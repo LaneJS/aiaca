@@ -4,7 +4,8 @@
     "outDir": "../../dist/out-tsc/services/scanner",
     "module": "commonjs",
     "moduleResolution": "node10",
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "target": "ES2022"
   },
   "include": [
     "jest.config.ts",

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc/services/scanner",
     "module": "commonjs",
-    "types": ["node"]
+    "types": ["node"],
+    "target": "ES2022"
   },
   "include": ["src/**/*.ts"],
   "exclude": [

@@ -7,6 +7,7 @@
   "type": "commonjs",
   "scripts": {
     "nx": "nx",
+    "scanner:sample": "ts-node services/scanner/src/scripts/sample-scan.ts",
     "lint": "nx run-many -t lint",
     "test": "nx run-many -t test",
     "build": "nx run-many -t build",
@@ -72,7 +73,13 @@
     "@angular/router": "~20.3.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.15.0",
+    "axe-core": "^4.10.2",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.3.0",
+    "playwright": "^1.48.2"
   },
   "nx": {}
 }

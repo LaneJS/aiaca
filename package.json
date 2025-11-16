@@ -7,6 +7,7 @@
   "type": "commonjs",
   "scripts": {
     "nx": "nx",
+    "scanner:sample": "ts-node services/scanner/src/scripts/sample-scan.ts",
     "lint": "nx run-many -t lint",
     "test": "nx run-many -t test",
     "build": "nx run-many -t build",
@@ -42,6 +43,7 @@
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
+    "@types/axe-core": "^2.0.2",
     "@types/jest": "^29.5.12",
     "@types/node": "18.16.9",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
@@ -70,6 +72,12 @@
     "@angular/platform-browser": "~20.3.0",
     "@angular/platform-browser-dynamic": "~20.3.0",
     "@angular/router": "~20.3.0",
+    "axe-core": "^4.10.2",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.3.0",
+    "playwright": "^1.48.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

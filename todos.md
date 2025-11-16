@@ -110,18 +110,18 @@ Use this as a working backlog. Check off as you go.
 
 ## 5. Scanner Service – MVP
 
-- [ ] Scaffold `services/scanner` project (Node/TS or Python).
-- [ ] Integrate axe-core / Lighthouse to run an accessibility audit on a given URL.
-- [ ] Define scanner API (internal service-to-service):
-  - [ ] `POST /scan` – body: `{ url: string }`, returns standardized issues:
+- [x] Scaffold `services/scanner` project (Node/TS or Python).
+- [x] Integrate axe-core / Lighthouse to run an accessibility audit on a given URL.
+- [x] Define scanner API (internal service-to-service):
+  - [x] `POST /scan` – body: `{ url: string }`, returns standardized issues:
     - Issue id
     - Type (e.g., `alt_missing`, `contrast`, `heading_structure`, `form_label`)
     - Severity (error/warning)
     - Selector / XPath / node reference
     - Short description
-- [ ] Support minimal headless browser run:
-  - [ ] Use Playwright/Puppeteer to render page and inject axe-core.
-- [ ] Persist raw results into DB via `services/api` or direct DB access (choose pattern).
+- [x] Support minimal headless browser run:
+  - [x] Use Playwright/Puppeteer to render page and inject axe-core.
+- [x] Persist raw results into DB via `services/api` or direct DB access (choose pattern).
 
 ---
 

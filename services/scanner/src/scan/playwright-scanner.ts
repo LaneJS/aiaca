@@ -35,6 +35,7 @@ export class PlaywrightScanner {
         deviceScaleFactor: 1,
         colorScheme: 'light',
         ignoreHTTPSErrors: true,
+        bypassCSP: true,
       });
 
       const page = await context.newPage();
@@ -66,23 +67,28 @@ export class PlaywrightScanner {
 
   private async navigate(page: Page, body: ScanRequestBody) {
     if (body.htmlSnapshot) {
-      await page.goto('about:blank');
-      await page.setContent(body.htmlSnapshot, { waitUntil: 'networkidle' });
-      await page.evaluate(
-        ({ url }) => {
-          if (url) {
-            const base = document.createElement('base');
-            base.href = url;
-            document.head.prepend(base);
-          }
-        },
-        { url: body.url },
-      );
+      const htmlWithBase = this.injectBaseHref(body.htmlSnapshot, body.url);
+      await page.setContent(htmlWithBase, { waitUntil: 'networkidle' });
       logger.debug({ url: body.url }, 'Loaded snapshot content');
       return;
     }
 
     await page.goto(body.url, { waitUntil: 'networkidle' });
     logger.debug({ url: body.url }, 'Loaded URL');
+  }
+
+  private injectBaseHref(html: string, baseHref?: string) {
+    if (!baseHref) return html;
+    if (/<base\s[^>]*href=/i.test(html)) return html;
+
+    if (/<head[^>]*>/i.test(html)) {
+      return html.replace(/<head([^>]*)>/i, `<head$1><base href="${baseHref}">`);
+    }
+
+    if (/<html[^>]*>/i.test(html)) {
+      return html.replace(/<html([^>]*)>/i, `<html$1><head><base href="${baseHref}"></head>`);
+    }
+
+    return `<head><base href="${baseHref}"></head>${html}`;
   }
 }

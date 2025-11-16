@@ -37,7 +37,7 @@ describe('domain validation helpers', () => {
 
     expect(apiKey.keyType).toBe('SERVICE');
     expect(ScanStatus.COMPLETED).toBe('COMPLETED');
-    expect(IssueSeverity.WARNING).toBe('WARNING');
+    expect(IssueSeverity.SERIOUS).toBe('SERIOUS');
     expect(IssueStatus.OPEN).toBe('OPEN');
   });
 });

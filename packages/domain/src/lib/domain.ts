@@ -1,13 +1,17 @@
 import { z } from 'zod';
 
 export enum ScanStatus {
-  QUEUED = 'QUEUED',
+  PENDING = 'PENDING',
+  RUNNING = 'RUNNING',
   COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
 }
 
 export enum IssueSeverity {
-  ERROR = 'ERROR',
-  WARNING = 'WARNING',
+  CRITICAL = 'CRITICAL',
+  SERIOUS = 'SERIOUS',
+  MODERATE = 'MODERATE',
+  MINOR = 'MINOR',
 }
 
 export enum IssueStatus {

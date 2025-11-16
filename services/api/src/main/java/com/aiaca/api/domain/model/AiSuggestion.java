@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.UuidGenerator;
 public class AiSuggestion {
 
     @Id
+    @GeneratedValue
     @UuidGenerator
     private UUID id;
 

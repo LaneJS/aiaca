@@ -2,6 +2,7 @@ package com.aiaca.api.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -16,6 +17,7 @@ import org.hibernate.annotations.UuidGenerator;
 public class EmbedKey {
 
     @Id
+    @GeneratedValue
     @UuidGenerator
     private UUID id;
 

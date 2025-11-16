@@ -2,6 +2,7 @@ package com.aiaca.api.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.UuidGenerator;
 public class User extends AbstractAuditable {
 
     @Id
+    @GeneratedValue
     @UuidGenerator
     private UUID id;
 

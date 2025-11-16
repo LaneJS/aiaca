@@ -76,35 +76,35 @@ Use this as a working backlog. Check off as you go.
 
 **Auth & Users**
 
-- [ ] Implement basic email/password auth (no social logins yet):
-  - [ ] `POST /auth/register`
-  - [ ] `POST /auth/login`
-  - [ ] `POST /auth/logout` (token invalidation or client-side only)
-- [ ] Implement JWT or session tokens.
-- [ ] Protect authenticated endpoints.
+- [x] Implement basic email/password auth (no social logins yet): ✅ JWT-backed register/login/logout with blacklist
+  - [x] `POST /auth/register`
+  - [x] `POST /auth/login`
+  - [x] `POST /auth/logout` (token invalidation or client-side only)
+- [x] Implement JWT or session tokens. ✅ JWT with configurable secret/expiration
+- [x] Protect authenticated endpoints. ✅ Spring Security guards `/api/v1/**` except public routes
 
 **Sites & Scan Management**
 
-- [ ] `POST /sites` – Create a tracked site entry.
-- [ ] `GET /sites` – List sites for the logged-in user.
-- [ ] `GET /sites/{id}` – Site details.
-- [ ] `POST /sites/{id}/scans` – Trigger new scan for URL(s) under the site.
-- [ ] `GET /sites/{id}/scans` – List scans with status, timestamp, and basic score.
-- [ ] `GET /scans/{id}` – Get scan details, including issue list and AI suggestions (if available).
+- [x] `POST /sites` – Create a tracked site entry. ✅ Persists owner-linked site
+- [x] `GET /sites` – List sites for the logged-in user. ✅ Requires bearer token
+- [x] `GET /sites/{id}` – Site details. ✅ Returns embed key and metadata
+- [x] `POST /sites/{id}/scans` – Trigger new scan for URL(s) under the site. ✅ Creates completed MVP scan with stub issues
+- [x] `GET /sites/{id}/scans` – List scans with status, timestamp, and basic score. ✅ Owner scoped
+- [x] `GET /scans/{id}` – Get scan details, including issue list and AI suggestions (if available). ✅ Validates ownership
 
 **Free Scan (Unauthenticated)**
 
-- [ ] `POST /public/scans` – Accept a single URL and return:
-  - [ ] Basic set of issues (limited count)
-  - [ ] Simple overall score
-  - [ ] Partial AI suggestions (e.g., first issue only)
-- [ ] Add rate limiting for public endpoint (IP-based).
+- [x] `POST /public/scans` – Accept a single URL and return:
+  - [x] Basic set of issues (limited count)
+  - [x] Simple overall score
+  - [x] Partial AI suggestions (e.g., first issue only)
+- [x] Add rate limiting for public endpoint (IP-based). ✅ In-memory limiter (5/min per IP)
 
 **Embed Script Support**
 
-- [ ] `GET /sites/{id}/embed-config` – Serve JSON config used by embed script:
-  - [ ] List of elements to adjust (e.g., image URL → alt text)
-  - [ ] Basic features toggles.
+- [x] `GET /sites/{id}/embed-config` – Serve JSON config used by embed script:
+  - [x] List of elements to adjust (e.g., image URL → alt text)
+  - [x] Basic features toggles.
 
 ---
 

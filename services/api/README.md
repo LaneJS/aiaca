@@ -1,15 +1,66 @@
 # API Service (Spring Boot)
 
-Spring Boot skeleton for the AACA backend API.
+Spring Boot backend for the AACA platform. Endpoints are versioned under `/api/v1` and secured with JWT bearer tokens. Auth-only routes require an `Authorization: Bearer <token>` header.
 
 ## Getting Started
 - Install Node/Angular deps at root for Nx tooling: `npm install`
 - Build the service: `npx nx build api`
-- Run tests: `npx nx test api`
+- Run tests: `npx nx test api` or `./gradlew test`
 - Launch the app locally: `npx nx serve api`
 - If the Gradle wrapper JAR is missing (binary files are ignored), regenerate it with a locally installed Gradle: `gradle wrapper --gradle-version 8.7`.
 
-## Next up
-- Add domain models and controllers for the MVP endpoints listed in `todos.md`.
-- Configure database connectivity and migrations (Flyway/Liquibase).
-- Expose a `/health` endpoint for local dev and uptime monitoring.
+H2 is enabled for local dev/tests; configure Postgres via standard Spring datasource properties.
+
+## Endpoints
+
+### Auth
+- `POST /api/v1/auth/register` – body `{ "email": "user@example.com", "password": "Secret123" }`
+- `POST /api/v1/auth/login` – same body as register.
+- `POST /api/v1/auth/logout` – send current bearer token in `Authorization` header; token is blacklisted server-side.
+
+Successful auth responses:
+```json
+{
+  "userId": "<uuid>",
+  "email": "user@example.com",
+  "token": "<jwt>"
+}
+```
+
+### Sites
+- `POST /api/v1/sites` – create a site. Body `{ "name": "My Shop", "url": "https://shop.test" }`
+- `GET /api/v1/sites` – list sites for the current user.
+- `GET /api/v1/sites/{id}` – site details including embed key.
+
+### Scans (authenticated)
+- `POST /api/v1/sites/{id}/scans` – body `{ "pageUrl": "https://site/page" }` queues a scan and returns a stubbed completed result for MVP.
+- `GET /api/v1/sites/{id}/scans` – list scan summaries.
+- `GET /api/v1/scans/{id}` – scan detail with issues and AI suggestion placeholders.
+
+### Public Scan (unauthenticated)
+- `POST /api/v1/public/scans` – body `{ "url": "https://example.com" }`
+  - Returns limited issues and score.
+  - Rate limited in-memory to 5 requests/minute per IP.
+
+### Embed Config
+- `GET /api/v1/sites/{id}/embed-config`
+  - Provide `X-Embed-Key` header for anonymous embed script access, or an auth token if calling from the dashboard.
+  - Response:
+```json
+{
+  "siteId": "<uuid>",
+  "embedKey": "<uuid>",
+  "autoFixes": ["alt_text", "focus_outline"],
+  "enableSkipLink": true
+}
+```
+
+## Error handling & logging
+- Validation errors return HTTP 400 with `{ "code": "validation_failed", "errors": { "field": "message" } }`.
+- Not found resources return HTTP 404 with code `not_found`.
+- Tokens are hashed using BCrypt; JWT secret/expiration configurable via `security.jwt.*` properties.
+- Rate limiting and logout token blacklist use in-memory stores appropriate for MVP; migrate to Redis for production.
+
+## Notes
+- Endpoints are namespaced under `/api/v1` to allow future versioned contracts.
+- Entities use cascading deletes for site → scans → issues to keep demo data clean.

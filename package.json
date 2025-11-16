@@ -11,7 +11,12 @@
     "test": "nx run-many -t test",
     "build": "nx run-many -t build",
     "format": "prettier --write .",
-    "check:binaries": "tools/check_binaries.py"
+    "check:binaries": "tools/check_binaries.py",
+    "docker:up": "docker-compose up",
+    "docker:up:build": "docker-compose up --build",
+    "docker:down": "docker-compose down",
+    "docker:rebuild": "docker-compose build --no-cache",
+    "docker:logs": "docker-compose logs -f"
   },
   "devDependencies": {
     "@angular-devkit/core": "~20.3.0",

@@ -10,6 +10,7 @@ npm-debug.log*
 yarn-error.log*
 pnpm-error.log*
 .env*
+!.env.sample
 .DS_Store
 .idea
 *.iml

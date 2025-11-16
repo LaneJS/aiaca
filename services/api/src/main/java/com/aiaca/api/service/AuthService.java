@@ -62,8 +62,16 @@ public class AuthService {
     }
 
     public void logout(String token) {
-        Date expiry = jwtService.extractExpiration(token);
-        tokenBlacklist.blacklist(token, expiry);
-        log.info("Token blacklisted until {}", expiry);
+        try {
+            Date expiry = jwtService.extractExpiration(token);
+            if (expiry.before(new Date())) {
+                log.info("Ignoring logout for expired token");
+                return;
+            }
+            tokenBlacklist.blacklist(token, expiry);
+            log.info("Token blacklisted until {}", expiry);
+        } catch (io.jsonwebtoken.JwtException | IllegalArgumentException ex) {
+            log.info("Ignoring logout for invalid token: {}", ex.getMessage());
+        }
     }
 }

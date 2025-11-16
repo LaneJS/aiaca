@@ -86,4 +86,11 @@ class ApiIntegrationTest {
                 .andReturn();
         assertThat(result.getResponse().getStatus()).isIn(401, 403);
     }
+
+    @Test
+    void logoutWithInvalidTokenIsNoOp() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/logout")
+                        .header("Authorization", "Bearer this.is.not.valid"))
+                .andExpect(status().isNoContent());
+    }
 }

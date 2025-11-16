@@ -26,7 +26,7 @@ Monorepo for the AACA platform: marketing site, dashboard, accessibility scanner
 5. Verify no binaries are tracked before opening a PR: `npm run check:binaries`
 
 ### Environment configuration
-- Copy `.env.sample` to `.env` (or create `.env.local` and pass `--env-file .env.local` to docker-compose) to seed default ports, database credentials, and service URLs.
+- Copy `.env.sample` to `.env` before running Docker (the compose file expects this file to exist). If you prefer a different filename, pass it explicitly via `docker compose --env-file .env.local ...`.
 - The compose stack reads from `.env` via `env_file`; update values there to match your local network without committing secrets.
 
 ### Local stack with Docker Compose

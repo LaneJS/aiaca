@@ -59,16 +59,16 @@ Use this as a working backlog. Check off as you go.
 
 ## 3. Database & Basic Domain Modeling
 
-- [ ] Define initial DB schema (tables/entities):
-  - [ ] `users`
-  - [ ] `sites`
-  - [ ] `scans`
-  - [ ] `scan_issues`
-  - [ ] `ai_suggestions`
-  - [ ] `api_keys` / `embed_keys`
-- [ ] Implement migrations (Flyway/Liquibase).
-- [ ] Implement basic ORM mappings (JPA/Hibernate) in `services/api`.
-- [ ] Seed dev DB with a sample user + site for testing.
+- [x] Define initial DB schema (tables/entities): ✅ 2025-11-16 – Data & Persistence agent (users, sites, scans, scan_issues, ai_suggestions, api_keys, embed_keys)
+  - [x] `users`
+  - [x] `sites`
+  - [x] `scans`
+  - [x] `scan_issues`
+  - [x] `ai_suggestions`
+  - [x] `api_keys` / `embed_keys`
+- [x] Implement migrations (Flyway/Liquibase). ✅ 2025-11-16 – Flyway SQL added under services/api
+- [x] Implement basic ORM mappings (JPA/Hibernate) in `services/api`. ✅ 2025-11-16 – Entities + repositories created
+- [x] Seed dev DB with a sample user + site for testing. ✅ 2025-11-16 – Local Flyway seed script
 
 ---
 

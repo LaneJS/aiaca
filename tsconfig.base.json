@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/nx/schemas/tsconfig-schema.json",
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@aiaca/ui": ["packages/ui/src/index.ts"],
+      "@aiaca/embed-script": ["packages/embed-script/src/index.ts"],
+      "@aiaca/domain": ["packages/domain/src/index.ts"],
+      "@aiaca/config": ["packages/config/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

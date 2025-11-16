@@ -1,0 +1,26 @@
+{
+  "name": "embed-script",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/embed-script/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/embed-script",
+        "main": "packages/embed-script/src/index.ts",
+        "tsConfig": "packages/embed-script/tsconfig.lib.json",
+        "assets": ["packages/embed-script/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/embed-script/jest.config.ts"
+      }
+    }
+  }
+}

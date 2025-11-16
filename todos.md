@@ -20,21 +20,21 @@ Use this as a working backlog. Check off as you go.
 
 ## 1. Repo & Project Foundation
 
-- [ ] Initialize monorepo (e.g., Nx, Turborepo, or custom tooling) with:
-  - [ ] `apps/marketing-site`
-  - [ ] `apps/dashboard`
-  - [ ] `services/api`
-  - [ ] `services/scanner`
-  - [ ] `services/ai-orchestrator`
-  - [ ] `packages/embed-script`
-  - [ ] `packages/ui`
-  - [ ] `packages/domain`
-  - [ ] `packages/config`
-- [ ] Define base coding standards (lint, format, TypeScript/Java style, commit conventions).
-- [ ] Add root `README.md` with architecture overview and dev setup.
-- [ ] Add `AGENTS.md` and link it from README.
-- [ ] Create `.editorconfig` and basic lint/prettier configs.
-- [ ] Configure root package manager (npm/yarn/pnpm) and workspace settings.
+- [x] Initialize monorepo (e.g., Nx, Turborepo, or custom tooling) with: ✅ Nx workspace initialized 2025-11-16 – DevOps agent
+  - [x] `apps/marketing-site` – scaffolded Angular app
+  - [x] `apps/dashboard` – scaffolded Angular app
+  - [x] `services/api` – Spring Boot starter generated
+  - [x] `services/scanner` – Node/TypeScript app stub
+  - [x] `services/ai-orchestrator` – Node/TypeScript app stub
+  - [x] `packages/embed-script` – JS bundle library scaffolded
+  - [x] `packages/ui` – Angular shared UI library
+  - [x] `packages/domain` – shared DTO/model library
+  - [x] `packages/config` – shared config/constants library
+- [x] Define base coding standards (lint, format, TypeScript/Java style, commit conventions). ✅ ESLint/Prettier/.editorconfig added 2025-11-16 – DevOps agent
+- [x] Add root `README.md` with architecture overview and dev setup. ✅ Updated 2025-11-16 – DevOps agent
+- [x] Add `AGENTS.md` and link it from README. ✅ Linked from README 2025-11-16 – DevOps agent
+- [x] Create `.editorconfig` and basic lint/prettier configs. ✅ Added 2025-11-16 – DevOps agent
+- [x] Configure root package manager (npm/yarn/pnpm) and workspace settings. ✅ npm workspace configured with lockfile 2025-11-16 – DevOps agent
 
 ---
 

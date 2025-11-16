@@ -25,6 +25,18 @@ Monorepo for the AACA platform: marketing site, dashboard, accessibility scanner
 4. Build all projects: `npm run build`
 5. Verify no binaries are tracked before opening a PR: `npm run check:binaries`
 
+### Environment configuration
+- Copy `.env.sample` to `.env` (or create `.env.local` and pass `--env-file .env.local` to docker-compose) to seed default ports, database credentials, and service URLs.
+- The compose stack reads from `.env` via `env_file`; update values there to match your local network without committing secrets.
+
+### Local stack with Docker Compose
+1. Build and start everything (PostgreSQL + API + services + frontends): `npm run docker:up:build`
+2. Observe logs: `npm run docker:logs`
+3. Stop and clean up: `npm run docker:down`
+4. If you need a fresh image rebuild: `npm run docker:rebuild`
+
+Services are reachable on the host using the ports defined in `.env.sample` (API on `http://localhost:8080`, marketing site on `http://localhost:4200`, dashboard on `http://localhost:4300`).
+
 ### Project-specific commands
 - Marketing site: `npx nx serve marketing-site`, `npx nx test marketing-site`, `npx nx build marketing-site`
 - Dashboard: `npx nx serve dashboard`, `npx nx test dashboard`, `npx nx build dashboard`

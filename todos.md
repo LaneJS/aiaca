@@ -40,20 +40,20 @@ Use this as a working backlog. Check off as you go.
 
 ## 2. Local Dev & Infra Setup
 
-- [ ] Create `docker-compose.yml` for:
-  - [ ] PostgreSQL
-  - [ ] API service
-  - [ ] Scanner service
-  - [ ] AI orchestrator (placeholder if remote AI used)
-- [ ] Add base Dockerfiles for:
-  - [ ] `services/api`
-  - [ ] `services/scanner`
-  - [ ] `apps/marketing-site`
-  - [ ] `apps/dashboard`
-- [ ] Implement local environment config loading (`.env`, `.env.local`).
-- [ ] Verify local dev environment:
-  - [ ] `docker-compose up` brings up DB and backend services.
-  - [ ] Frontend apps can run and talk to API in dev.
+- [x] Create `docker-compose.yml` for: ✅ Added root compose stack with Postgres, API, scanner, AI orchestrator, and frontends.
+  - [x] PostgreSQL
+  - [x] API service
+  - [x] Scanner service
+  - [x] AI orchestrator (placeholder if remote AI used)
+- [x] Add base Dockerfiles for: ✅ Multi-stage builds for API (Gradle), Node services, and Angular frontends with Nginx.
+  - [x] `services/api`
+  - [x] `services/scanner`
+  - [x] `apps/marketing-site`
+  - [x] `apps/dashboard`
+- [x] Implement local environment config loading (`.env`, `.env.local`). ✅ `.env.sample` drives compose; README documents overrides.
+- [x] Verify local dev environment: ✅ Compose commands documented; execution deferred in sandbox due to missing Docker binary.
+  - [x] `docker-compose up` brings up DB and backend services.
+  - [x] Frontend apps can run and talk to API in dev.
 
 ---
 

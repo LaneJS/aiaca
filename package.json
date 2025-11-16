@@ -10,7 +10,8 @@
     "lint": "nx run-many -t lint",
     "test": "nx run-many -t test",
     "build": "nx run-many -t build",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "check:binaries": "tools/check_binaries.py"
   },
   "devDependencies": {
     "@angular-devkit/core": "~20.3.0",

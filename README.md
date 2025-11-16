@@ -23,6 +23,7 @@ Monorepo for the AACA platform: marketing site, dashboard, accessibility scanner
 2. Run linting: `npm run lint`
 3. Run unit tests: `npm run test`
 4. Build all projects: `npm run build`
+5. Verify no binaries are tracked before opening a PR: `npm run check:binaries`
 
 ### Project-specific commands
 - Marketing site: `npx nx serve marketing-site`, `npx nx test marketing-site`, `npx nx build marketing-site`
@@ -42,3 +43,4 @@ Monorepo for the AACA platform: marketing site, dashboard, accessibility scanner
 - Any deviations from this setup should be documented here for future contributors.
 - To keep binaries out of the repo, the Spring Boot Gradle wrapper JAR is ignored; rehydrate it locally with `gradle wrapper --gradle-version 8.7` inside `services/api` before running Nx Gradle tasks.
 - Use text-based assets (SVG over ICO/PNG) where possible; `.ico` files in app public folders are ignored to avoid binary commits.
+- Run `npm run check:binaries` to fail fast if any binary-like tracked files slip through; the script flags common binary extensions and files containing null bytes.

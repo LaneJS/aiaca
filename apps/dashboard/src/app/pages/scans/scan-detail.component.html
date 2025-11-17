@@ -1,0 +1,25 @@
+<section class="card" *ngIf="scan">
+  <header class="section-header">
+    <div>
+      <p class="eyebrow">Scan detail</p>
+      <h1>{{ scan.createdAt | date: 'longDate' }}</h1>
+      <p class="muted">Score {{ scan.score }} · {{ scan.aiSummary }}</p>
+    </div>
+  </header>
+  <div class="controls" role="group" aria-label="Issue filters">
+    <button type="button" [class.active]="filter === 'all'" (click)="filter = 'all'">All</button>
+    <button type="button" [class.active]="filter === 'open'" (click)="filter = 'open'">Open</button>
+    <button type="button" [class.active]="filter === 'fixed'" (click)="filter = 'fixed'">Fixed</button>
+  </div>
+  <ul class="issues">
+    <li *ngFor="let issue of issues()">
+      <div>
+        <p class="title">{{ issue.title }}</p>
+        <p class="muted">{{ issue.description }}</p>
+        <p class="hint">{{ issue.suggestion }}</p>
+        <p class="hint">Selector: {{ issue.selector }}</p>
+      </div>
+      <button type="button" (click)="toggle(issue)">{{ issue.status === 'fixed' ? 'Mark open' : 'Mark fixed' }}</button>
+    </li>
+  </ul>
+</section>

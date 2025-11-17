@@ -1,0 +1,33 @@
+<section class="card" *ngIf="site">
+  <header class="section-header">
+    <div>
+      <p class="eyebrow">Site</p>
+      <h1>{{ site.name }}</h1>
+      <p class="muted">{{ site.url }}</p>
+    </div>
+    <div class="meta">
+      <span class="pill">Score {{ site.score }}</span>
+      <span class="pill alert">{{ site.issuesOpen }} open</span>
+    </div>
+  </header>
+  <div class="grid">
+    <div>
+      <p class="muted">Last scan</p>
+      <p>{{ site.lastScan | date: 'short' }}</p>
+    </div>
+    <div>
+      <p class="muted">Embed key</p>
+      <p>{{ site.embedKey }}</p>
+    </div>
+  </div>
+  <h3>Recent scans</h3>
+  <ul class="scans">
+    <li *ngFor="let scan of scans">
+      <div>
+        <p class="title">{{ scan.createdAt | date: 'short' }}</p>
+        <p class="muted">Score {{ scan.score }}</p>
+      </div>
+      <a [routerLink]="['/scans', scan.id]">View</a>
+    </li>
+  </ul>
+</section>

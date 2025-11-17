@@ -1,14 +1,27 @@
 # Dashboard (Angular)
 
-Authenticated dashboard shell for the AACA product.
+Authenticated dashboard shell for the AACA product with onboarding, auth flow, and scan insights.
 
-## Getting Started
+## Architecture
+- **Routing:** Protected shell (`ShellComponent`) wraps Overview, Sites, Scans, Script Setup, and Account routes; `/auth` handles login/sign-up.
+- **State & services:** Lightweight Angular signals/services for auth, toasts, and API access. HTTP interceptor attaches tokens and falls back to mock data when API is offline.
+- **UI:** Accessible layout with keyboard-friendly navigation, checklist onboarding, scan tables, and issue toggles. Script Setup exposes the embed snippet with copy-to-clipboard.
+
+## Running & Testing
 - Install dependencies: `npm install`
-- Run the dev server: `npx nx serve dashboard`
-- Run unit tests: `npx nx test dashboard`
-- Build for production: `npx nx build dashboard`
+- Dev server: `npx nx serve dashboard`
+- Unit tests: `npx nx test dashboard`
+- Lint: `npx nx lint dashboard`
+- Prod build: `npx nx build dashboard`
 
-## Next up
-- Replace the placeholder shell with the navigation/layout described in the MVP checklist.
-- Hook auth-aware routing guards and shared UI components from `packages/ui`.
-- Prepare mocked data services to unblock UI development while API endpoints are built.
+### Manual smoke path (MVP)
+1. Open `/auth` and log in or sign up (demo session falls back to mock data if API unavailable).
+2. Land on **Overview** to view the onboarding checklist.
+3. Visit **Sites** → open a site detail to see metrics + recent scans.
+4. Go to **Scans** → open a scan to view issues; mark issues fixed locally.
+5. Open **Script Setup** to copy the embed snippet for the selected site.
+
+## Notes
+- API integration hits `/api` endpoints from `services/api`; mock data fills gaps while backend stabilizes.
+- Tokens are stored in localStorage for MVP; move to secure storage for production.
+- Shared UI patterns (cards, pills, tables) are centralized in the dashboard styles and can be migrated to `packages/ui` as they evolve.

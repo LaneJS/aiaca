@@ -1,0 +1,18 @@
+<section class="card">
+  <header class="section-header">
+    <div>
+      <p class="eyebrow">Script setup</p>
+      <h1>Enable auto-fix</h1>
+    </div>
+  </header>
+  <label class="muted" for="site">Site</label>
+  <select id="site" (change)="select($any($event.target).value)">
+    <option value="">Choose a site</option>
+    <option *ngFor="let site of sites" [value]="site.id">{{ site.name }}</option>
+  </select>
+  <div *ngIf="selected" class="snippet">
+    <p class="muted">Copy this snippet into your <code>&lt;head&gt;</code>.</p>
+    <textarea #code aria-label="Embed snippet" readonly>{{ snippet() }}</textarea>
+    <button type="button" (click)="copy(code)">Copy snippet</button>
+  </div>
+</section>

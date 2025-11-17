@@ -1,0 +1,19 @@
+<section class="card">
+  <header class="section-header">
+    <div>
+      <p class="eyebrow">Sites</p>
+      <h1>Tracked properties</h1>
+    </div>
+    <button class="ghost" type="button">Add site</button>
+  </header>
+  <div class="grid">
+    <article *ngFor="let site of sites" class="site" tabindex="0" (click)="view(site)" (keypress.enter)="view(site)" role="button">
+      <p class="muted">{{ site.url }}</p>
+      <h3>{{ site.name }}</h3>
+      <div class="meta">
+        <span class="pill">Score {{ site.score || '—' }}</span>
+        <span class="pill alert">{{ site.issuesOpen || 0 }} open</span>
+      </div>
+    </article>
+  </div>
+</section>

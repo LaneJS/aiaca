@@ -1,0 +1,95 @@
+.layout {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0b1223, #0f172a);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  background: rgba(11, 18, 35, 0.9);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+.ghost {
+  background: transparent;
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+}
+
+.sidenav {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.25rem 1rem;
+}
+
+.sidenav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sidenav a {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #e2e8f0;
+  transition: background 150ms ease;
+}
+
+.sidenav a:hover,
+.sidenav a.active {
+  background: rgba(148, 163, 184, 0.15);
+}
+
+.content {
+  padding: 1.5rem;
+}
+
+.icon {
+  font-size: 0.75rem;
+}
+
+@media (max-width: 960px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+
+  .sidenav {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}

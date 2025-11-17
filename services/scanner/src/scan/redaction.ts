@@ -20,11 +20,15 @@ const scrubNode = (node: AxeResults['violations'][number]['nodes'][number]) => {
  * Removes HTML snippets from axe results so sensitive page content is not retained.
  */
 export const redactAxeResults = (results: AxeResults): AxeResults => {
+  const scrubBucket = (
+    bucket: AxeResults['violations'] | AxeResults['passes'] | AxeResults['incomplete'] | AxeResults['inapplicable']
+  ) => bucket.map((entry) => ({ ...entry, nodes: entry.nodes.map((node) => scrubNode(node)) }));
+
   return {
     ...results,
-    violations: results.violations.map((violation) => ({
-      ...violation,
-      nodes: violation.nodes.map((node) => scrubNode(node)),
-    })),
+    violations: scrubBucket(results.violations),
+    passes: scrubBucket(results.passes),
+    incomplete: scrubBucket(results.incomplete),
+    inapplicable: scrubBucket(results.inapplicable),
   };
 };

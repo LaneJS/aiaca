@@ -1,0 +1,16 @@
+{
+  "requestedUrl": "http://localhost:4300/sites/1/scans/last",
+  "finalUrl": "http://localhost:4300/sites/1/scans/last",
+  "categories": {
+    "accessibility": {
+      "score": 0.97,
+      "auditRefs": [
+        { "id": "table-headers", "weight": 2, "group": "a11y-tables-lists", "score": 1 },
+        { "id": "aria-required-children", "weight": 1, "group": "a11y-names-labels", "score": 1 },
+        { "id": "label", "weight": 1, "group": "a11y-names-labels", "score": 1 },
+        { "id": "focus-traps", "weight": 1, "group": "a11y-navigation", "score": 1 }
+      ]
+    }
+  },
+  "timing": { "total": 1380 }
+}

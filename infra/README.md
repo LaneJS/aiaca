@@ -32,6 +32,25 @@ npm run docker:up:build
 - **Node memory spikes during Angular builds:** Increase Docker memory or set `NODE_OPTIONS=--max-old-space-size=4096` in your environment before starting the stack.
 - **Frontends cannot reach the API:** Confirm `API_INTERNAL_URL`/`PUBLIC_API_BASE_URL` in `.env` point to `http://api:8080` (internal) and `http://localhost:8080` (host) respectively.
 
+## Production / Staging Configuration Checklist
+
+| Area | Staging | Production | Notes |
+| --- | --- | --- | --- |
+| Hostnames | `staging.api.aaca.test`, `staging.scanner.aaca.test`, `staging.ai.aaca.test`, `staging.aaca.test` (marketing), `staging.app.aaca.test` (dashboard) | `api.aaca.com`, `scanner.aaca.com`, `ai.aaca.com`, `www.aaca.com`, `app.aaca.com` | DNS + TLS managed via Cloudflare; certificates auto-provisioned. |
+| Secrets | `JWT_SECRET`, `POSTGRES_PASSWORD`, `EMBED_SIGNING_KEY`, `AI_API_KEY` stored in secrets manager; mounted as env vars | same as staging with prod values | Keep secrets out of `.env.*`; rotation handled quarterly. |
+| Database | `POSTGRES_HOST=staging-db`, `POSTGRES_DB=aaca_staging` | `POSTGRES_HOST=prod-db`, `POSTGRES_DB=aaca_prod` | Apply Flyway migrations on startup (already enabled). |
+| API config | `PUBLIC_API_BASE_URL=https://staging.api.aaca.test/api/v1`, `SECURITY_PUBLIC_SCAN_RATE_LIMIT=5` | `PUBLIC_API_BASE_URL=https://api.aaca.com/api/v1`, `SECURITY_PUBLIC_SCAN_RATE_LIMIT=5` | Rate limit matched to MVP spec. |
+| Frontend env | `NG_APP_API_URL=https://staging.api.aaca.test/api/v1`, `NG_APP_EMBED_CDN=https://cdn-staging.aaca.com` | `NG_APP_API_URL=https://api.aaca.com/api/v1`, `NG_APP_EMBED_CDN=https://cdn.aaca.com` | Values injected via Angular environment files or `.env.production.local`. |
+| Scanner | `SCANNER_ORIGIN=https://staging.scanner.aaca.test`, `CHROME_PATH=/usr/bin/chromium` | `SCANNER_ORIGIN=https://scanner.aaca.com`, `CHROME_PATH=/usr/bin/chromium` | Ensure sandbox flags set per Dockerfile. |
+| Observability | `PROMETHEUS_PUSHGATEWAY_URL` pointing to staging gateway; Grafana URL `https://grafana-staging.aaca.test` | `PROMETHEUS_PUSHGATEWAY_URL` pointing to prod gateway; Grafana URL `https://grafana.aaca.com` | Dashboards `a11y-overview`, `scan-pipeline` enabled in both. |
+| Support | `SUPPORT_EMAIL=support@aaca.test`, `STATUS_PAGE_URL=https://status.aaca.test` | `SUPPORT_EMAIL=support@aaca.com`, `STATUS_PAGE_URL=https://status.aaca.com` | Marketing footer links driven by these values. |
+
+### Verification Steps
+- Copy `.env.sample` to `.env.staging` and `.env.production`, then populate values above.
+- Run `npm run ci:config:check -- --env-file .env.staging` to validate required vars are present (script in `tools/` checks for missing keys).
+- Dry-run deploy: `docker compose -f docker-compose.yml --env-file .env.staging config` to ensure substitutions resolve.
+- After deploy, confirm health endpoints respond (see Observability section) and that marketing footer shows correct support email.
+
 ## Observability (Section 11)
 - **Structured logging**
   - API emits JSON logs via Logstash encoder (fields include `service`, `correlationId`, `requestPath`).

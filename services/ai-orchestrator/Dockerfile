@@ -2,12 +2,12 @@
 
 FROM node:20-alpine AS builder
 WORKDIR /workspace
-COPY package*.json nx.json tsconfig.base.json .
+COPY package.json package-lock.json nx.json tsconfig.base.json ./
+RUN npm ci
 COPY apps ./apps
 COPY services ./services
 COPY packages ./packages
 COPY tools ./tools
-RUN npm ci
 RUN npx nx build ai-orchestrator --configuration=production
 RUN npx nx run ai-orchestrator:copy-workspace-modules --configuration=production
 RUN npx nx run ai-orchestrator:prune-lockfile --configuration=production

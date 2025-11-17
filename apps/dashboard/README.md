@@ -25,3 +25,4 @@ Authenticated dashboard shell for the AACA product with onboarding, auth flow, a
 - API integration hits `/api` endpoints from `services/api`; mock data fills gaps while backend stabilizes.
 - Tokens are stored in localStorage for MVP; move to secure storage for production.
 - Shared UI patterns (cards, pills, tables) are centralized in the dashboard styles and can be migrated to `packages/ui` as they evolve.
+- Copy for scan severity/tooltips lives in `src/app/pages/scans/copy.ts` and is rendered on the scan detail page. Long-form explanations back up the dashboard text in `docs/guides/accessibility-report.md` and `docs/guides/embed-script.md`.

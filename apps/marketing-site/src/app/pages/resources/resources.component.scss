@@ -5,8 +5,8 @@
 
 .guides {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
   margin: 2rem 0;
 }
 
@@ -18,8 +18,26 @@
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
+.guides ol {
+  padding-left: 1.2rem;
+  color: #0f172a;
+}
+
+.guides li {
+  margin-bottom: 0.35rem;
+}
+
 .note {
   color: #475569;
+  margin-top: 0.5rem;
+}
+
+.helper-card {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  color: #0f172a;
 }
 
 .faq {
@@ -39,6 +57,19 @@ dt {
 
 dd {
   margin: 0.5rem 0 0;
+}
+
+.inline-link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.inline-link:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .cta {

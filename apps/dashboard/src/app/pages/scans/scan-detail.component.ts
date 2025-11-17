@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { IssueDetail, ScanDetail } from '../../core/models';
+import { issueTypeCopy, severityCopy } from './copy';
 
 @Component({
   selector: 'app-scan-detail',
@@ -11,6 +12,9 @@ import { IssueDetail, ScanDetail } from '../../core/models';
 export class ScanDetailComponent implements OnInit {
   protected scan?: ScanDetail;
   protected filter: 'all' | 'open' | 'fixed' = 'all';
+  protected readonly severityCopy = severityCopy;
+  protected readonly severityOrder: Array<keyof typeof severityCopy> = ['high', 'medium', 'low'];
+  protected readonly issueTypeCopy = issueTypeCopy;
 
   constructor(private readonly api: ApiService, private readonly route: ActivatedRoute) {}
 

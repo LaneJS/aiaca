@@ -309,19 +309,19 @@ Use this as a working backlog. Check off as you go.
 
 ## 13. Launch Readiness Checklist
 
-- [ ] Run internal a11y audit on:
-  - [ ] Marketing site
-  - [ ] Dashboard (core flows)
-- [ ] Smoke-test:
-  - [ ] Public free scan (anon)
-  - [ ] Signup → add site → run scan → view issues
-  - [ ] Install embed script on test site and verify:
-    - [ ] Alt text injection works.
-    - [ ] Skip link appears.
-- [ ] Verify SEO basics and social preview cards.
-- [ ] Set environment variables and production configs.
-- [ ] Deploy to production/staging environment.
-- [ ] Set up basic uptime monitoring on key endpoints.
-- [ ] Add a minimal contact/support channel (support email, form, or chat widget).
+- [x] Run internal a11y audit on:
+  - [x] Marketing site
+  - [x] Dashboard (core flows)
+- [x] Smoke-test:
+  - [x] Public free scan (anon)
+  - [x] Signup → add site → run scan → view issues
+  - [x] Install embed script on test site and verify:
+    - [x] Alt text injection works.
+    - [x] Skip link appears.
+- [x] Verify SEO basics and social preview cards.
+- [x] Set environment variables and production configs.
+- [x] Deploy to production/staging environment.
+- [x] Set up basic uptime monitoring on key endpoints.
+- [x] Add a minimal contact/support channel (support email, form, or chat widget).
 
 ---

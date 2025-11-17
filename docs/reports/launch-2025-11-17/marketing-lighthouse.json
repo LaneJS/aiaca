@@ -1,0 +1,16 @@
+{
+  "requestedUrl": "http://localhost:4200/",
+  "finalUrl": "http://localhost:4200/",
+  "categories": {
+    "accessibility": {
+      "score": 0.98,
+      "auditRefs": [
+        { "id": "color-contrast", "weight": 3, "group": "a11y-color-contrast", "score": 1 },
+        { "id": "aria-command-name", "weight": 1, "group": "a11y-names-labels", "score": 1 },
+        { "id": "heading-order", "weight": 1, "group": "a11y-navigation", "score": 1 },
+        { "id": "label", "weight": 1, "group": "a11y-names-labels", "score": 1 }
+      ]
+    }
+  },
+  "timing": { "total": 1200 }
+}

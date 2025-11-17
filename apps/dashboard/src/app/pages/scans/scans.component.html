@@ -1,0 +1,28 @@
+<section class="card">
+  <header class="section-header">
+    <div>
+      <p class="eyebrow">Scans</p>
+      <h1>Recent activity</h1>
+    </div>
+  </header>
+  <table class="table" role="grid">
+    <thead>
+      <tr>
+        <th scope="col">Site</th>
+        <th scope="col">Score</th>
+        <th scope="col">Issues</th>
+        <th scope="col">Status</th>
+        <th scope="col">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let scan of scans" (click)="view(scan)" tabindex="0" role="button" (keypress.enter)="view(scan)">
+        <td>{{ siteName(scan) }}</td>
+        <td>{{ scan.score }}</td>
+        <td>{{ scan.issueCount }}</td>
+        <td>{{ scan.status }}</td>
+        <td>{{ scan.createdAt | date: 'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

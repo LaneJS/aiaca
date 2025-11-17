@@ -1,0 +1,21 @@
+<div class="auth">
+  <form class="panel" (ngSubmit)="submit()" [formGroup]="form" novalidate>
+    <p class="eyebrow">AACA</p>
+    <h1>{{ mode === 'login' ? 'Welcome back' : 'Create account' }}</h1>
+    <label class="field" *ngIf="mode === 'signup'">
+      <span>Name</span>
+      <input formControlName="name" type="text" required />
+    </label>
+    <label class="field">
+      <span>Email</span>
+      <input formControlName="email" type="email" required aria-required="true" />
+    </label>
+    <label class="field">
+      <span>Password</span>
+      <input formControlName="password" type="password" required aria-required="true" />
+    </label>
+    <button type="submit" [disabled]="form.invalid">{{ mode === 'login' ? 'Login' : 'Sign up' }}</button>
+    <p class="muted" *ngIf="mode === 'login'">Need an account? <a (click)="mode = 'signup'">Sign up</a></p>
+    <p class="muted" *ngIf="mode === 'signup'">Have an account? <a (click)="mode = 'login'">Login</a></p>
+  </form>
+</div>

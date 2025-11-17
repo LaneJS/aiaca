@@ -1,0 +1,81 @@
+<section class="grid">
+  <div class="card focus" tabindex="0">
+    <header>
+      <p class="eyebrow">Onboarding checklist</p>
+      <h1>Launch accessibility monitoring</h1>
+    </header>
+    <ul class="checklist">
+      <li *ngFor="let step of onboarding()" [class.complete]="step.completed">
+        <span class="checkbox" aria-hidden="true">{{ step.completed ? '✓' : '○' }}</span>
+        <div>
+          <p class="title">{{ step.label }}</p>
+          <p class="body">{{ step.description }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="card metrics">
+    <p class="eyebrow">Business view</p>
+    <div class="stats">
+      <div>
+        <p class="muted">Sites</p>
+        <p class="value">{{ sites().length }}</p>
+      </div>
+      <div>
+        <p class="muted">Completed scans</p>
+        <p class="value">{{ scans().length }}</p>
+      </div>
+      <div>
+        <p class="muted">Avg score</p>
+        <p class="value">{{ averageScore() }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="grid">
+  <div class="card">
+    <header class="section-header">
+      <div>
+        <p class="eyebrow">Recent scans</p>
+        <h2>Developer view</h2>
+      </div>
+      <a routerLink="/scans" class="ghost">View all</a>
+    </header>
+    <table class="table" role="grid">
+      <thead>
+        <tr>
+          <th scope="col">Site</th>
+          <th scope="col">Score</th>
+          <th scope="col">Issues</th>
+          <th scope="col">When</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let scan of scans()">
+          <td>{{ sites().find((s) => s.id === scan.siteId)?.name || 'Unknown' }}</td>
+          <td><span class="pill">{{ scan.score }}</span></td>
+          <td>{{ scan.issueCount }}</td>
+          <td>{{ scan.createdAt | date: 'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <header class="section-header">
+      <div>
+        <p class="eyebrow">Run scan</p>
+        <h2>Quick actions</h2>
+      </div>
+    </header>
+    <div *ngIf="sites().length; else empty">
+      <label class="muted" for="scan-site">Choose site</label>
+      <select id="scan-site" aria-label="Choose site to scan" (change)="runScan($any($event.target).value)">
+        <option value="">Select site</option>
+        <option *ngFor="let site of sites()" [value]="site.id">{{ site.name }}</option>
+      </select>
+    </div>
+    <ng-template #empty>
+      <p>Add a site first to trigger scans.</p>
+    </ng-template>
+  </div>
+</section>

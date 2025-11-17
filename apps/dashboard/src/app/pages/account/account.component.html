@@ -1,0 +1,9 @@
+<section class="card">
+  <header>
+    <p class="eyebrow">Account</p>
+    <h1>User profile</h1>
+  </header>
+  <p>Name: {{ auth.user()?.name }}</p>
+  <p>Email: {{ auth.user()?.email }}</p>
+  <p class="muted">Tokens are stored locally for the MVP. Upgrade to secure storage before production.</p>
+</section>

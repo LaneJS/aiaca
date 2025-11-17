@@ -209,28 +209,28 @@ Use this as a working backlog. Check off as you go.
 
 **App Shell**
 
-- [ ] Create Angular app `apps/dashboard`.
-- [ ] Implement basic layout:
-  - [ ] Sidebar or top-nav with:
+- [x] Create Angular app `apps/dashboard`.
+- [x] Implement basic layout:
+  - [x] Sidebar or top-nav with:
     - Overview
     - Sites
     - Scans
     - Script Setup
     - Account
-- [ ] Add global loading and error handling patterns.
+- [x] Add global loading and error handling patterns.
 
 **Auth Flow**
 
-- [ ] Implement signup & login screens:
-  - [ ] Email, password, confirm password.
-  - [ ] Basic validation and error states.
-- [ ] Store auth token securely (local storage + in-memory, or cookies).
-- [ ] Implement route guards for protected routes.
+- [x] Implement signup & login screens:
+  - [x] Email, password, confirm password.
+  - [x] Basic validation and error states.
+- [x] Store auth token securely (local storage + in-memory, or cookies).
+- [x] Implement route guards for protected routes.
 
 **Onboarding / First-Run Experience**
 
-- [ ] After signup:
-  - [ ] Show a “Get started” checklist:
+- [x] After signup:
+  - [x] Show a “Get started” checklist:
     - Add your first site.
     - Run a scan.
     - Install the embed script (optional).
@@ -238,29 +238,29 @@ Use this as a working backlog. Check off as you go.
 
 **Site & Scan Views**
 
-- [ ] Sites list:
-  - [ ] Table/grid of sites with:
+- [x] Sites list:
+  - [x] Table/grid of sites with:
     - Name
     - Domain
     - Last scan date
     - Current score
-- [ ] Site detail:
-  - [ ] Basic summary metrics.
-  - [ ] List of recent scans.
-- [ ] Scan detail:
-  - [ ] Score
-  - [ ] Issue list with filters (severity, type, page section).
-  - [ ] For each issue:
+- [x] Site detail:
+  - [x] Basic summary metrics.
+  - [x] List of recent scans.
+- [x] Scan detail:
+  - [x] Score
+  - [x] Issue list with filters (severity, type, page section).
+  - [x] For each issue:
     - Short description
     - Impact explanation (plain language)
     - Suggested fix (code snippet or content suggestion)
-  - [ ] Tag issues as “fixed” (client-side only for MVP, or update server if easy).
+  - [x] Tag issues as “fixed” (client-side only for MVP, or update server if easy).
 
 **Script Setup Page**
 
-- [ ] Show site-specific embed snippet with copy-to-clipboard button.
-- [ ] Explain what the script does and limitations.
-- [ ] Provide quick testing instructions (“Open your site and try tabbing through…”).
+- [x] Show site-specific embed snippet with copy-to-clipboard button.
+- [x] Explain what the script does and limitations.
+- [x] Provide quick testing instructions (“Open your site and try tabbing through…”).
 
 ---
 

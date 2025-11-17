@@ -1,22 +1,20 @@
 import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { App } from './app';
-import { NxWelcome } from './nx-welcome';
-import { RouterModule } from '@angular/router';
+import { ToastContainerComponent } from './shared/components/toast-container.component';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterModule.forRoot([])],
-      declarations: [App, NxWelcome],
+      imports: [RouterTestingModule, ToastContainerComponent],
+      declarations: [App],
     }).compileComponents();
   });
 
-  it('should render title', () => {
+  it('should render the app shell', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Welcome dashboard',
-    );
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });

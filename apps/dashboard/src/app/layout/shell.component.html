@@ -1,0 +1,24 @@
+<div class="layout">
+  <header class="topbar" role="banner">
+    <div class="brand" tabindex="0">AACA Dashboard</div>
+    <div class="user-actions" aria-label="User menu">
+      <span class="user" aria-live="polite">{{ auth.user()?.name }}</span>
+      <button class="ghost" type="button" (click)="logout()">Sign out</button>
+    </div>
+  </header>
+  <div class="body" role="presentation">
+    <nav class="sidenav" aria-label="Primary navigation">
+      <ul>
+        <li *ngFor="let item of navItems">
+          <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: item.path === '/overview' }" (click)="navigate(item)" [attr.aria-label]="item.label">
+            <span class="icon" aria-hidden="true">●</span>
+            {{ item.label }}
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <main class="content" tabindex="-1">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

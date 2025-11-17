@@ -70,8 +70,7 @@ export class GeminiSuggestionProvider implements SuggestionProvider {
 
     const text = result.response.text();
     const parsed = JSON.parse(text ?? '{}');
-    const requestId =
-      result.response.candidates?.[0]?.content?.id || result.response.id || crypto.randomUUID();
+    const requestId = crypto.randomUUID();
 
     return {
       provider: this.name,

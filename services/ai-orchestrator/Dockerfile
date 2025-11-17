@@ -9,6 +9,9 @@ COPY services ./services
 COPY packages ./packages
 COPY tools ./tools
 RUN npx nx build ai-orchestrator --configuration=production
+WORKDIR /workspace/dist/services/ai-orchestrator
+RUN npm install --package-lock-only
+WORKDIR /workspace
 
 FROM node:24-alpine
 WORKDIR /app

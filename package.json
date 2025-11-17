@@ -41,7 +41,7 @@
     "@nxrocks/nx-spring-boot": "^11.0.1",
     "@schematics/angular": "~20.3.0",
     "@swc-node/register": "~1.9.1",
-    "@swc/core": "~1.5.7",
+    "@swc/core": "~1.15.2",
     "@swc/helpers": "~0.5.11",
     "@types/axe-core": "^2.0.2",
     "@types/jest": "^29.5.12",

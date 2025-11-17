@@ -159,49 +159,49 @@ Use this as a working backlog. Check off as you go.
 
 **Structure & Navigation**
 
-- [ ] Create Angular app `apps/marketing-site`.
-- [ ] Set up routing for:
-  - [ ] `/` – Home / value proposition
-  - [ ] `/how-it-works`
-  - [ ] `/pricing`
-  - [ ] `/resources` (blog/FAQs placeholder)
-  - [ ] `/scan` – free scan page
-- [ ] Implement responsive layout, including:
-  - [ ] Header with nav and CTA (“Run a free scan”)
-  - [ ] Footer with links (privacy, terms, contact).
+- [x] Create Angular app `apps/marketing-site`.
+- [x] Set up routing for:
+  - [x] `/` – Home / value proposition
+  - [x] `/how-it-works`
+  - [x] `/pricing`
+  - [x] `/resources` (blog/FAQs placeholder)
+  - [x] `/scan` – free scan page
+- [x] Implement responsive layout, including:
+  - [x] Header with nav and CTA (“Run a free scan”)
+  - [x] Footer with links (privacy, terms, contact).
 
 **Home Page Content**
 
-- [ ] Hero section:
-  - [ ] Clear statement: “AI-powered accessibility compliance for small websites.”
-  - [ ] Primary CTA: “Run a free accessibility scan.”
-- [ ] Sections:
-  - [ ] Problem overview (lawsuits, moral + business reasons).
-  - [ ] How it works (3-step visual: Scan → Fix → Stay compliant).
-  - [ ] Features grid (scanner, AI suggestions, auto-fix script, monitoring).
-  - [ ] Pricing preview (starting at ~$X/month).
-  - [ ] Social proof area (placeholder for testimonials/case studies).
+- [x] Hero section:
+  - [x] Clear statement: “AI-powered accessibility compliance for small websites.”
+  - [x] Primary CTA: “Run a free accessibility scan.”
+- [x] Sections:
+  - [x] Problem overview (lawsuits, moral + business reasons).
+  - [x] How it works (3-step visual: Scan → Fix → Stay compliant).
+  - [x] Features grid (scanner, AI suggestions, auto-fix script, monitoring).
+  - [x] Pricing preview (starting at ~$X/month).
+  - [x] Social proof area (placeholder for testimonials/case studies).
 
 **Free Scan Page**
 
-- [ ] Simple form:
-  - [ ] URL input
-  - [ ] Consent checkbox or note about scanning.
-- [ ] On submit:
-  - [ ] Call `POST /public/scans`.
-  - [ ] Show loading state.
-- [ ] Display results:
-  - [ ] Overall accessibility score (simple, e.g., 0–100).
-  - [ ] Top 3–5 issues (limited for free).
-  - [ ] CTA: “Create a free account to see all issues and AI fix suggestions.”
+- [x] Simple form:
+  - [x] URL input
+  - [x] Consent checkbox or note about scanning.
+- [x] On submit:
+  - [x] Call `POST /public/scans`.
+  - [x] Show loading state.
+- [x] Display results:
+  - [x] Overall accessibility score (simple, e.g., 0–100).
+  - [x] Top 3–5 issues (limited for free).
+  - [x] CTA: “Create a free account to see all issues and AI fix suggestions.”
 
 **Other**
 
-- [ ] Implement SEO basics:
-  - [ ] Page titles & meta descriptions.
-  - [ ] Open Graph tags.
-  - [ ] Semantic structure (headings, landmark roles).
-- [ ] Ensure marketing site itself passes an internal a11y check.
+- [x] Implement SEO basics:
+  - [x] Page titles & meta descriptions.
+  - [x] Open Graph tags.
+  - [x] Semantic structure (headings, landmark roles).
+- [x] Ensure marketing site itself passes an internal a11y check.
 
 ---
 

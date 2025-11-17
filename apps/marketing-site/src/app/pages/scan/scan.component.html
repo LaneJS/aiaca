@@ -1,0 +1,43 @@
+<section class="scan" aria-labelledby="scan-heading">
+  <p class="eyebrow">Free tool</p>
+  <h1 id="scan-heading">Run a free accessibility scan</h1>
+  <p class="lead">Submit one URL to receive a score and the top issues. No account required.</p>
+
+  <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
+    <label for="url">Website URL</label>
+    <input
+      id="url"
+      name="url"
+      type="url"
+      required
+      [(ngModel)]="url"
+      placeholder="https://example.com"
+      aria-describedby="consent"
+    />
+    <p id="consent" class="consent">By submitting, you confirm you have permission to scan this page.</p>
+    <ui-cta-button type="submit" label="Start scan" variant="primary"></ui-cta-button>
+    <span class="status" *ngIf="submitting" aria-live="polite">Submitting scan…</span>
+    <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+  </form>
+
+  <section *ngIf="result" class="results" aria-live="polite" aria-label="Scan results">
+    <div class="summary">
+      <p class="eyebrow">Score</p>
+      <p class="score">{{ result.score }}</p>
+      <p class="note">Score is limited for the free scan. Create an account to see the full report.</p>
+    </div>
+    <div class="issues">
+      <h2>Top issues</h2>
+      <ul>
+        <li *ngFor="let issue of result.issues">
+          <p class="issue-type">{{ issue.type }} ({{ issue.severity }})</p>
+          <p class="issue-description">{{ issue.description }}</p>
+          <p *ngIf="issue.location" class="issue-location">Location: {{ issue.location }}</p>
+          <p *ngIf="issue.suggestion" class="issue-suggestion">Suggested fix: {{ issue.suggestion }}</p>
+        </li>
+      </ul>
+      <p class="upgrade">Create a free account to see every issue, AI suggestions, and exportable reports.</p>
+      <ui-cta-button routerLink="/pricing" label="See plans" variant="secondary"></ui-cta-button>
+    </div>
+  </section>
+</section>

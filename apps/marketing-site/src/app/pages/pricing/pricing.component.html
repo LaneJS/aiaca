@@ -1,0 +1,40 @@
+<section class="pricing" aria-labelledby="pricing-page-heading">
+  <p class="eyebrow">Plans</p>
+  <h1 id="pricing-page-heading">Pricing designed for small teams</h1>
+  <p class="lead">Keep the free scan forever or upgrade for monitoring and the auto-fix script.</p>
+
+  <div class="plan-grid">
+    <article *ngFor="let plan of plans">
+      <h2>{{ plan.name }}</h2>
+      <p class="price">{{ plan.price }}</p>
+      <p>{{ plan.description }}</p>
+      <ul>
+        <li *ngFor="let feature of plan.features">{{ feature }}</li>
+      </ul>
+      <ui-cta-button
+        [routerLink]="plan.routerLink"
+        [href]="plan.href"
+        label="{{ plan.cta }}"
+        variant="primary"
+      ></ui-cta-button>
+    </article>
+  </div>
+
+  <div class="faq" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">Quick questions</h2>
+    <dl>
+      <div>
+        <dt>Does the free scan include AI suggestions?</dt>
+        <dd>We share a limited set of AI-backed suggestions on the first few issues to help you take action.</dd>
+      </div>
+      <div>
+        <dt>Can I cancel anytime?</dt>
+        <dd>Yes. Plans are month-to-month with no hidden fees.</dd>
+      </div>
+      <div>
+        <dt>Do you handle privacy-sensitive pages?</dt>
+        <dd>We avoid storing forms or logged-in data and document what we collect in the privacy policy.</dd>
+      </div>
+    </dl>
+  </div>
+</section>

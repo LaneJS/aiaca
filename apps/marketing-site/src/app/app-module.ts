@@ -1,14 +1,36 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { App } from './app';
+import { FormsModule } from '@angular/forms';
 import { appRoutes } from './app.routes';
-import { NxWelcome } from './nx-welcome';
+import { SiteHeaderComponent } from './components/site-header/site-header.component';
+import { SiteFooterComponent } from './components/site-footer/site-footer.component';
+import { HomeComponent } from './pages/home/home.component';
+import { HowItWorksComponent } from './pages/how-it-works/how-it-works.component';
+import { PricingComponent } from './pages/pricing/pricing.component';
+import { ResourcesComponent } from './pages/resources/resources.component';
+import { ScanComponent } from './pages/scan/scan.component';
+import { CTAButtonComponent } from '@aiaca/ui';
+import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [App, NxWelcome],
-  imports: [BrowserModule, RouterModule.forRoot(appRoutes)],
-  providers: [provideBrowserGlobalErrorListeners()],
-  bootstrap: [App],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
+    RouterModule.forRoot(appRoutes, { scrollPositionRestoration: 'enabled' }),
+    AppComponent,
+    SiteHeaderComponent,
+    SiteFooterComponent,
+    HomeComponent,
+    HowItWorksComponent,
+    PricingComponent,
+    ResourcesComponent,
+    ScanComponent,
+    CTAButtonComponent,
+  ],
+  providers: [provideBrowserGlobalErrorListeners(), provideClientHydration()],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

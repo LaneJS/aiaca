@@ -1,7 +1,7 @@
 import { aiSuggestFixRequestSchema } from '@aiaca/domain';
 import { FastifyInstance } from 'fastify';
+import { issuesPerSuggestion, suggestionCounter } from './metrics';
 import { SuggestionService } from './suggestion-service';
-import { logger } from './logger';
 
 export async function registerRoutes(app: FastifyInstance, service: SuggestionService): Promise<void> {
   app.post('/suggest-fixes', async (request, reply) => {
@@ -12,9 +12,11 @@ export async function registerRoutes(app: FastifyInstance, service: SuggestionSe
 
     try {
       const result = await service.suggest(parsed.data);
+      suggestionCounter.inc();
+      issuesPerSuggestion.observe(parsed.data.issues.length);
       return reply.status(200).send(result);
     } catch (error) {
-      logger.error({
+      request.log.error({
         message: 'suggestion.failed',
         error: error instanceof Error ? error.message : 'unknown',
       });

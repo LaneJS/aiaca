@@ -282,16 +282,16 @@ Use this as a working backlog. Check off as you go.
 
 ## 11. Observability & Basic Ops
 
-- [ ] Implement structured logging for:
-  - [ ] API requests
-  - [ ] Scanner runs
-  - [ ] AI calls (without leaking sensitive data).
-- [ ] Add minimal metrics:
-  - [ ] Number of scans per day.
-  - [ ] Average scan duration.
-  - [ ] AI usage per scan.
-- [ ] Add simple healthcheck endpoints for services:
-  - [ ] `/health` on API, scanner, ai-orchestrator.
+- [x] Implement structured logging for:
+  - [x] API requests
+  - [x] Scanner runs
+  - [x] AI calls (without leaking sensitive data).
+- [x] Add minimal metrics:
+  - [x] Number of scans per day.
+  - [x] Average scan duration.
+  - [x] AI usage per scan.
+- [x] Add simple healthcheck endpoints for services:
+  - [x] `/health` on API, scanner, ai-orchestrator.
 
 ---
 

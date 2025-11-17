@@ -8,6 +8,9 @@ import com.aiaca.api.model.ScanIssue;
 import com.aiaca.api.model.ScanStatus;
 import com.aiaca.api.model.Site;
 import com.aiaca.api.repository.ScanRepository;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,12 +20,19 @@ import java.util.UUID;
 @Service
 public class ScanService {
     private final ScanRepository scanRepository;
+    private final Counter scanCounter;
+    private final Counter publicScanCounter;
+    private final Timer scanTimer;
 
-    public ScanService(ScanRepository scanRepository) {
+    public ScanService(ScanRepository scanRepository, MeterRegistry meterRegistry) {
         this.scanRepository = scanRepository;
+        this.scanCounter = meterRegistry.counter("api_scans_total", "type", "authenticated");
+        this.publicScanCounter = meterRegistry.counter("api_scans_total", "type", "public");
+        this.scanTimer = meterRegistry.timer("api_scan_duration_seconds");
     }
 
     public Scan createScan(Site site, ScanDtos.CreateScanRequest request) {
+        Timer.Sample sample = Timer.start();
         Scan scan = new Scan();
         scan.setSite(site);
         scan.setStatus(ScanStatus.COMPLETED);
@@ -37,7 +47,10 @@ public class ScanService {
         issue.setSuggestion("Add descriptive alt text to hero image");
         scan.getIssues().add(issue);
 
-        return scanRepository.save(scan);
+        Scan saved = scanRepository.save(scan);
+        scanCounter.increment();
+        sample.stop(scanTimer);
+        return saved;
     }
 
     public List<Scan> listBySite(Site site) {
@@ -68,6 +81,7 @@ public class ScanService {
     }
 
     public ScanDtos.ScanDetail createPublicScan(String url) {
+        Timer.Sample sample = Timer.start();
         Scan scan = new Scan();
         scan.setStatus(ScanStatus.COMPLETED);
         scan.setScore(70.0);
@@ -82,6 +96,8 @@ public class ScanService {
 
         List<ScanDtos.ScanIssueDto> issueDtos = List.of(
                 new ScanDtos.ScanIssueDto(null, issue.getType(), issue.getSeverity(), issue.getDescription(), issue.getSelector(), null));
+        publicScanCounter.increment();
+        sample.stop(scanTimer);
         return new ScanDtos.ScanDetail(null, null, scan.getCreatedAt(), scan.getStatus(), scan.getScore(), issueDtos);
     }
 }

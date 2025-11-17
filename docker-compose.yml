@@ -32,7 +32,7 @@ services:
     ports:
       - "${API_PORT:-8080}:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -52,7 +52,7 @@ services:
     ports:
       - "${SCANNER_PORT:-4001}:4001"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4001/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:4001/health"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -72,7 +72,7 @@ services:
     ports:
       - "${AI_ORCHESTRATOR_PORT:-4002}:4002"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4002/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:4002/health"]
       interval: 30s
       timeout: 5s
       retries: 3

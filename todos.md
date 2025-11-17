@@ -127,16 +127,16 @@ Use this as a working backlog. Check off as you go.
 
 ## 6. AI Orchestrator – MVP
 
-- [ ] Scaffold `services/ai-orchestrator` project.
-- [ ] Define internal API:
-  - [ ] `POST /suggest-fixes` – input: issues + HTML context, output: AI suggestions.
-- [ ] Implement integration with Gemini or placeholder AI:
-  - [ ] For now, optionally stub out AI with static suggestions for dev environment to decouple.
-- [ ] For MVP, support AI for:
-  - [ ] Missing alt text – generate short, descriptive alt text.
-  - [ ] Vague link text – suggest more descriptive text.
-  - [ ] Simple contrast issues – suggest adjusted hex color values.
-- [ ] Implement timeout & error handling (fallback gracefully if AI unavailable).
+- [x] Scaffold `services/ai-orchestrator` project. ✅ Fastify server with config + logging
+- [x] Define internal API:
+  - [x] `POST /suggest-fixes` – input: issues + HTML context, output: AI suggestions.
+- [x] Implement integration with Gemini or placeholder AI:
+  - [x] Stub provider available for offline dev; Gemini wired via `@google/generative-ai` with structured JSON output.
+- [x] For MVP, support AI for:
+  - [x] Missing alt text – generate short, descriptive alt text.
+  - [x] Vague link text – suggest more descriptive text.
+  - [x] Simple contrast issues – suggest adjusted hex color values.
+- [x] Implement timeout & error handling (fallback gracefully if AI unavailable). ✅ Timeouts + stub fallback
 
 ---
 

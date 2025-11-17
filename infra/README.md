@@ -12,6 +12,7 @@ npm run docker:up:build
 ```
 - Services come up on the ports defined in `.env` (API: 8080, scanner: 4001, AI orchestrator: 4002, marketing site: 4200, dashboard: 4300).
 - Inside the compose network, other services should call the API at `http://api:8080`.
+- The API calls `http://scanner:4001/scan` and `http://ai-orchestrator:4002/suggest-fixes` by default; override `SCANNER_SERVICE_URL` or `AI_ORCHESTRATOR_SERVICE_URL` in `.env` when running the API outside of Compose.
 
 ### Rebuild or stop
 - Rebuild images without cache: `npm run docker:rebuild`

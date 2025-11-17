@@ -29,6 +29,12 @@ public class GlobalExceptionHandler {
                 .body(error("rate_limited", ex.getMessage()));
     }
 
+    @ExceptionHandler(UpstreamServiceException.class)
+    public ResponseEntity<Map<String, Object>> handleUpstream(UpstreamServiceException ex) {
+        return ResponseEntity.status(ex.getStatus())
+                .body(error("upstream_error", ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, Object> body = error("validation_failed", "Request validation failed");

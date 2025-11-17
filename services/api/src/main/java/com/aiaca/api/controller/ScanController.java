@@ -6,6 +6,7 @@ import com.aiaca.api.model.User;
 import com.aiaca.api.security.UserPrincipal;
 import com.aiaca.api.service.ScanService;
 import com.aiaca.api.service.SiteService;
+import com.aiaca.api.service.UrlSanitizer;
 import com.aiaca.api.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,13 @@ public class ScanController {
     private final ScanService scanService;
     private final SiteService siteService;
     private final UserRepository userRepository;
+    private final UrlSanitizer urlSanitizer;
 
-    public ScanController(ScanService scanService, SiteService siteService, UserRepository userRepository) {
+    public ScanController(ScanService scanService, SiteService siteService, UserRepository userRepository, UrlSanitizer urlSanitizer) {
         this.scanService = scanService;
         this.siteService = siteService;
         this.userRepository = userRepository;
+        this.urlSanitizer = urlSanitizer;
     }
 
     @PostMapping("/sites/{siteId}/scans")
@@ -39,7 +42,8 @@ public class ScanController {
                                                           @Valid @RequestBody ScanDtos.CreateScanRequest request) {
         User owner = userRepository.findById(principal.getId()).orElseThrow();
         Site site = siteService.getSite(owner, siteId);
-        var scan = scanService.createScan(site, request);
+        String sanitizedUrl = urlSanitizer.sanitize(request.pageUrl());
+        var scan = scanService.createScan(site, sanitizedUrl);
         return ResponseEntity.ok(scanService.toDetail(scan));
     }
 

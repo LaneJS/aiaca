@@ -60,6 +60,10 @@ Response:
 }
 ```
 
+**Safety controls**
+- URLs are normalized with the shared `sanitizeScanUrl` helper (http/https only, fragments removed) before navigation.
+- `redactAxeResults` strips HTML snippets from axe-core output so sensitive page content is not returned or stored.
+
 ### Issue types covered
 - Missing alt text (`image-alt`, `area-alt`)
 - Contrast (`color-contrast`)

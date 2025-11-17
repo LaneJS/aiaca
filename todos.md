@@ -297,13 +297,13 @@ Use this as a working backlog. Check off as you go.
 
 ## 12. Security, Privacy & Compliance (MVP)
 
-- [ ] Add rate limiting for public scan endpoint.
-- [ ] Ensure URLs are validated/sanitized before scanning.
-- [ ] Avoid storing page contents containing sensitive user input (forms, private dashboards).
-- [ ] Draft basic:
-  - [ ] Privacy Policy (placeholder text)
-  - [ ] Terms of Service (placeholder text)
-- [ ] Add cookie & tracking banner only if necessary (and compliant).
+- [x] Add rate limiting for public scan endpoint. ✅ API enforces 5 req/IP/min configurable via `security.public-scan.rate-limit.*` with integration test.
+- [x] Ensure URLs are validated/sanitized before scanning. ✅ Shared `sanitizeScanUrl` helper used by scanner + API to reject non-http/https and strip fragments.
+- [x] Avoid storing page contents containing sensitive user input (forms, private dashboards). ✅ Scanner redacts axe HTML snippets; policy documented in `docs/security-privacy.md`.
+- [x] Draft basic:
+  - [x] Privacy Policy (placeholder text)
+  - [x] Terms of Service (placeholder text)
+- [x] Add cookie & tracking banner only if necessary (and compliant). ✅ No tracking cookies; decision recorded in `docs/legal/cookie-banner-decision.md`.
 
 ---
 

@@ -5,6 +5,7 @@ import { logger } from './logger';
 import { metricsRegister, scanCounter, scanDuration } from './metrics';
 import { PlaywrightScanner } from './scan/playwright-scanner';
 import type { ScanRequestBody } from './types/scan';
+import { sanitizeScanUrl } from '@aiaca/domain';
 
 const scanner = new PlaywrightScanner();
 
@@ -37,8 +38,17 @@ export const buildServer = () => {
       return { error: 'Invalid payload: "url" is required' };
     }
 
+    let sanitizedUrl: string;
     try {
-      const result = await scanner.scan({ url, htmlSnapshot });
+      sanitizedUrl = sanitizeScanUrl(url);
+    } catch (error) {
+      reply.code(400);
+      timer();
+      return { error: 'Invalid URL', details: (error as Error).message };
+    }
+
+    try {
+      const result = await scanner.scan({ url: sanitizedUrl, htmlSnapshot });
       scanCounter.inc();
       timer();
       return {

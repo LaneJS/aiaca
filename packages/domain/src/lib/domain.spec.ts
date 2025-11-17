@@ -10,6 +10,7 @@ import {
   ScanDetail,
   SiteResponse,
 } from './domain';
+import { sanitizeScanUrl } from './url-validator';
 
 describe('domain validation helpers', () => {
   it('validates a site payload', () => {
@@ -39,6 +40,18 @@ describe('domain validation helpers', () => {
     expect(ScanStatus.COMPLETED).toBe('COMPLETED');
     expect(IssueSeverity.SERIOUS).toBe('SERIOUS');
     expect(IssueStatus.OPEN).toBe('OPEN');
+  });
+});
+
+describe('sanitizeScanUrl', () => {
+  it('normalizes and strips fragments', () => {
+    const result = sanitizeScanUrl(' https://Example.com/path#section ');
+
+    expect(result).toBe('https://example.com/path');
+  });
+
+  it('rejects unsupported protocols', () => {
+    expect(() => sanitizeScanUrl('ftp://example.com')).toThrow('http or https');
   });
 });
 

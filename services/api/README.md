@@ -55,7 +55,8 @@ Successful auth responses:
 ### Public Scan (unauthenticated)
 - `POST /api/v1/public/scans` – body `{ "url": "https://example.com" }`
   - Returns limited issues and score.
-  - Rate limited in-memory to 5 requests/minute per IP.
+  - Rate limited in-memory to 5 requests/minute per IP (override with `security.public-scan.rate-limit.max-requests` and `security.public-scan.rate-limit.window-ms`).
+  - URLs are normalized to http/https and have fragments removed before scans run.
 
 ### Embed Config
 - `GET /api/v1/sites/{id}/embed-config`

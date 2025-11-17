@@ -256,6 +256,7 @@ This document defines **agents** (human or AI) that collaborate on the monorepo,
   - Build & deploy to staging/production.
 - Set up logging, metrics, basic alerting.
 - Manage secrets and environment configuration.
+- Own shared security/privacy controls documented in `docs/security-privacy.md` (rate limits, URL validation, redaction). Update services when these baselines change.
 
 **Inputs:** Service definitions.  
 **Outputs:** Reproducible deployments & observability.

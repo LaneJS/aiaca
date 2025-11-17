@@ -31,7 +31,7 @@ public class ScanService {
         this.scanTimer = meterRegistry.timer("api_scan_duration_seconds");
     }
 
-    public Scan createScan(Site site, ScanDtos.CreateScanRequest request) {
+    public Scan createScan(Site site, String sanitizedUrl) {
         Timer.Sample sample = Timer.start();
         Scan scan = new Scan();
         scan.setSite(site);

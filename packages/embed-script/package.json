@@ -3,9 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "main": "./dist/autofix.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "npm run bundle",
+    "bundle": "node ./scripts/build.cjs",
+    "test": "npx nx test embed-script"
+  },
   "dependencies": {
     "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
   }
 }

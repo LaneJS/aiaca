@@ -1,0 +1,46 @@
+.resources {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.guides {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.guides article {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.note {
+  color: #475569;
+}
+
+.faq {
+  margin-top: 2rem;
+}
+
+dl div {
+  margin-bottom: 1rem;
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+
+dt {
+  font-weight: 700;
+}
+
+dd {
+  margin: 0.5rem 0 0;
+}
+
+.cta {
+  margin-top: 2rem;
+}

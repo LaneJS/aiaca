@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+type EnvRecord = Record<string, string | undefined>;
+
+// Declare a minimal process shape so browser builds can compile without Node typings
+declare const process: { env?: EnvRecord } | undefined;
+
 export const booleanString = z
   .string()
   .optional()
@@ -10,7 +15,7 @@ export const orchestratorEnvSchema = z.object({
     .string()
     .default('4002')
     .transform((value) => Number.parseInt(value, 10)),
-  AI_ORCHESTRATOR_USE_STUB: booleanString.default(false),
+  AI_ORCHESTRATOR_USE_STUB: booleanString.default('false'),
   AI_ORCHESTRATOR_MAX_ISSUES: z
     .string()
     .default('5')
@@ -30,7 +35,7 @@ export const orchestratorEnvSchema = z.object({
 
 export type OrchestratorEnv = z.infer<typeof orchestratorEnvSchema>;
 
-export function loadEnv<TSchema extends z.ZodTypeAny>(schema: TSchema, env = process.env): z.infer<TSchema> {
+export function loadEnv<TSchema extends z.ZodTypeAny>(schema: TSchema, env = process?.env): z.infer<TSchema> {
   const parsed = schema.safeParse(env);
 
   if (!parsed.success) {
@@ -39,4 +44,26 @@ export function loadEnv<TSchema extends z.ZodTypeAny>(schema: TSchema, env = pro
   }
 
   return parsed.data;
+}
+
+export function getApiBaseUrl(env?: Record<string, string | undefined>): string {
+  const sourceEnv = env ?? (typeof process !== 'undefined' ? (process.env as Record<string, string | undefined>) : undefined);
+
+  const fromEnv =
+    sourceEnv?.['AACA_API_BASE_URL'] || sourceEnv?.['NX_PUBLIC_API_BASE_URL'] || sourceEnv?.['PUBLIC_API_BASE_URL'];
+
+  if (fromEnv) {
+    return normalizeBaseUrl(fromEnv);
+  }
+
+  const globalBase = (globalThis as Record<string, unknown>)['__AACA_API_BASE_URL__'];
+  if (typeof globalBase === 'string' && globalBase.length > 0) {
+    return normalizeBaseUrl(globalBase);
+  }
+
+  return 'http://localhost:4000/api/v1';
+}
+
+function normalizeBaseUrl(url: string): string {
+  return url.endsWith('/') ? url.slice(0, -1) : url;
 }

@@ -1,0 +1,79 @@
+.site-footer {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 3rem 1.25rem 2rem;
+  margin-top: 4rem;
+}
+
+.shell {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  display: grid;
+  gap: 2rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #1d4ed8;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.title {
+  font-weight: 700;
+  margin: 0;
+}
+
+.tagline {
+  margin: 0;
+  color: #cbd5e1;
+}
+
+.footer-links {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+h3 {
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+a {
+  color: #e2e8f0;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  color: #bfdbfe;
+}
+
+.copy {
+  margin: 0.25rem 0;
+}
+
+.meta {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 1rem;
+  text-align: center;
+  color: #cbd5e1;
+}

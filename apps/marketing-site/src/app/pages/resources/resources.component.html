@@ -1,0 +1,27 @@
+<section class="resources" aria-labelledby="resources-page-heading">
+  <p class="eyebrow">Education</p>
+  <h1 id="resources-page-heading">Resources to keep accessibility simple</h1>
+  <p class="lead">Plain-language explanations, FAQs, and short guides that pair with the product.</p>
+
+  <div class="guides" aria-label="Guides coming soon">
+    <article *ngFor="let guide of guides">
+      <h2>{{ guide.title }}</h2>
+      <p>{{ guide.summary }}</p>
+      <p class="note">Guide content is in progress. Request early access and we will share drafts.</p>
+    </article>
+  </div>
+
+  <div class="faq" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">Frequently asked questions</h2>
+    <dl>
+      <div *ngFor="let item of faqs">
+        <dt>{{ item.question }}</dt>
+        <dd>{{ item.answer }}</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="cta">
+    <ui-cta-button routerLink="/scan" label="Start with a free scan" variant="primary"></ui-cta-button>
+  </div>
+</section>

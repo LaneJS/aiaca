@@ -1,0 +1,22 @@
+<section class="page" aria-labelledby="how-page-heading">
+  <p class="eyebrow">Process</p>
+  <h1 id="how-page-heading">How AACA keeps your site accessible</h1>
+  <p class="lead">
+    We combine automated testing, AI-powered suggestions, and an optional auto-fix script to reduce WCAG violations fast.
+  </p>
+
+  <div class="step-grid" role="list">
+    <article *ngFor="let step of steps" role="listitem">
+      <h2>{{ step.title }}</h2>
+      <p>{{ step.body }}</p>
+    </article>
+  </div>
+
+  <div class="callout" aria-label="Accessibility commitments">
+    <h2>Accessibility promises baked into the product</h2>
+    <ul>
+      <li *ngFor="let promise of commitments">{{ promise }}</li>
+    </ul>
+    <ui-cta-button routerLink="/scan" label="Try the free scan" variant="primary"></ui-cta-button>
+  </div>
+</section>

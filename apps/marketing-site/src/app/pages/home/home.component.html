@@ -1,0 +1,121 @@
+<section class="hero">
+  <div class="hero__content">
+    <p class="eyebrow">Accessibility-first marketing site</p>
+    <h1>AI-powered accessibility compliance for small websites.</h1>
+    <p class="lead">
+      Run a free accessibility scan, see the top issues blocking compliance, and ship fixes faster with clear guidance.
+    </p>
+    <div class="hero__actions">
+      <ui-cta-button routerLink="/scan" variant="primary" label="Run a free accessibility scan"></ui-cta-button>
+      <ui-cta-button routerLink="/how-it-works" variant="secondary" label="See how it works"></ui-cta-button>
+    </div>
+    <p class="supporting">
+      Built for small teams that need WCAG wins without hiring a full accessibility specialist.
+    </p>
+  </div>
+  <div class="hero__panel" aria-label="Product highlights">
+    <ul>
+      <li>
+        <p class="metric">95</p>
+        <p class="label">Average accessibility score after one guided sprint.</p>
+      </li>
+      <li>
+        <p class="metric">3 steps</p>
+        <p class="label">Scan → Fix → Stay compliant with simple guardrails.</p>
+      </li>
+      <li>
+        <p class="metric"><span aria-hidden="true">⚡</span> Minutes</p>
+        <p class="label">From scan to prioritized fixes with AI help.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="problem" aria-labelledby="problem-heading">
+  <div class="section-header">
+    <p class="eyebrow">Why now</p>
+    <h2 id="problem-heading">Accessibility is a legal, moral, and business must-have.</h2>
+    <p class="lead">
+      Avoid demand letters, welcome every visitor, and stay ahead of search ranking changes that reward usable websites.
+    </p>
+  </div>
+  <div class="problem__grid">
+    <article>
+      <h3>Reduce risk</h3>
+      <p>Mitigate ADA and WCAG non-compliance issues before they become costly legal notices.</p>
+    </article>
+    <article>
+      <h3>Serve everyone</h3>
+      <p>Deliver inclusive experiences with clear headings, alternative text, and keyboard-friendly flows.</p>
+    </article>
+    <article>
+      <h3>Grow with confidence</h3>
+      <p>Accessible sites keep customers engaged longer and help you win SEO-conscious buyers.</p>
+    </article>
+  </div>
+</section>
+
+<section class="how" aria-labelledby="how-heading">
+  <div class="section-header">
+    <p class="eyebrow">How it works</p>
+    <h2 id="how-heading">Three guided steps to compliance</h2>
+    <p class="lead">We bundle automation, AI suggestions, and a lightweight auto-fix script.</p>
+  </div>
+  <div class="steps" role="list">
+    <div class="step" *ngFor="let step of steps" role="listitem">
+      <p class="step__badge">{{ step.title }}</p>
+      <p class="step__copy">{{ step.description }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="features" aria-labelledby="features-heading">
+  <div class="section-header">
+    <p class="eyebrow">What you get</p>
+    <h2 id="features-heading">Built-in accessibility expertise</h2>
+    <p class="lead">Everything you need to identify, explain, and fix WCAG issues without extra vendors.</p>
+  </div>
+  <div class="feature-grid">
+    <article *ngFor="let feature of features">
+      <h3>{{ feature.title }}</h3>
+      <p>{{ feature.copy }}</p>
+    </article>
+  </div>
+</section>
+
+<section class="pricing-preview" aria-labelledby="pricing-heading">
+  <div class="section-header">
+    <p class="eyebrow">Pricing</p>
+    <h2 id="pricing-heading">Start free, upgrade when you need more coverage.</h2>
+    <p class="lead">The free scan includes your top issues. Paid plans start at $39/month for ongoing monitoring.</p>
+  </div>
+  <div class="pricing-card">
+    <div>
+      <p class="eyebrow">Free scan</p>
+      <p class="price">$0</p>
+      <p>Top issues for one URL, with AI-backed explanations.</p>
+    </div>
+    <div class="divider" aria-hidden="true"></div>
+    <div>
+      <p class="eyebrow">Starter</p>
+      <p class="price">From $39/mo</p>
+      <p>Full reports, unlimited URLs, monitoring, and the optional auto-fix script.</p>
+    </div>
+    <div class="actions">
+      <ui-cta-button routerLink="/pricing" label="View pricing" variant="primary"></ui-cta-button>
+      <ui-cta-button routerLink="/scan" label="Run a free scan" variant="secondary"></ui-cta-button>
+    </div>
+  </div>
+</section>
+
+<section class="social-proof" aria-labelledby="social-proof-heading">
+  <div class="section-header">
+    <p class="eyebrow">Trusted results</p>
+    <h2 id="social-proof-heading">Social proof coming soon</h2>
+    <p class="lead">Testimonials and case studies are in progress. Request access to our pilot cohort.</p>
+  </div>
+  <div class="placeholder">
+    <p>Placeholder for testimonials, case studies, and partner logos.</p>
+    <ui-cta-button routerLink="/scan" label="Join the pilot" variant="primary"></ui-cta-button>
+  </div>
+</section>

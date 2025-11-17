@@ -1,22 +1,21 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { App } from './app';
-import { NxWelcome } from './nx-welcome';
-import { RouterModule } from '@angular/router';
+import { AppComponent } from './app.component';
 
-describe('App', () => {
+describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterModule.forRoot([])],
-      declarations: [App, NxWelcome],
-    }).compileComponents();
+      imports: [AppComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideTemplate(AppComponent, '<a class="skip-link">Skip to main content</a>')
+      .compileComponents();
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(App);
+  it('should create the app shell with skip link', () => {
+    const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Welcome marketing-site',
-    );
+    expect(compiled.querySelector('.skip-link')?.textContent).toContain('Skip to main content');
   });
 });

@@ -31,3 +31,25 @@ npm run docker:up:build
 - **Gradle download slowness:** The API image uses the official Gradle image; ensure network access or prewarm caches if builds are slow.
 - **Node memory spikes during Angular builds:** Increase Docker memory or set `NODE_OPTIONS=--max-old-space-size=4096` in your environment before starting the stack.
 - **Frontends cannot reach the API:** Confirm `API_INTERNAL_URL`/`PUBLIC_API_BASE_URL` in `.env` point to `http://api:8080` (internal) and `http://localhost:8080` (host) respectively.
+
+## Observability (Section 11)
+- **Structured logging**
+  - API emits JSON logs via Logstash encoder (fields include `service`, `correlationId`, `requestPath`).
+  - Scanner and AI orchestrator use Pino JSON with `service` + `correlationId` derived from the `X-Request-Id` header (auto-generated if missing).
+  - Tail all containers: `npm run docker:logs` (or `docker compose logs -f api scanner ai-orchestrator`).
+
+- **Health endpoints** (exposed on main service ports for local uptime monitors / compose healthchecks):
+  - API: `http://localhost:${API_PORT:-8080}/health`
+  - Scanner: `http://localhost:${SCANNER_PORT:-4001}/health`
+  - AI orchestrator: `http://localhost:${AI_ORCHESTRATOR_PORT:-4002}/health`
+
+- **Metrics**
+  - API (Micrometer/Prometheus): `http://localhost:${API_PORT:-8080}/prometheus` (includes scan counters and timers).
+  - Scanner (prom-client): `http://localhost:${SCANNER_PORT:-4001}/metrics` (scan totals + duration histogram).
+  - AI orchestrator (prom-client): `http://localhost:${AI_ORCHESTRATOR_PORT:-4002}/metrics` (AI suggestion counts + issue distribution).
+  - Compose exposes these on the same service ports; point Prometheus/Grafana at the host URLs above or the in-network names `api:8080/prometheus`, `scanner:4001/metrics`, `ai-orchestrator:4002/metrics`.
+
+- **Quick checks**
+  - `curl -s http://localhost:8080/health` → Spring Boot health JSON.
+  - `curl -s http://localhost:4001/metrics | head` to verify scanner metrics scrape.
+  - `curl -s http://localhost:4002/metrics | head` to verify AI orchestrator metrics.

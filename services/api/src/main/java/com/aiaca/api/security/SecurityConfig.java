@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/api/v1/public/**", "/actuator/health", "/h2-console/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/api/v1/public/**", "/health", "/metrics", "/prometheus", "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/sites/*/embed-config").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())

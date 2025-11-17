@@ -63,6 +63,6 @@ Services are reachable on the host using the ports defined in `.env.sample` (API
 ## Notes
 - If you add new projects, prefer Nx generators to keep configuration consistent.
 - Any deviations from this setup should be documented here for future contributors.
-- To keep binaries out of the repo, the Spring Boot Gradle wrapper JAR is ignored; rehydrate it locally with `gradle wrapper --gradle-version 8.7` inside `services/api` before running Nx Gradle tasks.
+- To keep binaries out of the repo, the Spring Boot Gradle wrapper JAR is ignored. Use the provided wrapper script (`./gradlew`) for any API tasks (e.g., `./gradlew wrapper --gradle-version 8.7`) so the build always runs on Gradle 8.x. If you truly need to regenerate the wrapper JAR from scratch, install Gradle 8.7+ first—older global installs trigger `TaskContainer.named(...)` errors when evaluating the Spring Boot build.
 - Use text-based assets (SVG over ICO/PNG) where possible; `.ico` files in app public folders are ignored to avoid binary commits.
 - Run `npm run check:binaries` to fail fast if any binary-like tracked files slip through; the script flags common binary extensions and files containing null bytes.

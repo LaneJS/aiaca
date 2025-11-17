@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM eclipse-temurin:17-jdk-alpine AS builder
+FROM eclipse-temurin:21-jdk-alpine AS builder
 # Build inside the service directory so Gradle resolves settings.gradle correctly
 WORKDIR /workspace/services/api
 
@@ -12,7 +12,7 @@ RUN chmod +x gradlew
 COPY src ./src
 RUN ./gradlew --no-daemon bootJar -x test
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=builder /workspace/services/api/build/libs/*.jar /app/app.jar
 ENV JAVA_OPTS=""

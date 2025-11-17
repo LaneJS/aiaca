@@ -21,7 +21,7 @@ Spring Boot backend for the AACA platform. Endpoints are versioned under `/api/v
 - Build the service: `npx nx build api`
 - Run tests (H2 + mocked services): `npx nx test api` or `./gradlew test`
 - Launch the app locally (defaults to H2): `npx nx serve api`
-- If the Gradle wrapper JAR is missing (binary files are ignored), regenerate it with a locally installed Gradle: `gradle wrapper --gradle-version 8.7`.
+- Use the repo wrapper script (`./gradlew …`) for all commands so you pick up the pinned Gradle version (8.x). If `gradle/wrapper/gradle-wrapper.jar` is somehow absent, install Gradle 8.7+ and run `gradle wrapper --gradle-version 8.7` once to rehydrate it—older system Gradle versions will fail with `TaskContainer.named(...)` errors during configuration.
 
 Configure Postgres access by exporting the `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, and related vars plus `SPRING_FLYWAY_ENABLED=true` before starting the app.
 

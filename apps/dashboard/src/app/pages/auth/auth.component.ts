@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
@@ -6,23 +6,22 @@ import { ToastService } from '../../core/toast.service';
 
 @Component({
   selector: 'app-auth',
+  standalone: false,
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
+  private readonly fb = inject(FormBuilder);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly toasts = inject(ToastService);
+
   mode: 'login' | 'signup' = 'login';
   form = this.fb.nonNullable.group({
     name: ['', []],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
-
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly auth: AuthService,
-    private readonly router: Router,
-    private readonly toasts: ToastService
-  ) {}
 
   submit() {
     if (this.form.invalid) return;

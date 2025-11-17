@@ -6,6 +6,7 @@ import { issueTypeCopy, severityCopy } from './copy';
 
 @Component({
   selector: 'app-scan-detail',
+  standalone: false,
   templateUrl: './scan-detail.component.html',
   styleUrl: './scan-detail.component.scss',
 })

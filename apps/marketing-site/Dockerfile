@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /workspace
 COPY package*.json nx.json tsconfig.base.json .
 COPY apps ./apps

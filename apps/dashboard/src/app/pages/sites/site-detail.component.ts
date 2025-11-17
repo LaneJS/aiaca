@@ -5,6 +5,7 @@ import { ScanSummary, SiteSummary } from '../../core/models';
 
 @Component({
   selector: 'app-site-detail',
+  standalone: false,
   templateUrl: './site-detail.component.html',
   styleUrl: './site-detail.component.scss',
 })

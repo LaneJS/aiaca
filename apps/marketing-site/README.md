@@ -22,6 +22,10 @@ This Angular app powers the public marketing experience for AACA, including the 
 - `/resources` contains FAQs and guides placeholders.
 - `/scan` provides the free scan form and results preview.
 
+### Content references
+- Resource FAQs and guide summaries live in `src/app/pages/resources/resources.component.ts|html|scss`.
+- Full Markdown guides for handoffs and support sit in `docs/guides/` and mirror the resource page summaries.
+
 ## API configuration
 The scan form posts to `POST /api/v1/public/scans` using a base URL resolved by `getApiBaseUrl` from `@aiaca/config`. Override via `AACA_API_BASE_URL`, `NX_PUBLIC_API_BASE_URL`, `PUBLIC_API_BASE_URL`, or by setting `window.__AACA_API_BASE_URL__`.
 

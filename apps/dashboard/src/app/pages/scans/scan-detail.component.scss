@@ -31,6 +31,41 @@
   gap: 0.75rem;
 }
 
+.helper-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.helper-grid section {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.helper-grid h2 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.helper-grid dl,
+.helper-grid ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.helper-grid dt {
+  font-weight: 700;
+}
+
+.helper-grid dd {
+  margin: 0 0 0.65rem 0;
+  color: #cbd5e1;
+}
+
 .issues li {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;

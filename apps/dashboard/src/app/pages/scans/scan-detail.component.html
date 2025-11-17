@@ -11,6 +11,27 @@
     <button type="button" [class.active]="filter === 'open'" (click)="filter = 'open'">Open</button>
     <button type="button" [class.active]="filter === 'fixed'" (click)="filter = 'fixed'">Fixed</button>
   </div>
+  <div class="helper-grid" aria-label="Issue guidance" id="issue-guidance">
+    <section aria-label="Severity definitions">
+      <h2>Severity levels</h2>
+      <dl>
+        <div *ngFor="let level of severityOrder">
+          <dt>{{ severityCopy[level].label }}</dt>
+          <dd>{{ severityCopy[level].description }}</dd>
+        </div>
+      </dl>
+    </section>
+    <section aria-label="Common issue types">
+      <h2 id="issue-types">Common issue types</h2>
+      <ul>
+        <li *ngFor="let type of issueTypeCopy">
+          <p class="title">{{ type.label }}</p>
+          <p class="hint">{{ type.description }}</p>
+        </li>
+      </ul>
+      <p class="hint">Need a refresher? See the marketing site guide “How to read your accessibility report.”</p>
+    </section>
+  </div>
   <ul class="issues">
     <li *ngFor="let issue of issues()">
       <div>

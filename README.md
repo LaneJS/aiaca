@@ -50,6 +50,11 @@ Services are reachable on the host using the ports defined in `.env.sample` (API
 - Linting: ESLint via Nx targets.
 - Testing: Jest for TS/JS projects, Spring Boot defaults for the API.
 
+### Content & docs
+- User-facing copy for the marketing site lives in `apps/marketing-site/src/app/pages/**`, with FAQs and guide summaries in the `resources` page.
+- Dashboard helper copy (severity levels, common issues) is centralized in `apps/dashboard/src/app/pages/scans/copy.ts`.
+- Long-form guidance and the content style guide live under `docs/`, including `docs/guides/accessibility-report.md` and `docs/guides/embed-script.md`.
+
 ## Notes
 - If you add new projects, prefer Nx generators to keep configuration consistent.
 - Any deviations from this setup should be documented here for future contributors.

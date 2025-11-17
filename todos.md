@@ -266,16 +266,17 @@ Use this as a working backlog. Check off as you go.
 
 ## 10. Content & Education (MVP Scope)
 
-- [ ] Create FAQ section on marketing site:
-  - [ ] “What is web accessibility?”
-  - [ ] “Does this guarantee I’ll never be sued?”
-  - [ ] “How does the AI auto-fix script work?”
-- [ ] Write simple guides:
-  - [ ] “How to read your accessibility report.”
-  - [ ] “How to add the embed script to your site.”
-- [ ] Add tooltips or info icons in the dashboard explaining:
-  - [ ] Severity levels
-  - [ ] Common issue types.
+- [x] Create FAQ section on marketing site:
+  - [x] “What is web accessibility?”
+  - [x] “Does this guarantee I’ll never be sued?”
+  - [x] “How does the AI auto-fix script work?”
+- [x] Write simple guides:
+  - [x] “How to read your accessibility report.”
+  - [x] “How to add the embed script to your site.”
+- [x] Add tooltips or info icons in the dashboard explaining:
+  - [x] Severity levels
+  - [x] Common issue types.
+  - Notes: FAQ and guides now live on the marketing resources page with anchors; full Markdown guides are in `docs/guides/`. Dashboard scan detail includes inline severity and issue-type help sourced from `copy.ts`.
 
 ---
 

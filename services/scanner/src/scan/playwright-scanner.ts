@@ -4,6 +4,7 @@ import { logger } from '../logger';
 import { scannerConfig } from '../config';
 import { axeRulesCovered, normalizeAxeResults } from './axe-normalizer';
 import type { ScanRequestBody, ScanResult } from '../types/scan';
+import { redactAxeResults } from './redaction';
 
 interface PlaywrightScannerOptions {
   timeoutMs?: number;
@@ -54,11 +55,13 @@ export class PlaywrightScanner {
         axeRulesCovered,
       );
 
+      const redactedResults = redactAxeResults(axeResults);
+
       const durationMs = Math.round(performance.now() - start);
       return {
         url: body.url,
-        issues: normalizeAxeResults(axeResults),
-        rawAxe: { ...axeResults, durationMs },
+        issues: normalizeAxeResults(redactedResults),
+        rawAxe: { ...redactedResults, durationMs },
       };
     } finally {
       await browser.close();

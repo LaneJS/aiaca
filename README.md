@@ -50,6 +50,11 @@ Services are reachable on the host using the ports defined in `.env.sample` (API
 - Linting: ESLint via Nx targets.
 - Testing: Jest for TS/JS projects, Spring Boot defaults for the API.
 
+### Security, privacy, and compliance
+- Public scans are rate limited by default to **5 requests/IP/minute** (configurable via `security.public-scan.rate-limit.*`).
+- URLs are validated with a shared helper before any scan executes; non-http/https URLs are rejected and fragments removed.
+- Scanner output is redacted to drop HTML snippets to avoid storing sensitive content. Retention notes and legal placeholders live in `docs/security-privacy.md` and `docs/legal/`.
+
 ### Content & docs
 - User-facing copy for the marketing site lives in `apps/marketing-site/src/app/pages/**`, with FAQs and guide summaries in the `resources` page.
 - Dashboard helper copy (severity levels, common issues) is centralized in `apps/dashboard/src/app/pages/scans/copy.ts`.

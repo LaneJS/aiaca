@@ -4,6 +4,7 @@ import com.aiaca.api.dto.PublicScanDtos;
 import com.aiaca.api.dto.ScanDtos;
 import com.aiaca.api.service.RateLimiter;
 import com.aiaca.api.service.ScanService;
+import com.aiaca.api.service.UrlSanitizer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class PublicScanController {
     private final ScanService scanService;
     private final RateLimiter rateLimiter;
+    private final UrlSanitizer urlSanitizer;
 
-    public PublicScanController(ScanService scanService, RateLimiter rateLimiter) {
+    public PublicScanController(ScanService scanService, RateLimiter rateLimiter, UrlSanitizer urlSanitizer) {
         this.scanService = scanService;
         this.rateLimiter = rateLimiter;
+        this.urlSanitizer = urlSanitizer;
     }
 
     @PostMapping("/scans")
@@ -28,11 +31,12 @@ public class PublicScanController {
                                                                               HttpServletRequest httpRequest) {
         String key = httpRequest.getRemoteAddr();
         rateLimiter.assertWithinLimit(key);
-        ScanDtos.ScanDetail result = scanService.createPublicScan(request.url());
+        String sanitizedUrl = urlSanitizer.sanitize(request.url());
+        ScanDtos.ScanDetail result = scanService.createPublicScan(sanitizedUrl);
         var issues = result.issues().stream()
                 .map(issue -> new PublicScanDtos.PublicIssue(issue.type(), issue.severity(), issue.description(), issue.selector()))
                 .toList();
-        PublicScanDtos.PublicScanResponse response = new PublicScanDtos.PublicScanResponse(request.url(), result.score(), issues);
+        PublicScanDtos.PublicScanResponse response = new PublicScanDtos.PublicScanResponse(sanitizedUrl, result.score(), issues);
         return ResponseEntity.ok(response);
     }
 }

@@ -1,4 +1,4 @@
-import { AiSuggestFixRequest, AiSuggestFixResponse } from '@aiaca/domain';
+import { AiIssueContext, AiSuggestFixRequest, AiSuggestFixResponse } from '@aiaca/domain';
 import { logger } from './logger';
 import { validateProviderResponse } from '../prompt/response-validator';
 import { SuggestionProvider } from '../providers/types';
@@ -33,9 +33,15 @@ export class SuggestionService {
   constructor(private readonly options: SuggestionServiceOptions) {}
 
   async suggest(request: AiSuggestFixRequest): Promise<AiSuggestFixResponse> {
+    const limitedIssues = request.issues.slice(0, Math.max(1, this.options.maxIssues));
+
+    if (limitedIssues.length === 0) {
+      throw new Error('At least one issue is required for suggestion generation');
+    }
+
     const limitedRequest: AiSuggestFixRequest = {
       ...request,
-      issues: request.issues.slice(0, this.options.maxIssues),
+      issues: limitedIssues as [AiIssueContext, ...AiIssueContext[]],
     };
 
     this.guardTenantBudget(limitedRequest);

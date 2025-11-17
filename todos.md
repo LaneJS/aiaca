@@ -142,16 +142,16 @@ Use this as a working backlog. Check off as you go.
 
 ## 7. Embed Script – MVP
 
-- [ ] Create `packages/embed-script` as a standalone JS bundle.
-- [ ] Implement configuration:
-  - [ ] Read `data-site-id` or similar attribute from `<script>` tag.
-  - [ ] Fetch embed config from `services/api`.
-- [ ] Implement minimal auto-fix features:
-  - [ ] Inject missing `alt` attributes based on AI suggestions.
-  - [ ] Inject “Skip to main content” link if not present.
-  - [ ] Ensure focus outlines are visible (CSS patch).
-- [ ] Provide a simple build pipeline (rollup/webpack/esbuild).
-- [ ] Add documentation snippet for users to copy-paste.
+- [x] Create `packages/embed-script` as a standalone JS bundle.
+- [x] Implement configuration:
+  - [x] Read `data-site-id` or similar attribute from `<script>` tag.
+  - [x] Fetch embed config from `services/api`.
+- [x] Implement minimal auto-fix features:
+  - [x] Inject missing `alt` attributes based on AI suggestions.
+  - [x] Inject “Skip to main content” link if not present.
+  - [x] Ensure focus outlines are visible (CSS patch).
+- [x] Provide a simple build pipeline (rollup/webpack/esbuild).
+- [x] Add documentation snippet for users to copy-paste.
 
 ---
 

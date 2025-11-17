@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AACA Embed Script Demo</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      header {
+        background: #0ea5e9;
+        color: #0b172a;
+        padding: 16px;
+      }
+      nav a {
+        margin-right: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <script
+      src="../dist/autofix.js"
+      data-site-id="demo-site"
+      data-api-base="/api/v1"
+    ></script>
+    <header>
+      <h1>Demo page without accessibility fixes</h1>
+      <nav>
+        <a href="#section1">Section 1</a>
+        <a href="#section2">Section 2</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section id="section1">
+        <h2>Images missing alt text</h2>
+        <img src="https://placekitten.com/200/200" />
+        <img src="https://placekitten.com/200/201" />
+      </section>
+      <section id="section2">
+        <h2>Keyboard focus</h2>
+        <button type="button">Focusable button</button>
+        <a href="#">Focusable link</a>
+      </section>
+    </main>
+  </body>
+</html>

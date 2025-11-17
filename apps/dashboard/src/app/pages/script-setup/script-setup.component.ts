@@ -4,6 +4,7 @@ import { SiteSummary } from '../../core/models';
 
 @Component({
   selector: 'app-script-setup',
+  standalone: false,
   templateUrl: './script-setup.component.html',
   styleUrl: './script-setup.component.scss',
 })

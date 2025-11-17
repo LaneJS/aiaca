@@ -5,6 +5,7 @@ import { SiteSummary } from '../../core/models';
 
 @Component({
   selector: 'app-sites',
+  standalone: false,
   templateUrl: './sites.component.html',
   styleUrl: './sites.component.scss',
 })

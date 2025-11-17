@@ -5,6 +5,7 @@ import { ScanSummary, SiteSummary } from '../../core/models';
 
 @Component({
   selector: 'app-scans',
+  standalone: false,
   templateUrl: './scans.component.html',
   styleUrl: './scans.component.scss',
 })

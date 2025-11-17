@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /workspace
 COPY package.json package-lock.json nx.json tsconfig.base.json ./
 RUN npm ci
@@ -9,13 +9,13 @@ COPY services ./services
 COPY packages ./packages
 COPY tools ./tools
 RUN npx nx build scanner --configuration=production
-RUN npx nx run scanner:copy-workspace-modules --configuration=production
-RUN npx nx run scanner:prune-lockfile --configuration=production
+WORKDIR /workspace/dist/services/scanner
+RUN npm install --package-lock-only
+WORKDIR /workspace
 
-FROM node:20-alpine
+FROM node:24-alpine
 WORKDIR /app
 ENV NODE_ENV=production
-ENV NODE_PATH="/app/node_modules:/app/workspace_modules"
 COPY --from=builder /workspace/dist/services/scanner ./
 RUN npm ci --omit=dev --ignore-scripts
 EXPOSE 4001

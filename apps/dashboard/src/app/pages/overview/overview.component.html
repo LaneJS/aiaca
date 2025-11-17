@@ -52,7 +52,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let scan of scans()">
-          <td>{{ sites().find((s) => s.id === scan.siteId)?.name || 'Unknown' }}</td>
+          <td>{{ getSiteName(scan.siteId) }}</td>
           <td><span class="pill">{{ scan.score }}</span></td>
           <td>{{ scan.issueCount }}</td>
           <td>{{ scan.createdAt | date: 'short' }}</td>

@@ -5,6 +5,7 @@ import { ToastService } from '../../core/toast.service';
 
 @Component({
   selector: 'app-overview',
+  standalone: false,
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
 })
@@ -57,5 +58,9 @@ export class OverviewComponent implements OnInit {
       this.toasts.push('Scan queued', 'success');
       this.api.listScans(siteId).subscribe((scans) => this.scans.set([...this.scans(), ...scans]));
     });
+  }
+
+  getSiteName(siteId: string): string {
+    return this.sites().find((s) => s.id === siteId)?.name || 'Unknown';
   }
 }

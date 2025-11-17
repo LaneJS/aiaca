@@ -325,3 +325,13 @@ Use this as a working backlog. Check off as you go.
 - [x] Add a minimal contact/support channel (support email, form, or chat widget).
 
 ---
+
+## 14. Service Integration (API ↔ Scanner ↔ AI Orchestrator)
+
+- [x] Add HTTP clients in `services/api` for scanner `/scan` and AI orchestrator `/suggest-fixes`.
+- [x] Replace stubbed scan creation with real scanner + AI orchestrator calls and persist data.
+- [x] Add service URL + timeout configuration to application properties and `.env.sample`.
+- [x] Document integration architecture and compose networking defaults.
+- [ ] Add further hardening (circuit breakers, retries) for production traffic.
+
+---

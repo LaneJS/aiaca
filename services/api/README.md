@@ -25,6 +25,15 @@ Spring Boot backend for the AACA platform. Endpoints are versioned under `/api/v
 
 Configure Postgres access by exporting the `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, and related vars plus `SPRING_FLYWAY_ENABLED=true` before starting the app.
 
+### Service integration
+
+The API calls downstream services via `WebClient` with correlation IDs propagated in the `X-Request-Id` header:
+
+- **Scanner** – `POST ${SCANNER_SERVICE_URL:/scan}`. Defaults to `http://scanner:4001/scan` in Docker and `http://localhost:4001/scan` for local runs.
+- **AI orchestrator** – `POST ${AI_ORCHESTRATOR_SERVICE_URL:/suggest-fixes}`. Defaults to `http://ai-orchestrator:4002/suggest-fixes`.
+- **Timeouts** – configurable via `EXTERNAL_HTTP_TIMEOUT_MS` (default 8000ms).
+- **Stub mode** – set `AI_ORCHESTRATOR_USE_STUB=true` to force suggestions from the orchestrator stub provider while exercising real scanner responses.
+
 ## Endpoints
 
 ### Auth
@@ -48,13 +57,13 @@ Successful auth responses:
 - `GET /api/v1/sites/{id}` – site details including embed key.
 
 ### Scans (authenticated)
-- `POST /api/v1/sites/{id}/scans` – body `{ "pageUrl": "https://site/page" }` queues a scan and returns a stubbed completed result for MVP.
+- `POST /api/v1/sites/{id}/scans` – body `{ "pageUrl": "https://site/page" }` triggers a real scan via `services/scanner` and persists results + AI suggestions.
 - `GET /api/v1/sites/{id}/scans` – list scan summaries.
-- `GET /api/v1/scans/{id}` – scan detail with issues and AI suggestion placeholders.
+- `GET /api/v1/scans/{id}` – scan detail with issues and AI suggestions (first suggestion surfaced per issue in the API DTO).
 
 ### Public Scan (unauthenticated)
 - `POST /api/v1/public/scans` – body `{ "url": "https://example.com" }`
-  - Returns limited issues and score.
+  - Returns limited issues and score, populated directly from the scanner service.
   - Rate limited in-memory to 5 requests/minute per IP (override with `security.public-scan.rate-limit.max-requests` and `security.public-scan.rate-limit.window-ms`).
   - URLs are normalized to http/https and have fragments removed before scans run.
 

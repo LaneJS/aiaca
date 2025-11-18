@@ -184,8 +184,9 @@ This document defines **agents** (human or AI) that collaborate on the monorepo,
   - Respect token & cost budgets per plan.
   - Avoid hallucinating non-existent elements (validate suggestions against DOM snapshot).
 - Provide a deterministic interface to `services/api` and `packages/embed-script`.
+- Use the official `@google/genai` SDK (Gemini API) with default model `gemini-2.0-flash-exp`; maintain structured JSON responses with response schemas.
 
-**Inputs:** Scanner output, HTML snapshots, images.  
+**Inputs:** Scanner output, HTML snapshots, images.
 **Outputs:** Structured AI suggestions & metadata.
 
 ---

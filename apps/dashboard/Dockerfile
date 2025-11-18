@@ -6,7 +6,6 @@ COPY package*.json nx.json tsconfig.base.json .
 COPY apps ./apps
 COPY services ./services
 COPY packages ./packages
-COPY tools ./tools
 RUN npm ci
 RUN npx nx build dashboard --configuration=production
 

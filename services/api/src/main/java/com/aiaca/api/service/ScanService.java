@@ -121,7 +121,7 @@ public class ScanService {
         try {
             List<AiOrchestratorClient.IssueContext> contexts = scannerResponse.issues().stream()
                     .map(issue -> new AiOrchestratorClient.IssueContext(
-                            issue.id(), issue.type(), issue.severity(), issue.description(), issue.selector(),
+                            issue.id(), issue.type(), normalizeSeverity(issue.severity()), issue.description(), issue.selector(),
                             scannerResponse.url()))
                     .toList();
 
@@ -144,6 +144,21 @@ public class ScanService {
             return IssueSeverity.WARNING;
         }
         return "error".equalsIgnoreCase(severity) ? IssueSeverity.ERROR : IssueSeverity.WARNING;
+    }
+
+    private String normalizeSeverity(String severity) {
+        if (severity == null) {
+            return "MODERATE";
+        }
+        // Axe-core returns lowercase severity: critical, serious, moderate, minor
+        // Convert to uppercase to match the TypeScript IssueSeverity enum
+        String normalized = severity.toUpperCase();
+        // Validate it's one of the expected values
+        if (normalized.matches("CRITICAL|SERIOUS|MODERATE|MINOR")) {
+            return normalized;
+        }
+        // Default to MODERATE for unknown severity values
+        return "MODERATE";
     }
 
     private double calculateScore(List<ScannerClient.ScannerIssue> issues) {

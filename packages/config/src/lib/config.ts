@@ -61,7 +61,7 @@ export function getApiBaseUrl(env?: Record<string, string | undefined>): string 
     return normalizeBaseUrl(globalBase);
   }
 
-  return 'http://localhost:4000/api/v1';
+  return 'http://localhost:8080/api/v1';
 }
 
 function normalizeBaseUrl(url: string): string {

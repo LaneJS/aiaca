@@ -25,9 +25,15 @@ export class ScanService {
 
   submit(url: string): Observable<PublicScanResponse> {
     const endpoint = `${this.apiBase}/public/scans`;
+    console.log(`[ScanService] Submitting scan to: ${endpoint}`);
     return this.http
       .post<PublicScanResponse>(endpoint, { url })
-      .pipe(catchError(() => of(this.mockResponse(url))));
+      .pipe(
+        catchError((error) => {
+          console.error('[ScanService] API request failed, using mock data:', error);
+          return of(this.mockResponse(url));
+        })
+      );
   }
 
   private mockResponse(url: string): PublicScanResponse {

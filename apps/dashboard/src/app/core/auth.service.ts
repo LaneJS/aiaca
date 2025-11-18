@@ -1,4 +1,4 @@
-import { Injectable, Signal, computed, signal } from '@angular/core';
+import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
@@ -8,11 +8,14 @@ const TOKEN_KEY = 'aaca_token';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+
   private readonly _user = signal<UserProfile | null>(null);
   readonly user = this._user.asReadonly();
   readonly isAuthenticated: Signal<boolean> = computed(() => !!this._user());
 
-  constructor(private readonly http: HttpClient, private readonly router: Router) {
+  constructor() {
     const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
       this._user.set({ id: 'demo', name: 'Demo User', email: 'demo@aaca.dev' });

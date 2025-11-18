@@ -1,29 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/api.service';
 import { ToastService } from '../../core/toast.service';
 import { SiteSummary } from '../../core/models';
 
 @Component({
   selector: 'app-sites',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './sites.component.html',
   styleUrl: './sites.component.scss',
 })
 export class SitesComponent implements OnInit {
+  private readonly api = inject(ApiService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly toast = inject(ToastService);
+
   protected sites: SiteSummary[] = [];
   protected showAddModal = false;
   protected newSiteName = '';
   protected newSiteUrl = '';
   protected isSubmitting = false;
   protected shouldTriggerScan = true;
-
-  constructor(
-    private readonly api: ApiService,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly toast: ToastService
-  ) {}
 
   ngOnInit(): void {
     this.loadSites();
@@ -72,7 +73,7 @@ export class SitesComponent implements OnInit {
         this.loadSites();
 
         if (this.shouldTriggerScan) {
-          this.triggerInitialScan(site.id);
+          this.triggerInitialScan(site.id, site.url);
         }
       },
       error: (err) => {
@@ -85,8 +86,8 @@ export class SitesComponent implements OnInit {
     });
   }
 
-  private triggerInitialScan(siteId: string): void {
-    this.api.triggerScan(siteId).subscribe({
+  private triggerInitialScan(siteId: string, pageUrl: string): void {
+    this.api.triggerScan(siteId, pageUrl).subscribe({
       next: () => {
         this.toast.push('Initial scan started', 'info');
       },

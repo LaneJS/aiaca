@@ -1,15 +1,19 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/api.service';
 import { OnboardingStep, ScanSummary, SiteSummary } from '../../core/models';
 import { ToastService } from '../../core/toast.service';
 
 @Component({
   selector: 'app-overview',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
 })
 export class OverviewComponent implements OnInit {
+  private readonly api = inject(ApiService);
+  private readonly toasts = inject(ToastService);
   protected sites = signal<SiteSummary[]>([]);
   protected scans = signal<ScanSummary[]>([]);
 
@@ -46,15 +50,18 @@ export class OverviewComponent implements OnInit {
     return Math.round(total / list.length);
   });
 
-  constructor(private readonly api: ApiService, private readonly toasts: ToastService) {}
-
   ngOnInit(): void {
     this.api.listSites().subscribe((sites) => this.sites.set(sites));
     this.api.listScans().subscribe((scans) => this.scans.set(scans));
   }
 
   runScan(siteId: string) {
-    this.api.triggerScan(siteId).subscribe(() => {
+    const site = this.sites().find((s) => s.id === siteId);
+    if (!site) {
+      this.toasts.push('Site not found', 'error');
+      return;
+    }
+    this.api.triggerScan(siteId, site.url).subscribe(() => {
       this.toasts.push('Scan queued', 'success');
       this.api.listScans(siteId).subscribe((scans) => this.scans.set([...this.scans(), ...scans]));
     });

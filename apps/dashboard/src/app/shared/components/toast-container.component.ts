@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ToastService } from '../../core/toast.service';
 
 @Component({
@@ -17,5 +17,5 @@ import { ToastService } from '../../core/toast.service';
   styleUrls: ['./toast-container.component.scss'],
 })
 export class ToastContainerComponent {
-  constructor(protected readonly toasts: ToastService) {}
+  protected readonly toasts = inject(ToastService);
 }

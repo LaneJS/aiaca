@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../core/auth.service';
-import { Router } from '@angular/router';
 
 interface NavItem {
   label: string;
@@ -10,11 +11,15 @@ interface NavItem {
 
 @Component({
   selector: 'app-shell',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
 })
 export class ShellComponent implements OnInit {
+  protected readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
   navItems: NavItem[] = [
     { label: 'Overview', path: '/overview', icon: 'dashboard' },
     { label: 'Sites', path: '/sites', icon: 'language' },
@@ -22,8 +27,6 @@ export class ShellComponent implements OnInit {
     { label: 'Script Setup', path: '/script-setup', icon: 'code' },
     { label: 'Account', path: '/account', icon: 'person' },
   ];
-
-  constructor(protected readonly auth: AuthService, private readonly router: Router) {}
 
   ngOnInit() {
     this.auth.ensureDemoSession();

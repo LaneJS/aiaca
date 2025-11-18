@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/api.service';
 import { SiteSummary } from '../../core/models';
 
 @Component({
   selector: 'app-script-setup',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './script-setup.component.html',
   styleUrl: './script-setup.component.scss',
 })
-export class ScriptSetupComponent {
+export class ScriptSetupComponent implements OnInit {
+  private readonly api = inject(ApiService);
   protected sites: SiteSummary[] = [];
   protected selected?: SiteSummary;
 
-  constructor(private readonly api: ApiService) {
+  ngOnInit(): void {
     this.api.listSites().subscribe((sites) => (this.sites = sites));
   }
 

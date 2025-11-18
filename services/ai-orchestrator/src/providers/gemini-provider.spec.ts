@@ -79,13 +79,13 @@ describe('GeminiSuggestionProvider', () => {
         contents: expect.arrayContaining([
           expect.objectContaining({ role: 'user' }),
         ]),
-        config: {
-          abortSignal: controller.signal,
+        generationConfig: {
           responseMimeType: 'application/json',
           responseSchema: expect.any(Object),
           temperature: 0.2,
         },
       }),
+      { signal: controller.signal },
     );
 
     expect(response.provider).toBe('gemini');

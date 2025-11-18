@@ -48,7 +48,7 @@ export class GeminiSuggestionProvider implements SuggestionProvider {
 
     const prompt = buildSuggestionPrompt(request);
 
-    const result = await this.client.models.generateContent({
+    const payload = {
       model: this.options.model,
       contents: [
         {
@@ -56,13 +56,17 @@ export class GeminiSuggestionProvider implements SuggestionProvider {
           parts: [{ text: `${prompt.system}\n${prompt.user}` }],
         },
       ],
-      config: {
+      generationConfig: {
         temperature: 0.2,
         responseMimeType: 'application/json',
         responseSchema,
-        abortSignal: signal,
       },
-    });
+    };
+
+    const result = await (this.client.models.generateContent as (
+      params: typeof payload,
+      options?: { signal?: AbortSignal },
+    ) => Promise<any>)(payload, { signal });
 
     const text =
       result.text ??

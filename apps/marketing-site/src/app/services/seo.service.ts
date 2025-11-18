@@ -9,12 +9,13 @@ interface SeoConfig {
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
-  private readonly baseUrl = 'https://aaca.test';
+  private readonly baseUrl =
+    (typeof window !== 'undefined' && window.location.origin) || 'https://A11yAssistant.com';
   private readonly title = inject(Title);
   private readonly meta = inject(Meta);
 
   update(config: SeoConfig): void {
-    const fullTitle = `${config.title} | AACA`;
+    const fullTitle = `${config.title} | A11y Assistant`;
     const url = `${this.baseUrl}${config.path ?? ''}`;
 
     this.title.setTitle(fullTitle);

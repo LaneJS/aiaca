@@ -36,5 +36,4 @@ The scan form posts to `POST /api/v1/public/scans` using a base URL resolved by 
 
 ## Open questions
 - Final pricing numbers for Starter/Team/Agency tiers.
-- Canonical production domain for SEO base URL in `SeoService` (currently `https://aaca.test`).
 - Whether to surface a cookie/banner for analytics on the marketing site.

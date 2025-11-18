@@ -29,7 +29,9 @@ export const orchestratorEnvSchema = z.object({
     .optional()
     .transform((value) => (value ? Number.parseInt(value, 10) : undefined)),
   GEMINI_API_KEY: z.string().optional(),
-  GEMINI_MODEL: z.string().default('gemini-1.5-pro'),
+  GEMINI_MODEL: z
+    .enum(['gemini-2.0-flash-exp', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'])
+    .default('gemini-2.0-flash-exp'),
   GEMINI_LOCATION: z.string().default('us-central1'),
 });
 

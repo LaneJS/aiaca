@@ -1,27 +1,27 @@
 import { AiSuggestFixRequest, AiSuggestFixResponse } from '@aiaca/domain';
-import { GoogleGenerativeAI, Schema, SchemaType } from '@google/generative-ai';
+import { GoogleGenAI, Schema, Type } from '@google/genai';
 import crypto from 'crypto';
 import { buildSuggestionPrompt } from '../prompt/prompt-builder';
 import { SuggestionProvider } from './types';
 
 const suggestionSchema: Schema = {
-  type: SchemaType.OBJECT,
+  type: Type.OBJECT,
   properties: {
-    issueId: { type: SchemaType.STRING },
-    selector: { type: SchemaType.STRING },
-    explanation: { type: SchemaType.STRING },
-    suggestedFix: { type: SchemaType.STRING },
-    altText: { type: SchemaType.STRING },
-    confidence: { type: SchemaType.NUMBER },
-    grounded: { type: SchemaType.BOOLEAN },
+    issueId: { type: Type.STRING },
+    selector: { type: Type.STRING },
+    explanation: { type: Type.STRING },
+    suggestedFix: { type: Type.STRING },
+    altText: { type: Type.STRING },
+    confidence: { type: Type.NUMBER },
+    grounded: { type: Type.BOOLEAN },
   },
   required: ['explanation', 'suggestedFix'],
 };
 
 const responseSchema: Schema = {
-  type: SchemaType.OBJECT,
+  type: Type.OBJECT,
   properties: {
-    suggestions: { type: SchemaType.ARRAY, items: suggestionSchema },
+    suggestions: { type: Type.ARRAY, items: suggestionSchema },
   },
   required: ['suggestions'],
 };
@@ -33,43 +33,46 @@ interface GeminiProviderOptions {
 
 export class GeminiSuggestionProvider implements SuggestionProvider {
   name = 'gemini';
-  private readonly client?: GoogleGenerativeAI;
-  private readonly model?: ReturnType<GoogleGenerativeAI['getGenerativeModel']>;
+  private readonly client?: GoogleGenAI;
 
   constructor(private readonly options: GeminiProviderOptions) {
     if (options.apiKey) {
-      this.client = new GoogleGenerativeAI(options.apiKey);
-      this.model = this.client.getGenerativeModel({
-        model: options.model,
-        generationConfig: {
-          temperature: 0.2,
-          responseMimeType: 'application/json',
-          responseSchema,
-        },
-      });
+      this.client = new GoogleGenAI({ vertexai: false, apiKey: options.apiKey });
     }
   }
 
   async suggestFixes(request: AiSuggestFixRequest, signal?: AbortSignal): Promise<AiSuggestFixResponse> {
-    if (!this.model) {
+    if (!this.client) {
       throw new Error('Gemini provider not configured');
     }
 
     const prompt = buildSuggestionPrompt(request);
-    const result = await this.model.generateContent(
-      {
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: `${prompt.system}\n${prompt.user}` }],
-          },
-        ],
-      },
-      { signal },
-    );
 
-    const text = result.response.text();
-    const parsed = JSON.parse(text ?? '{}');
+    const payload = {
+      model: this.options.model,
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: `${prompt.system}\n${prompt.user}` }],
+        },
+      ],
+      generationConfig: {
+        temperature: 0.2,
+        responseMimeType: 'application/json',
+        responseSchema,
+      },
+    };
+
+    const result = await (this.client.models.generateContent as (
+      params: typeof payload,
+      options?: { signal?: AbortSignal },
+    ) => Promise<any>)(payload, { signal });
+
+    const text =
+      result.text ??
+      result.candidates?.flatMap((candidate) => candidate.content?.parts?.map((part) => part.text ?? '') ?? []).join('') ??
+        '';
+    const parsed = JSON.parse(text || '{}');
     const requestId = crypto.randomUUID();
 
     return {
@@ -77,8 +80,8 @@ export class GeminiSuggestionProvider implements SuggestionProvider {
       requestId,
       suggestions: parsed.suggestions ?? [],
       usage: {
-        inputTokens: result.response.usageMetadata?.promptTokenCount,
-        outputTokens: result.response.usageMetadata?.candidatesTokenCount,
+        inputTokens: result.usageMetadata?.promptTokenCount,
+        outputTokens: result.usageMetadata?.candidatesTokenCount,
       },
     };
   }

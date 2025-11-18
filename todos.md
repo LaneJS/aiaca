@@ -131,7 +131,7 @@ Use this as a working backlog. Check off as you go.
 - [x] Define internal API:
   - [x] `POST /suggest-fixes` – input: issues + HTML context, output: AI suggestions.
 - [x] Implement integration with Gemini or placeholder AI:
-  - [x] Stub provider available for offline dev; Gemini wired via `@google/generative-ai` with structured JSON output.
+  - [x] Stub provider available for offline dev; Gemini wired via `@google/genai` with structured JSON output.
 - [x] For MVP, support AI for:
   - [x] Missing alt text – generate short, descriptive alt text.
   - [x] Vague link text – suggest more descriptive text.

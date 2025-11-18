@@ -6,7 +6,7 @@ Fastify microservice that turns scanner issues + DOM snippets into structured AI
 - **Entry point:** `src/main.ts` boots a Fastify server and registers `POST /suggest-fixes` via `src/app/routes.ts`.
 - **Configuration:** Environment variables validated through `@aiaca/config` in `src/app/config.ts`.
 - **Providers:**
-  - `GeminiSuggestionProvider` (`src/providers/gemini-provider.ts`) for live calls to Gemini 2.5 Pro using structured JSON output.
+  - `GeminiSuggestionProvider` (`src/providers/gemini-provider.ts`) for live calls to Gemini 2.0 Flash via the `@google/genai` SDK using structured JSON output.
   - `StubSuggestionProvider` (`src/providers/stub-provider.ts`) to mimic API responses when offline or when `AI_ORCHESTRATOR_USE_STUB=true`.
 - **Prompting & validation:** Prompt builder in `src/prompt/prompt-builder.ts`; AI responses validated and grounded against incoming selectors/snippets in `src/prompt/response-validator.ts`.
 - **Budgeting & resiliency:** `SuggestionService` enforces per-request issue caps, optional tenant token budgets, timeouts, and falls back to the stub provider on errors.
@@ -22,7 +22,14 @@ Set the following variables (see `.env.sample` for patterns):
 | `AI_ORCHESTRATOR_TIMEOUT_MS` | Request timeout to AI provider | `20000` |
 | `AI_ORCHESTRATOR_TENANT_BUDGET_TOKENS` | Optional per-tenant budget (in tokens) | _unset_ |
 | `GEMINI_API_KEY` | API key for Gemini / Vertex AI | _required for live calls_ |
-| `GEMINI_MODEL` | Model name | `gemini-1.5-pro` |
+| `GEMINI_MODEL` | Model name | `gemini-2.0-flash-exp` |
+
+### Supported Gemini models
+
+- `gemini-2.0-flash-exp` (default)
+- `gemini-2.0-flash`
+- `gemini-1.5-pro`
+- `gemini-1.5-flash`
 
 ## Running locally
 

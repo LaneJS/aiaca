@@ -3,6 +3,7 @@ import { GoogleGenAI, Schema, Type } from '@google/genai';
 import crypto from 'crypto';
 import { buildSuggestionPrompt } from '../prompt/prompt-builder';
 import { SuggestionProvider } from './types';
+import { logger } from '../app/logger';
 
 const suggestionSchema: Schema = {
   type: Type.OBJECT,
@@ -25,6 +26,17 @@ const responseSchema: Schema = {
   },
   required: ['suggestions'],
 };
+
+/**
+ * Strips markdown code block wrappers from JSON responses.
+ * Handles cases where LLMs wrap JSON in ```json or ``` blocks.
+ */
+function stripMarkdownCodeBlocks(text: string): string {
+  // Remove ```json\n...\n``` or ```\n...\n``` wrappers
+  const codeBlockPattern = /^```(?:json)?\s*\n?([\s\S]*?)\n?```$/;
+  const match = text.trim().match(codeBlockPattern);
+  return match ? match[1].trim() : text.trim();
+}
 
 interface GeminiProviderOptions {
   apiKey?: string;
@@ -68,11 +80,25 @@ export class GeminiSuggestionProvider implements SuggestionProvider {
       options?: { signal?: AbortSignal },
     ) => Promise<any>)(payload, { signal });
 
-    const text =
+    const rawText =
       result.text ??
       result.candidates?.flatMap((candidate) => candidate.content?.parts?.map((part) => part.text ?? '') ?? []).join('') ??
         '';
-    const parsed = JSON.parse(text || '{}');
+
+    logger.debug({
+      message: 'gemini.raw_response',
+      rawText,
+      usageMetadata: result.usageMetadata,
+    });
+
+    const cleanedText = stripMarkdownCodeBlocks(rawText);
+
+    logger.debug({
+      message: 'gemini.cleaned_response',
+      cleanedText,
+    });
+
+    const parsed = JSON.parse(cleanedText || '{}');
     const requestId = crypto.randomUUID();
 
     return {

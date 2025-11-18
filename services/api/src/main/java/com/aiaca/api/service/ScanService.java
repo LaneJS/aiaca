@@ -12,6 +12,7 @@ import com.aiaca.api.model.ScanIssue;
 import com.aiaca.api.model.ScanStatus;
 import com.aiaca.api.model.Site;
 import com.aiaca.api.repository.ScanRepository;
+import com.aiaca.api.repository.SiteRepository;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
@@ -31,6 +32,7 @@ public class ScanService {
     private static final Logger log = LoggerFactory.getLogger(ScanService.class);
 
     private final ScanRepository scanRepository;
+    private final SiteRepository siteRepository;
     private final ScannerClient scannerClient;
     private final AiOrchestratorClient aiOrchestratorClient;
     private final boolean aiUseStub;
@@ -39,11 +41,13 @@ public class ScanService {
     private final Timer scanTimer;
 
     public ScanService(ScanRepository scanRepository,
+                       SiteRepository siteRepository,
                        MeterRegistry meterRegistry,
                        ScannerClient scannerClient,
                        AiOrchestratorClient aiOrchestratorClient,
                        @Value("${ai-orchestrator.use-stub:false}") boolean aiUseStub) {
         this.scanRepository = scanRepository;
+        this.siteRepository = siteRepository;
         this.scannerClient = scannerClient;
         this.aiOrchestratorClient = aiOrchestratorClient;
         this.aiUseStub = aiUseStub;
@@ -164,6 +168,13 @@ public class ScanService {
     private double calculateScore(List<ScannerClient.ScannerIssue> issues) {
         int issueCount = issues == null ? 0 : issues.size();
         return Math.max(0, 100 - issueCount * 5);
+    }
+
+    public List<Scan> listByUser(com.aiaca.api.model.User user) {
+        // Get all sites owned by the user, then get all scans for those sites
+        return siteRepository.findByOwner(user).stream()
+                .flatMap(site -> scanRepository.findBySite(site).stream())
+                .toList();
     }
 
     public List<Scan> listBySite(Site site) {

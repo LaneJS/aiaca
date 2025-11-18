@@ -8,26 +8,30 @@ export class ApiService {
   constructor(private readonly http: HttpClient) {}
 
   listSites() {
-    return this.http.get<SiteSummary[]>('/api/sites').pipe(catchError(() => of(this.mockSites())));
+    return this.http.get<SiteSummary[]>('/api/v1/sites').pipe(catchError(() => of(this.mockSites())));
   }
 
   getSite(id: string) {
-    return this.http.get<SiteSummary>(`/api/sites/${id}`).pipe(
+    return this.http.get<SiteSummary>(`/api/v1/sites/${id}`).pipe(
       catchError(() => of(this.mockSites().find((s) => s.id === id) as SiteSummary))
     );
   }
 
+  createSite(name: string, url: string) {
+    return this.http.post<SiteSummary>('/api/v1/sites', { name, url });
+  }
+
   listScans(siteId?: string) {
-    const endpoint = siteId ? `/api/sites/${siteId}/scans` : '/api/scans';
+    const endpoint = siteId ? `/api/v1/sites/${siteId}/scans` : '/api/v1/scans';
     return this.http.get<ScanSummary[]>(endpoint).pipe(catchError(() => of(this.mockScans(siteId))));
   }
 
   getScan(id: string) {
-    return this.http.get<ScanDetail>(`/api/scans/${id}`).pipe(catchError(() => of(this.mockScanDetail(id))));
+    return this.http.get<ScanDetail>(`/api/v1/scans/${id}`).pipe(catchError(() => of(this.mockScanDetail(id))));
   }
 
   triggerScan(siteId: string) {
-    return this.http.post<ScanSummary>(`/api/sites/${siteId}/scans`, {}).pipe(
+    return this.http.post<ScanSummary>(`/api/v1/sites/${siteId}/scans`, {}).pipe(
       catchError(() => of(this.mockScans(siteId)[0]))
     );
   }

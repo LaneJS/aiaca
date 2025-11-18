@@ -4,7 +4,7 @@
       <p class="eyebrow">Sites</p>
       <h1>Tracked properties</h1>
     </div>
-    <button class="ghost" type="button">Add site</button>
+    <button class="ghost" type="button" (click)="openAddModal()">Add site</button>
   </header>
   <div class="grid">
     <article *ngFor="let site of sites" class="site" tabindex="0" (click)="view(site)" (keypress.enter)="view(site)" role="button">
@@ -17,3 +17,70 @@
     </article>
   </div>
 </section>
+
+<!-- Add Site Modal -->
+<div class="modal-overlay" *ngIf="showAddModal" (click)="closeAddModal()">
+  <div class="modal" role="dialog" aria-labelledby="add-site-title" aria-modal="true" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2 id="add-site-title">Add a new site</h2>
+      <button type="button" class="close-btn" (click)="closeAddModal()" aria-label="Close modal">&times;</button>
+    </header>
+
+    <form (ngSubmit)="submitAddSite()" class="modal-body">
+      <div class="form-group">
+        <label for="site-name">Site name</label>
+        <input
+          id="site-name"
+          type="text"
+          [(ngModel)]="newSiteName"
+          name="siteName"
+          placeholder="e.g., My Business Website"
+          required
+          [disabled]="isSubmitting"
+          autocomplete="off"
+        />
+        <p class="form-hint">A friendly name to identify this site</p>
+      </div>
+
+      <div class="form-group">
+        <label for="site-url">Website URL</label>
+        <input
+          id="site-url"
+          type="url"
+          [(ngModel)]="newSiteUrl"
+          name="siteUrl"
+          placeholder="https://example.com"
+          required
+          [disabled]="isSubmitting"
+          autocomplete="url"
+        />
+        <p class="form-hint">The full URL including https://</p>
+        <p class="form-error" *ngIf="newSiteUrl && !isValidUrl(newSiteUrl)">
+          Please enter a valid HTTP or HTTPS URL
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="shouldTriggerScan"
+            name="triggerScan"
+            [disabled]="isSubmitting"
+          />
+          <span>Run initial accessibility scan</span>
+        </label>
+        <p class="form-hint">Recommended: Get your first scan results immediately</p>
+      </div>
+
+      <footer class="modal-footer">
+        <button type="button" class="ghost" (click)="closeAddModal()" [disabled]="isSubmitting">
+          Cancel
+        </button>
+        <button type="submit" class="primary" [disabled]="!isFormValid() || isSubmitting">
+          {{ isSubmitting ? 'Adding...' : 'Add site' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>

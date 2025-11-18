@@ -47,6 +47,13 @@ public class ScanController {
         return ResponseEntity.ok(scanService.toDetail(scan));
     }
 
+    @GetMapping("/scans")
+    public ResponseEntity<List<ScanDtos.ScanSummary>> listAllScans(@AuthenticationPrincipal UserPrincipal principal) {
+        User owner = userRepository.findById(principal.getId()).orElseThrow();
+        List<ScanDtos.ScanSummary> scans = scanService.listByUser(owner).stream().map(scanService::toSummary).toList();
+        return ResponseEntity.ok(scans);
+    }
+
     @GetMapping("/sites/{siteId}/scans")
     public ResponseEntity<List<ScanDtos.ScanSummary>> listScans(@AuthenticationPrincipal UserPrincipal principal,
                                                                 @PathVariable UUID siteId) {

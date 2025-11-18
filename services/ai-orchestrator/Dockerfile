@@ -3,7 +3,7 @@
 FROM node:24-alpine AS builder
 WORKDIR /workspace
 COPY package.json package-lock.json nx.json tsconfig.base.json ./
-RUN npm ci
+RUN CYPRESS_INSTALL_BINARY=0 npm ci
 COPY apps ./apps
 COPY services ./services
 COPY packages ./packages

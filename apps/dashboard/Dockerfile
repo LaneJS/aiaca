@@ -6,7 +6,7 @@ COPY package*.json nx.json tsconfig.base.json .
 COPY apps ./apps
 COPY services ./services
 COPY packages ./packages
-RUN npm ci
+RUN CYPRESS_INSTALL_BINARY=0 npm ci
 RUN npx nx build dashboard --configuration=production
 
 FROM nginx:1.27-alpine

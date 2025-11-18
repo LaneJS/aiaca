@@ -1,6 +1,6 @@
 # Dashboard (Angular)
 
-Authenticated dashboard shell for the AACA product with onboarding, auth flow, and scan insights.
+Authenticated dashboard shell for the A11y Assistant product with onboarding, auth flow, and scan insights.
 
 ## Architecture
 - **Routing:** Protected shell (`ShellComponent`) wraps Overview, Sites, Scans, Script Setup, and Account routes; `/auth` handles login/sign-up.

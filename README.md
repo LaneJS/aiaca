@@ -1,6 +1,6 @@
-# AI Accessibility Compliance Assistant (AACA)
+# A11y Assistant (A11yAssistant.com)
 
-Monorepo for the AACA platform: marketing site, dashboard, accessibility scanner, AI orchestration, embed script, and shared packages.
+Monorepo for the A11y Assistant platform: marketing site, dashboard, accessibility scanner, AI orchestration, embed script, and shared packages.
 
 ## Monorepo tooling
 - **Nx (integrated workspace, npm)** – chosen for first-class Angular support, built-in TypeScript/Node tooling, and community plugins for Spring Boot. Nx gives consistent generators, caching, and task orchestration across the mixed stack. If requirements change, we can swap or layer Turborepo-style tasks behind the same Nx commands.

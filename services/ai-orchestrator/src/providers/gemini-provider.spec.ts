@@ -4,11 +4,15 @@ import { GeminiSuggestionProvider } from './gemini-provider';
 const mockGenerateContent = jest.fn();
 
 jest.mock('@google/genai', () => {
-  const actual = jest.requireActual('@google/genai');
-
   return {
-    ...actual,
     GoogleGenAI: jest.fn(() => ({ models: { generateContent: mockGenerateContent } })),
+    Type: {
+      OBJECT: 'object',
+      STRING: 'string',
+      ARRAY: 'array',
+      NUMBER: 'number',
+      BOOLEAN: 'boolean',
+    },
   };
 });
 
@@ -43,17 +47,27 @@ describe('GeminiSuggestionProvider', () => {
     const provider = new GeminiSuggestionProvider({ apiKey: 'test-key', model: 'gemini-2.0-flash' });
 
     mockGenerateContent.mockResolvedValue({
-      text: JSON.stringify({
-        suggestions: [
-          {
-            issueId: 'issue-1',
-            selector: 'img.hero',
-            explanation: 'Images need concise alt text.',
-            suggestedFix: 'Add descriptive alt text.',
-            grounded: true,
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                text: JSON.stringify({
+                  suggestions: [
+                    {
+                      issueId: 'issue-1',
+                      selector: 'img.hero',
+                      explanation: 'Images need concise alt text.',
+                      suggestedFix: 'Add descriptive alt text.',
+                      grounded: true,
+                    },
+                  ],
+                }),
+              },
+            ],
           },
-        ],
-      }),
+        },
+      ],
       usageMetadata: { promptTokenCount: 10, candidatesTokenCount: 5 },
     });
 
@@ -65,12 +79,12 @@ describe('GeminiSuggestionProvider', () => {
         contents: expect.arrayContaining([
           expect.objectContaining({ role: 'user' }),
         ]),
-        config: expect.objectContaining({
+        config: {
+          abortSignal: controller.signal,
           responseMimeType: 'application/json',
           responseSchema: expect.any(Object),
           temperature: 0.2,
-          abortSignal: controller.signal,
-        }),
+        },
       }),
     );
 

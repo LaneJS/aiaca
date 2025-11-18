@@ -21,8 +21,8 @@
 2. Build and push images: `docker compose -f docker-compose.yml --env-file .env.production build && docker compose -f docker-compose.yml --env-file .env.production push` (or `config` for a dry run).
 3. Deploy: `docker compose -f docker-compose.yml --env-file .env.production pull && docker compose -f docker-compose.yml --env-file .env.production up -d --remove-orphans` on production host.
 4. Post-deploy verification:
-   - `curl -f https://api.aaca.com/health`
-   - `curl -f https://scanner.aaca.com/health`
+   - `curl -f https://api.A11yAssistant.com/health`
+   - `curl -f https://scanner.A11yAssistant.com/health`
    - Spot-check marketing site and dashboard load times.
 5. Rollback plan: `docker compose -f docker-compose.yml --env-file .env.production up -d api=scoped-tag scanner=scoped-tag` using previous image tags recorded in deployment log.
 

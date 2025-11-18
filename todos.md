@@ -230,11 +230,11 @@ Use this as a working backlog. Check off as you go.
 **Onboarding / First-Run Experience**
 
 - [x] After signup:
-  - [x] Show a “Get started” checklist:
+  - [x] Show a "Get started" checklist:
     - Add your first site.
     - Run a scan.
     - Install the embed script (optional).
-- [ ] Wizard to add first site and trigger initial scan.
+- [x] Wizard to add first site and trigger initial scan.
 
 **Site & Scan Views**
 

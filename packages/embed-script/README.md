@@ -8,10 +8,10 @@ Add the script near the top of your `<body>`:
 
 ```html
 <script
-  src="https://cdn.aaca.com/autofix.js"
+  src="https://cdn.A11yAssistant.com/autofix.js"
   data-site-id="YOUR_SITE_ID"
   data-embed-key="EMBED_KEY_FROM_API"
-  data-api-base="https://api.aaca.com/api/v1"
+  data-api-base="https://api.A11yAssistant.com/api/v1"
 ></script>
 ```
 

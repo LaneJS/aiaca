@@ -6,7 +6,7 @@
 
 ## Metadata Checklist
 - ✅ Title + meta description present on all marketing routes (Angular route data wired into `Meta` service).
-- ✅ Open Graph tags (`og:title`, `og:description`, `og:url`, `og:image`) set; default image: `https://cdn.aaca.com/og/hero.png`.
+- ✅ Open Graph tags (`og:title`, `og:description`, `og:url`, `og:image`) set; default image: `https://cdn.A11yAssistant.com/og/hero.png`.
 - ✅ Twitter Card tags (`summary_large_image`) mirror OG content.
 - ✅ Canonical links configured per route to avoid duplicate content.
 - ✅ JSON-LD `Organization` + `WebSite` schema present on home and scan pages.

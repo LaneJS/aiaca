@@ -24,7 +24,7 @@ export class ScriptSetupComponent implements OnInit {
   }
 
   snippet() {
-    return `<script src="https://cdn.aaca.com/autofix.js" data-site-id="${this.selected?.id || 'SITE_ID'}"></script>`;
+    return `<script src="https://cdn.A11yAssistant.com/autofix.js" data-site-id="${this.selected?.id || 'SITE_ID'}"></script>`;
   }
 
   copy(textarea: HTMLTextAreaElement) {

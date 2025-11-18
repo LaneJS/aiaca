@@ -201,7 +201,7 @@ This document defines **agents** (human or AI) that collaborate on the monorepo,
 **Responsibilities:**
 - Expose snippet, e.g.:
   ```html
-  <script src="https://cdn.aaca.com/autofix.js" data-site-id="SITE_ID"></script>
+  <script src="https://cdn.A11yAssistant.com/autofix.js" data-site-id="SITE_ID"></script>
   ```
 - Fetch per-site configuration from services/api and apply:
   - Alt attributes

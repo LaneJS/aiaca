@@ -10,7 +10,7 @@ Use this guide to install the AACA auto-fix script and confirm it is working. Th
 ## Install the script
 1. Copy the script snippet from the dashboard. It will look like:
    ```html
-   <script src="https://cdn.aaca.com/autofix.js" data-site-id="YOUR_SITE_ID" defer></script>
+   <script src="https://cdn.A11yAssistant.com/autofix.js" data-site-id="YOUR_SITE_ID" defer></script>
    ```
 2. Paste it before the closing `</head>` tag of every page you want covered.
 3. Publish or deploy your site as usual.

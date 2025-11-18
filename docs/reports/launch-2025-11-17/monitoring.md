@@ -7,10 +7,10 @@
 ## Uptime Monitors
 | Endpoint | Frequency | Alert Threshold | Notes |
 | --- | --- | --- | --- |
-| https://api.aaca.com/health | 60s | 2 failures → email + Slack `#ops` | Mirrors Spring Boot health; includes DB check. |
-| https://scanner.aaca.com/health | 60s | 2 failures → email + Slack `#ops` | Verifies scanner container reachable. |
-| https://www.aaca.com/ | 60s | 2 failures → email only | Marketing uptime; tracked for CDN issues. |
-| https://app.aaca.com/ | 60s | 2 failures → email + PagerDuty low | Dashboard shell availability. |
+| https://api.A11yAssistant.com/health | 60s | 2 failures → email + Slack `#ops` | Mirrors Spring Boot health; includes DB check. |
+| https://scanner.A11yAssistant.com/health | 60s | 2 failures → email + Slack `#ops` | Verifies scanner container reachable. |
+| https://www.A11yAssistant.com/ | 60s | 2 failures → email only | Marketing uptime; tracked for CDN issues. |
+| https://app.A11yAssistant.com/ | 60s | 2 failures → email + PagerDuty low | Dashboard shell availability. |
 
 - Alerts routed via UptimeRobot webhooks → Slack `#ops` and PagerDuty (low-urgency for dashboard marketing).
 

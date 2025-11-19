@@ -37,6 +37,9 @@ public class ScanIssue {
     @Enumerated(EnumType.STRING)
     private IssueSeverity severity;
 
+    @Enumerated(EnumType.STRING)
+    private IssueStatus status = IssueStatus.OPEN;
+
     private String description;
     private String selector;
     private String suggestion;

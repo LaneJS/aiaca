@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../core/auth.service';
@@ -16,7 +16,7 @@ interface NavItem {
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
 })
-export class ShellComponent implements OnInit {
+export class ShellComponent {
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -28,15 +28,11 @@ export class ShellComponent implements OnInit {
     { label: 'Account', path: '/account', icon: 'person' },
   ];
 
-  ngOnInit() {
-    this.auth.ensureDemoSession();
-  }
-
-  logout() {
+  logout(): void {
     this.auth.logout();
   }
 
-  navigate(item: NavItem) {
+  navigate(item: NavItem): void {
     this.router.navigate([item.path]);
   }
 }

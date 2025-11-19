@@ -5,11 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/api.service';
 import { ToastService } from '../../core/toast.service';
 import { SiteSummary } from '../../core/models';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner.component';
+import { ErrorStateComponent } from '../../shared/components/error-state.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-sites',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, ErrorStateComponent, EmptyStateComponent],
   templateUrl: './sites.component.html',
   styleUrl: './sites.component.scss',
 })
@@ -21,17 +25,35 @@ export class SitesComponent implements OnInit {
 
   protected sites: SiteSummary[] = [];
   protected showAddModal = false;
+  protected showEditModal = false;
+  protected showDeleteModal = false;
   protected newSiteName = '';
   protected newSiteUrl = '';
   protected isSubmitting = false;
   protected shouldTriggerScan = true;
+  protected isLoading = true;
+  protected error: string | null = null;
+  protected editingSite: SiteSummary | null = null;
+  protected deletingSite: SiteSummary | null = null;
 
   ngOnInit(): void {
     this.loadSites();
   }
 
   private loadSites(): void {
-    this.api.listSites().subscribe((sites) => (this.sites = sites));
+    this.isLoading = true;
+    this.error = null;
+
+    this.api.listSites().subscribe({
+      next: (sites) => {
+        this.sites = sites;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.error = 'Failed to load sites. Please try again.';
+      }
+    });
   }
 
   openAddModal(): void {
@@ -45,6 +67,30 @@ export class SitesComponent implements OnInit {
     this.showAddModal = false;
     this.newSiteName = '';
     this.newSiteUrl = '';
+  }
+
+  openEditModal(site: SiteSummary): void {
+    this.editingSite = site;
+    this.newSiteName = site.name;
+    this.newSiteUrl = site.url;
+    this.showEditModal = true;
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.editingSite = null;
+    this.newSiteName = '';
+    this.newSiteUrl = '';
+  }
+
+  openDeleteModal(site: SiteSummary): void {
+    this.deletingSite = site;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal = false;
+    this.deletingSite = null;
   }
 
   isFormValid(): boolean {
@@ -75,13 +121,60 @@ export class SitesComponent implements OnInit {
         if (this.shouldTriggerScan) {
           this.triggerInitialScan(site.id, site.url);
         }
-      },
-      error: (err) => {
-        this.toast.push('Failed to add site: ' + (err.error?.message || err.message || 'Unknown error'), 'error');
         this.isSubmitting = false;
       },
-      complete: () => {
+      error: (err: HttpErrorResponse) => {
+        const message = err.error?.message || 'Failed to add site';
+        this.toast.push(message, 'error');
         this.isSubmitting = false;
+      }
+    });
+  }
+
+  submitEditSite(): void {
+    if (!this.isFormValid() || !this.editingSite || this.isSubmitting) {
+      return;
+    }
+
+    this.isSubmitting = true;
+    const updates = {
+      name: this.newSiteName.trim(),
+      url: this.newSiteUrl.trim()
+    };
+
+    this.api.updateSite(this.editingSite.id, updates).subscribe({
+      next: () => {
+        this.toast.push('Site updated successfully', 'success');
+        this.closeEditModal();
+        this.loadSites();
+        this.isSubmitting = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        const message = err.error?.message || 'Failed to update site';
+        this.toast.push(message, 'error');
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+  confirmDelete(): void {
+    if (!this.deletingSite || this.isSubmitting) {
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.api.deleteSite(this.deletingSite.id).subscribe({
+      next: () => {
+        this.toast.push('Site deleted successfully', 'success');
+        this.closeDeleteModal();
+        this.loadSites();
+        this.isSubmitting = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        const message = err.error?.message || 'Failed to delete site';
+        this.toast.push(message, 'error');
+        this.isSubmitting = false;
+        this.closeDeleteModal();
       }
     });
   }
@@ -91,13 +184,18 @@ export class SitesComponent implements OnInit {
       next: () => {
         this.toast.push('Initial scan started', 'info');
       },
-      error: (err) => {
-        this.toast.push('Failed to start scan: ' + (err.error?.message || 'Unknown error'), 'error');
+      error: (err: HttpErrorResponse) => {
+        const message = err.error?.message || 'Failed to start scan';
+        this.toast.push(message, 'error');
       }
     });
   }
 
-  view(site: SiteSummary) {
+  view(site: SiteSummary): void {
     this.router.navigate(['./', site.id], { relativeTo: this.route });
+  }
+
+  retryLoad(): void {
+    this.loadSites();
   }
 }

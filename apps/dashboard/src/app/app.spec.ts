@@ -6,8 +6,7 @@ import { ToastContainerComponent } from './shared/components/toast-container.com
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, ToastContainerComponent],
-      declarations: [App],
+      imports: [RouterTestingModule, ToastContainerComponent, App],
     }).compileComponents();
   });
 

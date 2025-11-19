@@ -300,5 +300,37 @@ This document defines **agents** (human or AI) that collaborate on the monorepo,
 - Maintain API docs (OpenAPI spec, Postman collections).
 - Provide “How to integrate AACA into your workflow” recipes (WordPress, custom sites, CI).
 
-**Inputs:** Implementation details from all other agents.  
+**Inputs:** Implementation details from all other agents.
 **Outputs:** Clear docs and DX improvements.
+
+---
+
+## TODO: Section 18 – Dashboard MVP Production Finalization
+
+**Mission:** Remove all demo/mock data and finalize the dashboard for production MVP launch.
+
+**Agent:** Frontend Web App Agent + Backend API Agent (coordination required)
+
+**Scope:** `apps/dashboard/**`
+
+**See:** `todos/18-dashboard-mvp-finalization.md` for detailed implementation plan.
+
+**Status:** Ready to start
+
+**Priority:** HIGH - Blocking MVP launch
+
+**Key Tasks:**
+- Remove demo user fallback and implement proper auth error handling
+- Replace all mock data with real API integration
+- Fix issue status toggle to persist to backend
+- Update hardcoded CDN URL to production domain
+- Implement proper token storage (replace localStorage)
+- Add loading states and scan progress tracking
+- Remove silent mock data fallbacks on API errors
+
+**Success Criteria:**
+- Zero mock data in production build
+- All API calls properly integrated with backend
+- Graceful error handling without demo fallbacks
+- Production-ready token storage
+- Comprehensive testing evidence

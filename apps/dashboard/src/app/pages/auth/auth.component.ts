@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { ToastService } from '../../core/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-auth',
@@ -19,26 +20,51 @@ export class AuthComponent {
   private readonly toasts = inject(ToastService);
 
   mode: 'login' | 'signup' = 'login';
+  isLoading = false;
+  errorMessage = '';
+
   form = this.fb.nonNullable.group({
     name: ['', []],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  submit() {
+  submit(): void {
     if (this.form.invalid) return;
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
     const { name, email, password } = this.form.getRawValue();
     const action = this.mode === 'login' ? this.auth.login(email, password) : this.auth.signup(name, email, password);
+
     action.subscribe({
       next: () => {
-        this.toasts.push('Authenticated', 'success');
+        this.isLoading = false;
+        this.toasts.push(this.mode === 'login' ? 'Successfully logged in' : 'Account created successfully', 'success');
         this.router.navigate(['/overview']);
       },
-      error: () => {
-        this.toasts.push('Using demo login for now', 'info');
-        this.auth.ensureDemoSession();
-        this.router.navigate(['/overview']);
+      error: (error: HttpErrorResponse) => {
+        this.isLoading = false;
+        this.errorMessage = this.getErrorMessage(error);
+        this.toasts.push(this.errorMessage, 'error');
       },
     });
+  }
+
+  private getErrorMessage(error: HttpErrorResponse): string {
+    if (error.status === 0) {
+      return 'Unable to connect to server. Please check your internet connection and try again.';
+    }
+    if (error.status === 401) {
+      return this.mode === 'login' ? 'Invalid email or password' : 'Account creation failed';
+    }
+    if (error.status === 409) {
+      return 'An account with this email already exists';
+    }
+    if (error.status >= 500) {
+      return 'Server error. Please try again later.';
+    }
+    return error.error?.message || 'An unexpected error occurred. Please try again.';
   }
 }

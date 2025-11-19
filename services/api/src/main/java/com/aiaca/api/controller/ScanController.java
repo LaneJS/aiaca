@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,5 +73,15 @@ public class ScanController {
             return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok(scanService.toDetail(scan));
+    }
+
+    @PatchMapping("/scans/{scanId}/issues/{issueId}")
+    public ResponseEntity<ScanDtos.IssueDetail> updateIssueStatus(@AuthenticationPrincipal UserPrincipal principal,
+                                                                  @PathVariable UUID scanId,
+                                                                  @PathVariable UUID issueId,
+                                                                  @Valid @RequestBody ScanDtos.UpdateIssueStatusRequest request) {
+        User owner = userRepository.findById(principal.getId()).orElseThrow();
+        var issue = scanService.updateIssueStatus(scanId, issueId, request.status(), owner);
+        return ResponseEntity.ok(scanService.toIssueDetail(issue));
     }
 }

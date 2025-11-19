@@ -7,10 +7,12 @@ import com.aiaca.api.exception.ResourceNotFoundException;
 import com.aiaca.api.exception.UpstreamServiceException;
 import com.aiaca.api.model.AiSuggestion;
 import com.aiaca.api.model.IssueSeverity;
+import com.aiaca.api.model.IssueStatus;
 import com.aiaca.api.model.Scan;
 import com.aiaca.api.model.ScanIssue;
 import com.aiaca.api.model.ScanStatus;
 import com.aiaca.api.model.Site;
+import com.aiaca.api.repository.ScanIssueRepository;
 import com.aiaca.api.repository.ScanRepository;
 import com.aiaca.api.repository.SiteRepository;
 import io.micrometer.core.instrument.Counter;
@@ -33,6 +35,7 @@ public class ScanService {
 
     private final ScanRepository scanRepository;
     private final SiteRepository siteRepository;
+    private final ScanIssueRepository scanIssueRepository;
     private final ScannerClient scannerClient;
     private final AiOrchestratorClient aiOrchestratorClient;
     private final boolean aiUseStub;
@@ -42,12 +45,14 @@ public class ScanService {
 
     public ScanService(ScanRepository scanRepository,
                        SiteRepository siteRepository,
+                       ScanIssueRepository scanIssueRepository,
                        MeterRegistry meterRegistry,
                        ScannerClient scannerClient,
                        AiOrchestratorClient aiOrchestratorClient,
                        @Value("${ai-orchestrator.use-stub:false}") boolean aiUseStub) {
         this.scanRepository = scanRepository;
         this.siteRepository = siteRepository;
+        this.scanIssueRepository = scanIssueRepository;
         this.scannerClient = scannerClient;
         this.aiOrchestratorClient = aiOrchestratorClient;
         this.aiUseStub = aiUseStub;
@@ -236,5 +241,26 @@ public class ScanService {
         } finally {
             sample.stop(scanTimer);
         }
+    }
+
+    public ScanIssue updateIssueStatus(UUID scanId, UUID issueId, IssueStatus status, com.aiaca.api.model.User user) {
+        ScanIssue issue = scanIssueRepository.findById(issueId)
+                .orElseThrow(() -> new ResourceNotFoundException("Issue not found"));
+
+        if (!issue.getScan().getId().equals(scanId)) {
+            throw new ResourceNotFoundException("Issue not found for scan");
+        }
+
+        if (!issue.getScan().getSite().getOwner().getId().equals(user.getId())) {
+            throw new ResourceNotFoundException("Issue not found");
+        }
+
+        issue.setStatus(status);
+        return scanIssueRepository.save(issue);
+    }
+
+    public ScanDtos.IssueDetail toIssueDetail(ScanIssue issue) {
+        return new ScanDtos.IssueDetail(issue.getId(), issue.getType(), issue.getSeverity(),
+                issue.getStatus(), issue.getDescription(), issue.getSelector(), resolveSuggestion(issue));
     }
 }

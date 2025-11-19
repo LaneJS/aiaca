@@ -1,10 +1,11 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { UserProfile } from './models';
 
 const TOKEN_KEY = 'aaca_token';
+const USER_KEY = 'aaca_user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -16,48 +17,73 @@ export class AuthService {
   readonly isAuthenticated: Signal<boolean> = computed(() => !!this._user());
 
   constructor() {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
-      this._user.set({ id: 'demo', name: 'Demo User', email: 'demo@aaca.dev' });
-    }
+    this.restoreSession();
   }
 
-  login(email: string, password: string) {
-    return this.http.post<{ userId: string; email: string; token: string }>('/api/v1/auth/login', { email, password }).pipe(
+  login(email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string }> {
+    return this.http.post<{ userId: string; email: string; name?: string; token: string }>('/api/v1/auth/login', { email, password }).pipe(
       tap((res) => {
-        this.persistSession(res.token, { id: res.userId, email: res.email, name: res.email.split('@')[0] });
+        this.persistSession(res.token, {
+          id: res.userId,
+          email: res.email,
+          name: res.name || res.email.split('@')[0]
+        });
       })
     );
   }
 
-  signup(name: string, email: string, password: string) {
+  signup(name: string, email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string }> {
     return this.http
-      .post<{ userId: string; email: string; token: string }>('/api/v1/auth/register', {
+      .post<{ userId: string; email: string; name?: string; token: string }>('/api/v1/auth/register', {
         name,
         email,
         password,
       })
       .pipe(
         tap((res) => {
-          this.persistSession(res.token, { id: res.userId, email: res.email, name: res.email.split('@')[0] });
+          this.persistSession(res.token, {
+            id: res.userId,
+            email: res.email,
+            name: res.name || name
+          });
         })
       );
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
     this._user.set(null);
     this.router.navigate(['/auth']);
   }
 
-  ensureDemoSession() {
-    if (!this._user()) {
-      this.persistSession('demo-token', { id: 'demo', name: 'Demo User', email: 'demo@aaca.dev' });
+  getToken(): string | null {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+
+  private restoreSession(): void {
+    const token = localStorage.getItem(TOKEN_KEY);
+    const userJson = localStorage.getItem(USER_KEY);
+
+    if (token && userJson) {
+      try {
+        const user = JSON.parse(userJson) as UserProfile;
+        this._user.set(user);
+      } catch {
+        this.clearSession();
+      }
     }
   }
 
-  private persistSession(token: string, user: UserProfile) {
+  private persistSession(token: string, user: UserProfile): void {
     localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
     this._user.set(user);
+  }
+
+  private clearSession(): void {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    this._user.set(null);
   }
 }

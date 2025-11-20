@@ -1,0 +1,133 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Payments</p>
+    <h1>Invoices, settlements, and refunds</h1>
+    <p class="lede">Capture successful charges, failed attempts, and refunds in one view.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-secondary" (click)="applyFilter({ status: 'all', method: 'all', search: '' })">
+      Clear filters
+    </button>
+  </div>
+</section>
+
+<section class="filters">
+  <label class="input-group">
+    <span>Search</span>
+    <input
+      type="search"
+      placeholder="Buyer or invoice"
+      [(ngModel)]="filters.search"
+      (ngModelChange)="applyFilter({ search: $event })"
+    />
+  </label>
+  <label class="input-group">
+    <span>Status</span>
+    <select [(ngModel)]="filters.status" (ngModelChange)="applyFilter({ status: $event })">
+      <option value="all">All</option>
+      <option *ngFor="let status of paymentStatuses" [value]="status">{{ status.replace('_', ' ') }}</option>
+    </select>
+  </label>
+  <label class="input-group">
+    <span>Method</span>
+    <select [(ngModel)]="filters.method" (ngModelChange)="applyFilter({ method: $event })">
+      <option value="all">Any</option>
+      <option value="Card">Card</option>
+      <option value="ACH">ACH</option>
+      <option value="Wire">Wire</option>
+      <option value="Trial">Trial</option>
+    </select>
+  </label>
+</section>
+
+<section class="payments-grid">
+  <article class="panel">
+    <header class="panel__header">
+      <div>
+        <p class="eyebrow">Payment history</p>
+        <h3>Invoice outcomes</h3>
+      </div>
+      <span class="badge">Audit ready</span>
+    </header>
+
+    <div class="table" *ngIf="payments$ | async as payments">
+      <div class="table__head payments-head">
+        <span>Invoice</span>
+        <span>Buyer</span>
+        <span>Amount</span>
+        <span>Status</span>
+        <span>Method</span>
+        <span>Notes</span>
+      </div>
+
+      <div class="table__row payments-row" *ngFor="let payment of payments">
+        <span class="cell-title">{{ payment.invoice }}</span>
+        <div>
+          <p class="cell-title">{{ payment.customer }}</p>
+          <p class="cell-sub">{{ payment.period }}</p>
+        </div>
+        <span>$ {{ payment.amount | number: '1.0-0' }}</span>
+        <span [ngClass]="badgeClass(payment.status)">{{ payment.status.replace('_', ' ') }}</span>
+        <span class="cell-sub">{{ payment.method }}</span>
+        <p class="cell-sub">{{ payment.notes || '—' }}</p>
+      </div>
+
+      <p class="empty" *ngIf="payments.length === 0">No payments logged for this filter.</p>
+    </div>
+  </article>
+
+  <article class="panel form-card">
+    <header class="panel__header">
+      <div>
+        <p class="eyebrow">Log payment or refund</p>
+        <h3>Resolve an invoice</h3>
+      </div>
+      <span class="badge">Manual entry</span>
+    </header>
+
+    <form class="form" (ngSubmit)="recordPayment()">
+      <label class="input-group">
+        <span>Buyer</span>
+        <select [(ngModel)]="newPayment.accountId" name="accountId">
+          <option *ngFor="let account of (accounts$ | async)" [value]="account.id">{{ account.name }}</option>
+        </select>
+      </label>
+
+      <label class="input-group">
+        <span>Invoice</span>
+        <input type="text" [(ngModel)]="newPayment.invoice" name="invoice" required />
+      </label>
+
+      <div class="split">
+        <label class="input-group">
+          <span>Amount</span>
+          <input type="number" [(ngModel)]="newPayment.amount" name="amount" min="0" />
+        </label>
+        <label class="input-group">
+          <span>Period</span>
+          <input type="text" [(ngModel)]="newPayment.period" name="period" />
+        </label>
+      </div>
+
+      <label class="input-group">
+        <span>Status</span>
+        <select [(ngModel)]="newPayment.status" name="status">
+          <option *ngFor="let status of paymentStatuses" [value]="status">{{ status.replace('_', ' ') }}</option>
+        </select>
+      </label>
+
+      <label class="input-group">
+        <span>Method</span>
+        <input type="text" [(ngModel)]="newPayment.method" name="method" />
+        <small>Card, ACH, wire, or internal transfer.</small>
+      </label>
+
+      <label class="input-group">
+        <span>Notes</span>
+        <textarea [(ngModel)]="newPayment.notes" name="notes" rows="3"></textarea>
+      </label>
+
+      <button type="submit" class="btn btn-primary">Log payment</button>
+    </form>
+  </article>
+</section>

@@ -1,0 +1,127 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Billing overview</p>
+    <h1>Buyer payments & account health</h1>
+    <p class="lede">
+      Monitor who is paid up, who is coming due, and which customers need outreach before renewal.
+    </p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-primary">Record payment</button>
+    <button class="btn btn-secondary">Export billing CSV</button>
+  </div>
+</section>
+
+<section class="summary-grid" *ngIf="summary$ | async as summary">
+  <article class="card">
+    <p class="label">Active accounts</p>
+    <h2>{{ summary.activeAccounts }}</h2>
+    <p class="hint">{{ summary.trialing }} currently on trial</p>
+  </article>
+  <article class="card">
+    <p class="label">Monthly recurring revenue</p>
+    <h2>$ {{ summary.mrr | number: '1.0-0' }}</h2>
+    <p class="hint">Includes active and trialing buyers</p>
+  </article>
+  <article class="card">
+    <p class="label">Collected this month</p>
+    <h2>$ {{ summary.monthlyCollected | number: '1.0-0' }}</h2>
+    <p class="hint">$ {{ summary.refunds | number: '1.0-0' }} refunds issued</p>
+  </article>
+  <article class="card">
+    <p class="label">At risk</p>
+    <h2>{{ summary.atRisk }}</h2>
+    <p class="hint">Accounts with balances or failed payments</p>
+  </article>
+</section>
+
+<section class="panel-grid">
+  <article class="panel">
+    <header class="panel__header">
+      <div>
+        <p class="eyebrow">Upcoming renewals</p>
+        <h3>Renewals within the next 30 days</h3>
+      </div>
+      <span class="badge">Proactive outreach</span>
+    </header>
+    <div class="table" *ngIf="upcomingRenewals$ | async as renewals">
+      <div class="table__head">
+        <span>Buyer</span>
+        <span>Plan</span>
+        <span>Renews</span>
+        <span>Status</span>
+      </div>
+      <div class="table__row" *ngFor="let renewal of renewals">
+        <div>
+          <p class="cell-title">{{ renewal.name }}</p>
+          <p class="cell-sub">{{ renewal.email }}</p>
+        </div>
+        <span class="pill">{{ renewal.plan }}</span>
+        <span>{{ renewal.renewsOn | date }}</span>
+        <span [ngClass]="statusClass(renewal.status)">{{ renewal.status.replace('_', ' ') }}</span>
+      </div>
+      <p class="empty" *ngIf="renewals.length === 0">No renewals queued yet.</p>
+    </div>
+  </article>
+
+  <article class="panel">
+    <header class="panel__header">
+      <div>
+        <p class="eyebrow">At-risk accounts</p>
+        <h3>Balances to collect and failed charges</h3>
+      </div>
+      <span class="badge badge--warn">Needs attention</span>
+    </header>
+    <div class="table" *ngIf="atRiskAccounts$ | async as atRisk">
+      <div class="table__head">
+        <span>Buyer</span>
+        <span>Outstanding</span>
+        <span>Plan</span>
+        <span>Last payment</span>
+      </div>
+      <div class="table__row" *ngFor="let acct of atRisk">
+        <div>
+          <p class="cell-title">{{ acct.name }}</p>
+          <p class="cell-sub">{{ acct.email }}</p>
+        </div>
+        <span class="pill pill--danger">$ {{ acct.outstandingBalance | number: '1.0-0' }}</span>
+        <span class="pill">{{ acct.plan }}</span>
+        <span>{{ acct.lastPaymentDate | date }}</span>
+      </div>
+      <p class="empty" *ngIf="atRisk.length === 0">All accounts are current.</p>
+    </div>
+  </article>
+</section>
+
+<section class="panel">
+  <header class="panel__header">
+    <div>
+      <p class="eyebrow">Recent payments</p>
+      <h3>Latest invoices and outcomes</h3>
+    </div>
+    <div class="filters">
+      <button class="btn btn-ghost">Refresh</button>
+      <button class="btn btn-secondary">View all payments</button>
+    </div>
+  </header>
+  <div class="table" *ngIf="recentPayments$ | async as payments">
+    <div class="table__head">
+      <span>Invoice</span>
+      <span>Buyer</span>
+      <span>Amount</span>
+      <span>Status</span>
+      <span>Method</span>
+    </div>
+    <div class="table__row" *ngFor="let payment of payments">
+      <span class="cell-title">{{ payment.invoice }}</span>
+      <div>
+        <p class="cell-title">{{ payment.customer }}</p>
+        <p class="cell-sub">{{ payment.period }}</p>
+      </div>
+      <span>$ {{ payment.amount | number: '1.0-0' }}</span>
+      <span [ngClass]="statusClass(payment.status)">{{ payment.status.replace('_', ' ') }}</span>
+      <span class="cell-sub">{{ payment.method }}</span>
+    </div>
+    <p class="empty" *ngIf="payments.length === 0">No payments logged yet.</p>
+  </div>
+</section>

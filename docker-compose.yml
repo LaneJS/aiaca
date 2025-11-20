@@ -119,5 +119,19 @@ services:
     ports:
       - "${DEMO_SITE_PORT:-4400}:80"
 
+  payments-admin:
+    build:
+      context: .
+      dockerfile: apps/payments-admin/Dockerfile
+    container_name: aaca-payments-admin
+    depends_on:
+      - api
+    env_file:
+      - .env
+    environment:
+      API_BASE_URL: ${PUBLIC_API_BASE_URL:-http://localhost:8080}
+    ports:
+      - "${PAYMENTS_ADMIN_PORT:-4500}:80"
+
 volumes:
   postgres_data:

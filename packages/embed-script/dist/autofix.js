@@ -187,7 +187,7 @@ var AACAEmbed = (() => {
       console.warn("[AACA Embed] data-site-id is required on the embed script tag.");
       return null;
     }
-    return {
+    const attributes = {
       siteId,
       embedKey: script.dataset["embedKey"],
       apiBaseUrl: script.dataset["apiBaseUrl"] || DEFAULT_API_BASE,
@@ -197,6 +197,7 @@ var AACAEmbed = (() => {
       disableSkipLink: coerceBooleanFlag(script.dataset["disableSkipLink"]),
       disableFocusOutline: coerceBooleanFlag(script.dataset["disableFocusOutline"])
     };
+    return attributes;
   }
   async function fetchEmbedConfig(attributes, fetchImpl = fetch) {
     const baseUrl = attributes.apiBaseUrl || DEFAULT_API_BASE;
@@ -243,7 +244,9 @@ var AACAEmbed = (() => {
   var hasBootstrapped = false;
   async function applyFixes(config) {
     const attributes = readScriptAttributes();
-    if (!attributes) return;
+    if (!attributes) {
+      return;
+    }
     const features = deriveFeatures(config, attributes);
     if (features.altText) {
       applyAltTextFixes(config == null ? void 0 : config.altTextSuggestions);
@@ -259,10 +262,14 @@ var AACAEmbed = (() => {
     }
   }
   async function bootstrap() {
-    if (hasBootstrapped) return;
+    if (hasBootstrapped) {
+      return;
+    }
     hasBootstrapped = true;
     const attributes = readScriptAttributes();
-    if (!attributes) return;
+    if (!attributes) {
+      return;
+    }
     const config = await fetchEmbedConfig(attributes);
     await applyFixes(config);
   }

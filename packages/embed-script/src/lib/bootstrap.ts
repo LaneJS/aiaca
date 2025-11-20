@@ -8,7 +8,10 @@ let hasBootstrapped = false;
 
 async function applyFixes(config: EmbedConfig | null): Promise<void> {
   const attributes = readScriptAttributes();
-  if (!attributes) return;
+
+  if (!attributes) {
+    return;
+  }
 
   const features = deriveFeatures(config, attributes);
 
@@ -29,13 +32,20 @@ async function applyFixes(config: EmbedConfig | null): Promise<void> {
 }
 
 export async function bootstrap(): Promise<void> {
-  if (hasBootstrapped) return;
+  if (hasBootstrapped) {
+    return;
+  }
+
   hasBootstrapped = true;
 
   const attributes = readScriptAttributes();
-  if (!attributes) return;
+
+  if (!attributes) {
+    return;
+  }
 
   const config = await fetchEmbedConfig(attributes);
+
   await applyFixes(config);
 }
 

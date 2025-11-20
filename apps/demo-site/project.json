@@ -1,0 +1,78 @@
+{
+  "name": "demo-site",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/demo-site/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/demo-site",
+        "browser": "apps/demo-site/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/demo-site/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/demo-site/public"
+          }
+        ],
+        "styles": ["apps/demo-site/src/styles.scss"]
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/demo-site/src/environments/environment.ts",
+              "with": "apps/demo-site/src/environments/environment.prod.ts"
+            }
+          ],
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "demo-site:build:production"
+        },
+        "development": {
+          "buildTarget": "demo-site:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4400
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/demo-site/jest.config.ts",
+        "tsConfig": "apps/demo-site/tsconfig.spec.json"
+      }
+    }
+  }
+}

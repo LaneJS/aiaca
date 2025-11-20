@@ -1,0 +1,48 @@
+<div class="demo-site">
+  <!-- Control Panel (always visible) -->
+  <div class="control-panel">
+    <h2>AACA Embed Script Demo</h2>
+    <p>Toggle the script on/off to see accessibility fixes in action. Watch how the embed script automatically adds alt text to images, improves focus indicators, and adds a skip link.</p>
+    <app-script-toggle></app-script-toggle>
+  </div>
+
+  <!-- Demo Website Content (with intentional accessibility issues) -->
+  <header class="demo-header">
+    <!-- INTENTIONAL: Missing alt text on logo -->
+    <img src="/images/logo.svg" class="site-logo">
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section class="hero">
+      <!-- INTENTIONAL: Missing alt text on hero image -->
+      <img src="/images/hero.svg" class="hero-image">
+      <h1>Welcome to Our Product</h1>
+      <button class="cta-button">Get Started</button>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+      <h2>Key Features</h2>
+      <div class="feature-grid">
+        <div class="feature">
+          <!-- INTENTIONAL: Missing alt text on feature image -->
+          <img src="/images/feature-1.svg" id="feature-automation">
+          <h3>Automated Scanning</h3>
+          <p>Our AI-powered system automatically detects accessibility issues across your entire website, providing detailed reports and actionable insights.</p>
+        </div>
+        <div class="feature">
+          <!-- INTENTIONAL: Missing alt text on feature image -->
+          <img src="/images/feature-2.svg" id="feature-monitoring">
+          <h3>Real-time Monitoring</h3>
+          <p>Continuous compliance tracking ensures your website stays accessible. Get instant notifications when new issues are detected.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

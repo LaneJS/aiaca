@@ -23,6 +23,7 @@ async function run() {
     target: ['es2018'],
     logLevel: 'info',
     legalComments: 'none',
+    drop: [], // Keep console.log statements for debugging
   });
 
   const analysis = await analyzeMetafile(result.metafile, { color: true });

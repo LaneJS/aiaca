@@ -28,18 +28,20 @@ export function readScriptAttributes(): ScriptAttributes | null {
   }
 
   const script = findScriptElement();
+
   if (!script) {
     console.warn('[AACA Embed] Unable to locate embed script tag.');
     return null;
   }
 
   const siteId = script.dataset['siteId'];
+
   if (!siteId) {
     console.warn('[AACA Embed] data-site-id is required on the embed script tag.');
     return null;
   }
 
-  return {
+  const attributes = {
     siteId,
     embedKey: script.dataset['embedKey'],
     apiBaseUrl: script.dataset['apiBaseUrl'] || DEFAULT_API_BASE,
@@ -49,6 +51,8 @@ export function readScriptAttributes(): ScriptAttributes | null {
     disableSkipLink: coerceBooleanFlag(script.dataset['disableSkipLink']),
     disableFocusOutline: coerceBooleanFlag(script.dataset['disableFocusOutline']),
   };
+
+  return attributes;
 }
 
 export async function fetchEmbedConfig(

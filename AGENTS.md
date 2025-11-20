@@ -334,3 +334,38 @@ This document defines **agents** (human or AI) that collaborate on the monorepo,
 - Graceful error handling without demo fallbacks
 - Production-ready token storage
 - Comprehensive testing evidence
+
+---
+
+## TODO: Section 19 – Embed Script Demo Site
+
+**Mission:** Create a standalone demo website that showcases the AACA embed script (autofix.js) in action with a toggle to see before/after accessibility fixes.
+
+**Agent:** Frontend Web App Agent + Database Setup
+
+**Scope:** `apps/demo-site/**`
+
+**See:** `todos/19-embed-demo-site.md` for detailed implementation plan.
+
+**Status:** Ready to start
+
+**Priority:** HIGH - Critical for sales demos and customer onboarding
+
+**Key Tasks:**
+- Create new Angular application at apps/demo-site
+- Build demo website with intentional accessibility issues (missing alt text, no focus indicators, no skip link)
+- Implement toggle component to dynamically enable/disable embed script
+- Integrate with real backend API using fixed demo site ID and embed key
+- Create database seed script with demo site, scan, and AI-generated alt text suggestions
+- Configure Docker Compose service on port 4400
+- Configure nginx to serve autofix.js at /autofix.js path
+- Add demo images and content
+
+**Success Criteria:**
+- Demo site accessible at http://localhost:4400
+- Toggle control visibly switches between before/after states
+- Alt text suggestions applied from backend API when script enabled
+- Focus outlines and skip link appear when script enabled
+- All Docker services build and run successfully
+- Database seed creates demo site with scan results
+- No console errors when script loads

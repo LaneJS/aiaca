@@ -1,13 +1,14 @@
 <div class="page-shell">
   <header class="hero">
     <div class="hero__intro">
-      <p class="eyebrow low-contrast">Intentionally broken for accessibility testing</p>
-      <h1>Accessibility Anti-Pattern Demo</h1>
+      <p class="eyebrow low-contrast">Copy-paste preview · intentionally rough before state</p>
+      <h1>Watch our one-line accessibility rescue</h1>
       <p class="bad-tagline low-contrast">
-        This page intentionally violates ADA/WCAG guidance so you can watch our embed script clean it up in real time.
+        Paste the embed snippet below on any page. We scan it on load and instantly patch missing alt text, contrast, labels,
+        a skip link, and focus outlines while you work on permanent fixes.
       </p>
       <div class="hero__cta">
-        <a class="ghost-link" href="#">Click here to get lost</a>
+        <a class="ghost-link" href="#">Mystery link (goes nowhere)</a>
         <button class="icon-button">!</button>
       </div>
     </div>
@@ -15,14 +16,19 @@
       <div class="panel__title">Auto-fix embed preview</div>
       <div class="panel__status" [class.enabled]="autofixEnabled">
         <span class="dot"></span>
-        <span>{{ autofixEnabled ? 'Auto-fix is running' : 'Auto-fix is paused' }}</span>
+        <span>{{ autofixEnabled ? 'Auto-fix is running' : 'Auto-fix is paused (showing broken state)' }}</span>
       </div>
       <button class="toggle-button" type="button" (click)="toggleAutoFix()">
         {{ autofixEnabled ? 'View the raw, broken experience' : 'Re-enable automatic fixes' }}
       </button>
       <p class="muted meta-text">
-        Demo account: {{ demoAccount.name }} ({{ demoAccount.domain }}) · Scan score {{ demoAccount.score }}
+        Toggle to compare the intentionally broken baseline with the quick patch your visitors would see—no coding required.
       </p>
+      <p class="muted meta-text">
+        Sample site: {{ demoAccount.name }} ({{ demoAccount.domain }}) · Accessibility score before fixes {{ demoAccount.score }}
+        · Last scan {{ demoAccount.lastScan }}
+      </p>
+      <p class="muted meta-text">Copy this one-line embed to try it on your own page:</p>
       <pre class="embed-snippet" aria-label="Embed code snippet">{{ embedSnippet }}</pre>
     </div>
   </header>
@@ -30,8 +36,8 @@
   <main id="main-content" class="content">
     <section class="broken-preview">
       <div class="section-heading">
-        <h2 class="out-of-order">Broken experience preview</h2>
-        <p class="muted low-contrast">Missing skip links. No focus outlines. Low contrast everywhere.</p>
+        <h2 class="out-of-order">Before our snippet (intentionally broken until you toggle fixes)</h2>
+        <p class="muted low-contrast">Missing skip link, faint text, invisible focus states, and unlabeled forms make this page hard to use.</p>
       </div>
       <div class="bad-grid">
         <article class="bad-card">
@@ -39,7 +45,7 @@
             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
             data-ai-alt="Pastry case with macarons and fruit tarts"
           />
-          <h3>Hero visual with no alt</h3>
+          <h3>Bakery display with no alt text</h3>
           <p class="muted low-contrast">Screen readers have no idea what this image contains.</p>
           <a class="ghost-link" href="#">Learn more</a>
         </article>
@@ -62,13 +68,13 @@
 
     <section class="scan-section">
       <div class="section-heading">
-        <h2>Demo scan + AI fix queue</h2>
-        <p class="muted">Preloaded with a noisy site so you can watch fixes toggle on/off.</p>
+        <h2>What the snippet fixes instantly</h2>
+        <p class="muted">Simulated AI scan results showing the quick patches applied for visitors while your team builds long-term fixes.</p>
       </div>
       <div class="scan-meta muted">
-        <span>Site ID: {{ demoAccount.siteId }}</span>
-        <span>Embed key: {{ demoAccount.embedKey }}</span>
-        <span>Last scan: {{ demoAccount.lastScan }}</span>
+        <span>Example site: {{ demoAccount.domain }}</span>
+        <span>Latest scan: {{ demoAccount.lastScan }}</span>
+        <span>Auto-fix overlay loads as soon as the script runs</span>
       </div>
       <div class="scan-grid">
         <article class="scan-card" *ngFor="let finding of scanFindings">
@@ -89,15 +95,18 @@
 
     <section class="script-benefits">
       <div class="section-heading">
-        <h2>What the embed flips on</h2>
-        <p class="muted">Turn off the toggle above to see these go missing.</p>
+        <h2>Above: before vs. after the embed</h2>
+        <p class="muted">
+          The section above shows the raw, broken experience versus what visitors see after our snippet scans the page and appl
+          ies quick fixes. Use it as a stopgap while your dev team ships permanent updates.
+        </p>
       </div>
       <ul class="benefits">
-        <li>Skip link injected to #main-content</li>
-        <li>ARIA labels applied to unlabeled form fields</li>
-        <li>Visible focus outlines restored for links and buttons</li>
-        <li>High-contrast palette applied to muted text and ghost buttons</li>
-        <li>AI-suggested alt text added to every unannotated image</li>
+        <li>Skip link appears so keyboard users can jump straight to the main content.</li>
+        <li>ARIA labels are written in for unlabeled form fields, buttons, and icons.</li>
+        <li>Visible focus outlines return for every link and button without changing your layout.</li>
+        <li>High-contrast palette overlays muted text and ghost buttons so CTAs stand out.</li>
+        <li>AI-suggested alt text fills in for every unannotated image pulled from the scan.</li>
       </ul>
     </section>
   </main>

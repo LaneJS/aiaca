@@ -7,10 +7,40 @@ import { UserProfile } from './models';
 const TOKEN_KEY = 'aaca_token';
 const USER_KEY = 'aaca_user';
 
+class MemoryStorage implements Storage {
+  private store = new Map<string, string>();
+
+  get length(): number {
+    return this.store.size;
+  }
+
+  clear(): void {
+    this.store.clear();
+  }
+
+  getItem(key: string): string | null {
+    return this.store.has(key) ? (this.store.get(key) as string) : null;
+  }
+
+  key(index: number): string | null {
+    return Array.from(this.store.keys())[index] ?? null;
+  }
+
+  removeItem(key: string): void {
+    this.store.delete(key);
+  }
+
+  setItem(key: string, value: string): void {
+    this.store.set(key, value);
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+
+  private readonly storage: Storage = this.resolveStorage();
 
   private readonly _user = signal<UserProfile | null>(null);
   readonly user = this._user.asReadonly();
@@ -51,19 +81,17 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
-    this._user.set(null);
+    this.clearSession();
     this.router.navigate(['/auth']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(TOKEN_KEY);
+    return this.storage.getItem(TOKEN_KEY);
   }
 
   private restoreSession(): void {
-    const token = localStorage.getItem(TOKEN_KEY);
-    const userJson = localStorage.getItem(USER_KEY);
+    const token = this.storage.getItem(TOKEN_KEY);
+    const userJson = this.storage.getItem(USER_KEY);
 
     if (token && userJson) {
       try {
@@ -76,14 +104,23 @@ export class AuthService {
   }
 
   private persistSession(token: string, user: UserProfile): void {
-    localStorage.setItem(TOKEN_KEY, token);
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    this.storage.setItem(TOKEN_KEY, token);
+    this.storage.setItem(USER_KEY, JSON.stringify(user));
     this._user.set(user);
   }
 
   private clearSession(): void {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    this.storage.removeItem(TOKEN_KEY);
+    this.storage.removeItem(USER_KEY);
     this._user.set(null);
+  }
+
+  private resolveStorage(): Storage {
+    if (typeof sessionStorage !== 'undefined') {
+      return sessionStorage;
+    }
+
+    console.warn('[AuthService] Session storage is unavailable; using in-memory session store.');
+    return new MemoryStorage();
   }
 }

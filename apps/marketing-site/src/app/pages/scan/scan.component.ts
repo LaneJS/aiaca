@@ -31,10 +31,17 @@ export class ScanComponent implements OnInit {
 
   onSubmit(): void {
     this.errorMessage = '';
+    const trimmedUrl = this.url.trim();
+
+    if (!trimmedUrl) {
+      this.errorMessage = 'Enter a valid URL to scan.';
+      return;
+    }
+
     this.submitting = true;
     this.result = undefined;
 
-    this.scanService.submit(this.url).subscribe({
+    this.scanService.submit(trimmedUrl).subscribe({
       next: (response) => {
         this.result = response;
         this.submitting = false;

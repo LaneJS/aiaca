@@ -1,0 +1,56 @@
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.accounts-head {
+  display: grid;
+  grid-template-columns: 2fr 1fr 0.7fr 0.7fr 1fr 1.4fr;
+  align-items: center;
+}
+
+.accounts-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 0.7fr 0.7fr 1fr 1.4fr;
+  align-items: start;
+  gap: 0.5rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.form-card .form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.25rem;
+}

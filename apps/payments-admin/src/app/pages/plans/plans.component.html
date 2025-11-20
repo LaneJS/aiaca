@@ -1,0 +1,113 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Plans</p>
+    <h1>Packaging and revenue</h1>
+    <p class="lede">See which plans are driving revenue and add new ones for special deals.</p>
+  </div>
+</section>
+
+<section class="plans-grid" *ngIf="plans$ | async as plans">
+  <article class="plan-card" *ngFor="let plan of plans">
+    <header>
+      <div>
+        <p class="eyebrow">{{ plan.cadence | titlecase }} plan</p>
+        <h3>{{ plan.name }}</h3>
+      </div>
+      <span class="badge">{{ plan.activeSubscribers }} subscribers</span>
+    </header>
+
+    <div class="plan-stats">
+      <div>
+        <p class="label">Price</p>
+        <p class="stat">$ {{ plan.price | number: '1.0-0' }}</p>
+      </div>
+      <div>
+        <p class="label">Monthly revenue</p>
+        <p class="stat">$ {{ plan.monthlyRevenue | number: '1.0-0' }}</p>
+      </div>
+      <div>
+        <p class="label">Seats in use</p>
+        <p class="stat">{{ plan.seatsInUse }} / {{ plan.seatsIncluded }}</p>
+      </div>
+    </div>
+
+    <div class="features">
+      <p class="label">Included</p>
+      <ul>
+        <li *ngFor="let feature of plan.features">{{ feature }}</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="panel form-card">
+    <header class="panel__header">
+      <div>
+        <p class="eyebrow">Create plan</p>
+        <h3>Custom packaging</h3>
+      </div>
+      <span class="badge">Product ops</span>
+    </header>
+
+    <form class="form" (ngSubmit)="addPlan()">
+      <label class="input-group">
+        <span>Name</span>
+        <input type="text" [(ngModel)]="newPlan.name" name="name" required />
+      </label>
+
+      <div class="split">
+        <label class="input-group">
+          <span>Price</span>
+          <input type="number" [(ngModel)]="newPlan.price" name="price" min="0" />
+        </label>
+        <label class="input-group">
+          <span>Cadence</span>
+          <select [(ngModel)]="newPlan.cadence" name="cadence">
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="input-group">
+        <span>Included seats</span>
+        <input type="number" [(ngModel)]="newPlan.seatsIncluded" name="seatsIncluded" min="1" />
+      </label>
+
+      <label class="input-group">
+        <span>Features</span>
+        <input type="text" [(ngModel)]="newPlan.features" name="features" placeholder="support, reports" />
+        <small>Comma-separated items.</small>
+      </label>
+
+      <button class="btn btn-primary" type="submit">Add plan</button>
+    </form>
+  </article>
+</section>
+
+<section class="panel">
+  <header class="panel__header">
+    <div>
+      <p class="eyebrow">Seat usage</p>
+      <h3>Accounts by plan</h3>
+    </div>
+  </header>
+  <div class="table" *ngIf="(accounts$ | async) as accounts">
+    <div class="table__head usage-head">
+      <span>Buyer</span>
+      <span>Plan</span>
+      <span>Seats</span>
+      <span>Status</span>
+    </div>
+    <div class="table__row usage-row" *ngFor="let account of accounts">
+      <div>
+        <p class="cell-title">{{ account.name }}</p>
+        <p class="cell-sub">{{ account.email }}</p>
+      </div>
+      <span class="pill">{{ account.plan }}</span>
+      <span>{{ account.seats }}</span>
+      <span class="pill" [ngClass]="{ 'pill--danger': account.status === 'past_due' }">
+        {{ account.status.replace('_', ' ') }}
+      </span>
+    </div>
+  </div>
+</section>

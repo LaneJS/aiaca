@@ -1,0 +1,51 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="dot"></span>
+      <div>
+        <p class="eyebrow">AACA</p>
+        <h2>Billing Desk</h2>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a
+        *ngFor="let link of navLinks"
+        [routerLink]="link.path"
+        routerLinkActive="nav__link--active"
+        [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+        class="nav__link"
+      >
+        <div>
+          <p class="nav__label">{{ link.label }}</p>
+          <p class="nav__hint">{{ link.description }}</p>
+        </div>
+        <span class="chevron">›</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-card">
+      <p class="label">Collections playbook</p>
+      <p class="hint">1) Retry failed invoices<br />2) Email billing contacts<br />3) Offer card + ACH</p>
+      <button class="btn btn-secondary">Download SOP</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Payment operations</p>
+        <h1>Complete control of buyers</h1>
+        <p class="lede">Track active accounts, collect past-due invoices, and adjust plans without leaving this workspace.</p>
+      </div>
+      <div class="topbar__actions">
+        <button class="btn btn-secondary" routerLink="/payments">New payment</button>
+        <button class="btn btn-primary" routerLink="/accounts">Add buyer</button>
+      </div>
+    </header>
+
+    <section class="content">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,142 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Accounts</p>
+    <h1>Manage buyers and entitlements</h1>
+    <p class="lede">Track payment status, seats, and plan assignments for every customer.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-secondary" (click)="resetFilters()">Reset filters</button>
+  </div>
+</section>
+
+<section class="filters">
+  <label class="input-group">
+    <span>Search</span>
+    <input
+      type="search"
+      placeholder="Name or email"
+      [(ngModel)]="filters.search"
+      (ngModelChange)="applyFilter({ search: $event })"
+    />
+  </label>
+  <label class="input-group">
+    <span>Status</span>
+    <select [(ngModel)]="filters.status" (ngModelChange)="applyFilter({ status: $event })">
+      <option value="all">All</option>
+      <option *ngFor="let status of statusOptions" [value]="status">{{ status.replace('_', ' ') }}</option>
+    </select>
+  </label>
+  <label class="input-group">
+    <span>Plan</span>
+    <select [(ngModel)]="filters.plan" (ngModelChange)="applyFilter({ plan: $event })">
+      <option value="all">All plans</option>
+      <option *ngFor="let plan of planOptions" [value]="plan">{{ plan }}</option>
+    </select>
+  </label>
+</section>
+
+<section class="grid">
+  <article class="panel">
+    <header class="panel__header">
+      <div>
+        <p class="eyebrow">Buyer roster</p>
+        <h3>Active and trialing accounts</h3>
+      </div>
+      <span class="badge">Live data</span>
+    </header>
+
+    <div class="table" *ngIf="accounts$ | async as accounts">
+      <div class="table__head accounts-head">
+        <span>Buyer</span>
+        <span>Plan</span>
+        <span>Seats</span>
+        <span>MRR</span>
+        <span>Status</span>
+        <span>Actions</span>
+      </div>
+
+      <div class="table__row accounts-row" *ngFor="let account of accounts">
+        <div>
+          <p class="cell-title">{{ account.name }}</p>
+          <p class="cell-sub">{{ account.email }}</p>
+          <div class="tag-list">
+            <span class="pill" *ngFor="let tag of account.tags">{{ tag }}</span>
+          </div>
+        </div>
+        <span class="pill">{{ account.plan }}</span>
+        <span>{{ account.seats }}</span>
+        <span>$ {{ account.mrr | number: '1.0-0' }}</span>
+        <span [ngClass]="badgeClass(account.status)">{{ account.status.replace('_', ' ') }}</span>
+        <div class="actions">
+          <button class="btn btn-ghost" (click)="updateStatus(account.id, 'active')">Mark active</button>
+          <button class="btn btn-ghost" (click)="updateStatus(account.id, 'paused')">Pause</button>
+          <button class="btn btn-danger" (click)="clearBalance(account.id)" [disabled]="account.outstandingBalance === 0">
+            Clear $ {{ account.outstandingBalance | number: '1.0-0' }}
+          </button>
+        </div>
+      </div>
+
+      <p class="empty" *ngIf="accounts.length === 0">No buyers match these filters yet.</p>
+    </div>
+  </article>
+
+  <article class="panel form-card">
+    <header class="panel__header">
+      <div>
+        <p class="eyebrow">New buyer</p>
+        <h3>Add a paying account</h3>
+      </div>
+      <span class="badge">Onboard</span>
+    </header>
+
+    <form class="form" (ngSubmit)="addAccount()">
+      <label class="input-group">
+        <span>Buyer name</span>
+        <input type="text" [(ngModel)]="newAccount.name" name="name" required />
+      </label>
+
+      <label class="input-group">
+        <span>Billing email</span>
+        <input type="email" [(ngModel)]="newAccount.email" name="email" required />
+      </label>
+
+      <label class="input-group">
+        <span>Plan</span>
+        <select [(ngModel)]="newAccount.plan" name="plan">
+          <option *ngFor="let plan of planOptions" [value]="plan">{{ plan }}</option>
+        </select>
+      </label>
+
+      <div class="split">
+        <label class="input-group">
+          <span>Seats</span>
+          <input type="number" [(ngModel)]="newAccount.seats" name="seats" min="1" />
+        </label>
+        <label class="input-group">
+          <span>MRR ($)</span>
+          <input type="number" [(ngModel)]="newAccount.mrr" name="mrr" min="0" />
+        </label>
+      </div>
+
+      <label class="input-group">
+        <span>Status</span>
+        <select [(ngModel)]="newAccount.status" name="status">
+          <option *ngFor="let status of statusOptions" [value]="status">{{ status.replace('_', ' ') }}</option>
+        </select>
+      </label>
+
+      <label class="input-group">
+        <span>Renews on</span>
+        <input type="date" [(ngModel)]="newAccount.renewsOn" name="renewsOn" />
+      </label>
+
+      <label class="input-group">
+        <span>Tags</span>
+        <input type="text" placeholder="agency, priority" [(ngModel)]="newAccount.tags" name="tags" />
+        <small>Add comma-separated labels</small>
+      </label>
+
+      <button class="btn btn-primary" type="submit">Create buyer</button>
+    </form>
+  </article>
+</section>

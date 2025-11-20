@@ -95,6 +95,7 @@ This document defines **agents** (human or AI) that collaborate on the monorepo,
 **Owns:**
 - `apps/marketing-site/**`
 - `apps/dashboard/**`
+- `apps/payments-admin/**`
 - `packages/ui/**`
 
 **Responsibilities:**
@@ -104,9 +105,18 @@ This document defines **agents** (human or AI) that collaborate on the monorepo,
   - Auth/session
   - Site management & monitoring configuration
 - Implement charts and summaries (accessibility score, issue trends).
-- Provide a “developer view” (raw details, code snippets) and “business view” (plain-language summary).
+- Provide a "developer view" (raw details, code snippets) and "business view" (plain-language summary).
 
-**Inputs:** Product specs, design & copy.  
+**Angular Best Practices (MANDATORY):**
+- **Always use standalone components** - Set `standalone: true` in all `@Component` decorators
+- **Use inject() function for dependency injection** - Replace constructor injection with `inject()` from `@angular/core`
+- **Import dependencies explicitly** - Add all required modules (CommonModule, FormsModule, RouterModule, etc.) to the component's `imports` array
+- **Use provideRouter() for routing** - Configure routes using `provideRouter()` in `bootstrapApplication()`
+- **Bootstrap with bootstrapApplication()** - Use standalone bootstrapping instead of NgModule-based `bootstrapModule()`
+- **No NgModules** - Do not create or use NgModule files (app.module.ts, etc.) in new applications
+- Reference: https://angular.dev/reference/migrations/standalone
+
+**Inputs:** Product specs, design & copy.
 **Outputs:** Production-ready Angular apps.
 
 ---

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BillingDataService } from '../../services/billing-data.service';
@@ -11,10 +13,13 @@ interface PlanView extends BillingPlan {
 
 @Component({
   selector: 'app-plans-page',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './plans.component.html',
   styleUrls: ['./plans.component.scss'],
 })
 export class PlansComponent {
+  private readonly billing = inject(BillingDataService);
   readonly plans$: Observable<PlanView[]> = combineLatest([
     this.billing.plans$,
     this.billing.accounts$,
@@ -37,8 +42,6 @@ export class PlansComponent {
     seatsIncluded: 1,
     features: [],
   };
-
-  constructor(private readonly billing: BillingDataService) {}
 
   addPlan(): void {
     if (!this.newPlan.name || !this.newPlan.price) {

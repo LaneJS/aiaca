@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { BillingDataService } from '../../services/billing-data.service';
@@ -12,10 +14,13 @@ interface PaymentFilters {
 
 @Component({
   selector: 'app-payments-page',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.scss'],
 })
 export class PaymentsComponent implements OnInit {
+  private readonly billing = inject(BillingDataService);
   readonly filters$ = new BehaviorSubject<PaymentFilters>({ status: 'all', method: 'all', search: '' });
   filters: PaymentFilters = this.filters$.getValue();
   readonly paymentStatuses: PaymentStatus[] = ['paid', 'refunded', 'failed', 'past_due', 'pending'];
@@ -46,8 +51,6 @@ export class PaymentsComponent implements OnInit {
     status: 'paid',
     period: 'Monthly',
   };
-
-  constructor(private readonly billing: BillingDataService) {}
 
   ngOnInit(): void {
     this.accounts$.pipe(take(1)).subscribe((accounts) => {

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BillingDataService } from '../../services/billing-data.service';
@@ -12,10 +14,13 @@ interface AccountFilters {
 
 @Component({
   selector: 'app-accounts-page',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './accounts.component.html',
   styleUrls: ['./accounts.component.scss'],
 })
 export class AccountsComponent {
+  private readonly billing = inject(BillingDataService);
   readonly filters$ = new BehaviorSubject<AccountFilters>({ search: '', status: 'all', plan: 'all' });
   filters: AccountFilters = this.filters$.getValue();
 
@@ -49,8 +54,6 @@ export class AccountsComponent {
 
   readonly planOptions = ['Launch', 'Growth', 'Scale'];
   readonly statusOptions: AccountStatus[] = ['active', 'trialing', 'past_due', 'paused', 'cancelled'];
-
-  constructor(private readonly billing: BillingDataService) {}
 
   applyFilter(partial: Partial<AccountFilters>): void {
     this.filters = { ...this.filters, ...partial } as AccountFilters;

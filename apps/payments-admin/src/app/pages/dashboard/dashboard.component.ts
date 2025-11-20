@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BillingDataService } from '../../services/billing-data.service';
@@ -6,10 +7,14 @@ import { AccountRecord, BillingSummary, PaymentRecord } from '../../types';
 
 @Component({
   selector: 'app-dashboard-page',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
+  private readonly billing = inject(BillingDataService);
+
   readonly summary$: Observable<BillingSummary> = this.billing.summary$;
   readonly upcomingRenewals$: Observable<AccountRecord[]> = this.billing.accounts$.pipe(
     map((accounts) =>
@@ -35,8 +40,6 @@ export class DashboardComponent {
         .slice(0, 5)
     )
   );
-
-  constructor(private readonly billing: BillingDataService) {}
 
   statusClass(status: string): string {
     switch (status) {

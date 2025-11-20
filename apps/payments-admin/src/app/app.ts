@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 interface NavLink {
   label: string;
@@ -8,7 +10,8 @@ interface NavLink {
 
 @Component({
   selector: 'app-root',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
 })

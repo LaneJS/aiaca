@@ -26,3 +26,5 @@ pnpm-error.log*
 **/gradle/wrapper/gradle-wrapper.jar
 **/node_modules/
 **/.angular/cache
+
+.angular

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 interface DemoIssue {
   title: string;
@@ -24,7 +25,8 @@ declare global {
 
 @Component({
   selector: 'app-root',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -97,9 +99,6 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     this.autofixEnabled = Boolean(window?.AACAEmbedDemo);
-    if (this.autofixEnabled) {
-      window.AACAEmbedDemo?.enable();
-    }
   }
 
   protected toggleAutoFix(): void {

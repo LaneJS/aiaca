@@ -5,8 +5,7 @@ import { App } from './app';
 import { appRoutes } from './app.routes';
 
 @NgModule({
-  declarations: [App],
-  imports: [BrowserModule, RouterModule.forRoot(appRoutes)],
+  imports: [App, BrowserModule, RouterModule.forRoot(appRoutes)],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],
 })

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { getApiBaseUrl } from '@aiaca/config';
 
 export interface IssueSummary {
@@ -25,39 +25,10 @@ export class ScanService {
 
   submit(url: string): Observable<PublicScanResponse> {
     const endpoint = `${this.apiBase}/public/scans`;
-    console.log(`[ScanService] Submitting scan to: ${endpoint}`);
-    return this.http
-      .post<PublicScanResponse>(endpoint, { url })
-      .pipe(
-        catchError((error) => {
-          console.error('[ScanService] API request failed, using mock data:', error);
-          return of(this.mockResponse(url));
-        })
-      );
-  }
-
-  private mockResponse(url: string): PublicScanResponse {
-    return {
-      url,
-      score: 82,
-      issues: [
-        {
-          id: 'mock-1',
-          type: 'alt_text',
-          severity: 'moderate',
-          description: 'Image elements on the hero lack descriptive alt text.',
-          location: 'Hero banner image',
-          suggestion: 'Add concise alt text that describes the image intent.',
-        },
-        {
-          id: 'mock-2',
-          type: 'contrast',
-          severity: 'high',
-          description: 'Button text does not meet contrast ratios against the background.',
-          location: 'Primary CTA',
-          suggestion: 'Use a darker background (#0f172a) with white text for 7:1 contrast.',
-        },
-      ],
-    };
+    return this.http.post<PublicScanResponse>(endpoint, { url }).pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
   }
 }

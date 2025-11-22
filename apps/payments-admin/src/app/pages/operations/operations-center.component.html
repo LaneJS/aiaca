@@ -1,0 +1,133 @@
+<a class="skip-link" href="#dunning-queue">Skip to operations queues</a>
+
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Operations Center</p>
+    <h1>Dunning, disputes, and webhook health</h1>
+    <p class="lede">Work the collections queue, respond to disputes, and monitor webhook deliveries with live data.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-secondary" type="button" (click)="refresh()">Refresh</button>
+  </div>
+</section>
+
+<section class="panel" id="dunning-queue">
+  <header class="panel__header">
+    <div>
+      <p class="eyebrow">Dunning queue</p>
+      <h3>Past-due invoices needing outreach</h3>
+    </div>
+    <span class="badge">Collections</span>
+  </header>
+
+  <div class="table" *ngIf="dunningQueue$ | async as rows">
+    <div class="table__head dunning-head">
+      <span>Invoice</span>
+      <span>Status</span>
+      <span>Amount</span>
+      <span>Due</span>
+      <span>Actions</span>
+    </div>
+    <div class="table__row dunning-row" *ngFor="let row of rows">
+      <span class="cell-title">{{ row.invoice.number || row.invoice.id }}</span>
+      <span>{{ row.status }}</span>
+      <span>{{ formatAmount(row.invoice.total, row.invoice.currency) }}</span>
+      <span>{{ row.invoice.dueDate | date: 'mediumDate' }}</span>
+      <div class="actions">
+        <button class="btn btn-secondary" type="button" (click)="recordDunningTouch(row)">Log touchpoint</button>
+        <button class="btn btn-ghost" type="button" [disabled]="!row.invoice.accountId">Retry (hook)</button>
+      </div>
+    </div>
+    <p class="empty" *ngIf="rows.length === 0">No past-due invoices in queue.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <header class="panel__header">
+    <div>
+      <p class="eyebrow">Disputes</p>
+      <h3>Chargebacks and evidence status</h3>
+    </div>
+    <span class="badge">Risk</span>
+  </header>
+
+  <div class="table" *ngIf="disputes$ | async as disputePage">
+    <div class="table__head disputes-head">
+      <span>Dispute</span>
+      <span>Amount</span>
+      <span>Status</span>
+      <span>Evidence due</span>
+      <span>Actions</span>
+    </div>
+    <div class="table__row disputes-row" *ngFor="let dispute of disputePage.items">
+      <span class="cell-title">{{ dispute.id }}</span>
+      <span>{{ formatAmount(dispute.amount, dispute.currency) }}</span>
+      <span>{{ dispute.status }}</span>
+      <span>{{ dispute.evidenceDueAt | date: 'medium' }}</span>
+      <div class="actions">
+        <button
+          class="btn btn-secondary"
+          type="button"
+          [disabled]="disputeActionLoading().has(dispute.id || '')"
+          (click)="markDispute(dispute, disputeStatus.UNDER_REVIEW)"
+        >
+          Mark submitted
+        </button>
+        <button
+          class="btn btn-ghost"
+          type="button"
+          [disabled]="disputeActionLoading().has(dispute.id || '')"
+          (click)="markDispute(dispute, disputeStatus.WON)"
+        >
+          Mark won
+        </button>
+        <button
+          class="btn btn-ghost"
+          type="button"
+          [disabled]="disputeActionLoading().has(dispute.id || '')"
+          (click)="markDispute(dispute, disputeStatus.LOST)"
+        >
+          Mark lost
+        </button>
+      </div>
+    </div>
+    <p class="empty" *ngIf="disputePage.items.length === 0">No disputes found.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <header class="panel__header">
+    <div>
+      <p class="eyebrow">Webhook monitor</p>
+      <h3>Delivery attempts and errors</h3>
+    </div>
+    <span class="badge">Integrations</span>
+  </header>
+
+  <div class="table" *ngIf="webhooks$ | async as webhookPage">
+    <div class="table__head webhook-head">
+      <span>Event</span>
+      <span>Status</span>
+      <span>Received</span>
+      <span>Last error</span>
+      <span>Actions</span>
+    </div>
+    <div class="table__row webhook-row" *ngFor="let event of webhookPage.items">
+      <span class="cell-title">{{ event.eventType }}</span>
+      <span>{{ event.status }}</span>
+      <span>{{ event.receivedAt | date: 'short' }}</span>
+      <span class="cell-sub">{{ event.lastError || '—' }}</span>
+      <div class="actions">
+        <button
+          class="btn btn-secondary"
+          type="button"
+          [disabled]="webhookActionLoading().has(event.id || '')"
+          (click)="retryWebhook(event)"
+        >
+          Mark for retry
+        </button>
+      </div>
+    </div>
+    <p class="empty" *ngIf="webhookPage.items.length === 0">No webhook events recorded.</p>
+  </div>
+</section>

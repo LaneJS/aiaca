@@ -1,85 +1,163 @@
+<a class="skip-link" href="#plan-catalog">Skip to plan catalog</a>
+
 <section class="page-header">
   <div>
-    <p class="eyebrow">Plans</p>
-    <h1>Packaging and revenue</h1>
-    <p class="lede">See which plans are driving revenue and add new ones for special deals.</p>
+    <p class="eyebrow">Plans & Pricing</p>
+    <h1>Govern plan catalog, prices, and coupons</h1>
+    <p class="lede">Control packaging, currencies, discounts, and upcoming changes with live API data.</p>
   </div>
 </section>
 
-<section class="plans-grid" *ngIf="plans$ | async as plans">
-  <article class="plan-card" *ngFor="let plan of plans">
-    <header>
+<section class="panel" id="plan-catalog">
+  <header class="panel__header">
+    <div>
+      <p class="eyebrow">Plan catalog</p>
+      <h3>Plans, prices, and usage</h3>
+    </div>
+    <span class="badge">Live data</span>
+  </header>
+
+  <div class="table" *ngIf="planViews$ | async as plans">
+    <div class="table__head plan-head">
+      <span>Plan</span>
+      <span>Status</span>
+      <span>Prices</span>
+      <span>Subscriptions</span>
+      <span>Actions</span>
+    </div>
+
+    <div class="table__row plan-row" *ngFor="let entry of plans">
       <div>
-        <p class="eyebrow">{{ plan.cadence | titlecase }} plan</p>
-        <h3>{{ plan.name }}</h3>
+        <p class="cell-title">{{ entry.plan.name }}</p>
+        <p class="cell-sub">Code: {{ entry.plan.code }}</p>
+        <p class="cell-sub">{{ entry.plan.description || 'No description' }}</p>
       </div>
-      <span class="badge">{{ plan.activeSubscribers }} subscribers</span>
+      <span class="pill" [ngClass]="{ 'pill--danger': entry.plan.status !== PlanStatus.ACTIVE }">
+        {{ entry.plan.status }}
+      </span>
+      <div class="price-list">
+        <div class="price-pill" *ngFor="let price of entry.prices">
+          <p class="cell-title">{{ formatAmount(price.amount, price.currency) }}</p>
+          <p class="cell-sub">{{ price.interval.toLowerCase() }} • {{ price.intervalCount }}x • {{ price.usageType }}</p>
+          <p class="cell-sub">Active: {{ price.active ? 'Yes' : 'No' }}</p>
+        </div>
+        <p class="cell-sub" *ngIf="entry.prices.length === 0">No prices yet.</p>
+      </div>
+      <span class="pill">{{ entry.subscriptions }} subs</span>
+      <div class="actions">
+        <button
+          class="btn btn-ghost"
+          type="button"
+          [disabled]="planActionLoading().has(entry.plan.id)"
+          (click)="togglePlanStatus(entry.plan, PlanStatus.ACTIVE)"
+        >
+          Activate
+        </button>
+        <button
+          class="btn btn-ghost"
+          type="button"
+          [disabled]="planActionLoading().has(entry.plan.id)"
+          (click)="togglePlanStatus(entry.plan, PlanStatus.INACTIVE)"
+        >
+          Deactivate
+        </button>
+        <button class="btn btn-secondary" type="button" (click)="scheduledChangePlaceholder(entry.plan)">
+          Scheduled change
+        </button>
+      </div>
+    </div>
+
+    <p class="empty" *ngIf="plans.length === 0">No plans available.</p>
+  </div>
+</section>
+
+<section class="form-grid">
+  <article class="panel form-card">
+    <header class="panel__header">
+      <div>
+        <p class="eyebrow">Create plan</p>
+        <h3>New package</h3>
+      </div>
+      <span class="badge">Governance</span>
     </header>
 
-    <div class="plan-stats">
-      <div>
-        <p class="label">Price</p>
-        <p class="stat">$ {{ plan.price | number: '1.0-0' }}</p>
-      </div>
-      <div>
-        <p class="label">Monthly revenue</p>
-        <p class="stat">$ {{ plan.monthlyRevenue | number: '1.0-0' }}</p>
-      </div>
-      <div>
-        <p class="label">Seats in use</p>
-        <p class="stat">{{ plan.seatsInUse }} / {{ plan.seatsIncluded }}</p>
-      </div>
-    </div>
-
-    <div class="features">
-      <p class="label">Included</p>
-      <ul>
-        <li *ngFor="let feature of plan.features">{{ feature }}</li>
-      </ul>
-    </div>
+    <form class="form" (ngSubmit)="createPlan()" aria-label="Create plan">
+      <label class="input-group">
+        <span>Code</span>
+        <input type="text" name="code" [ngModel]="newPlan().code" (ngModelChange)="setPlanCode($event)" required />
+      </label>
+      <label class="input-group">
+        <span>Name</span>
+        <input type="text" name="name" [ngModel]="newPlan().name" (ngModelChange)="setPlanName($event)" required />
+      </label>
+      <label class="input-group">
+        <span>Description</span>
+        <textarea name="description" [ngModel]="newPlan().description" (ngModelChange)="setPlanDescription($event)"></textarea>
+      </label>
+      <label class="input-group">
+        <span>Status</span>
+        <select name="status" [ngModel]="newPlan().status" (ngModelChange)="setPlanStatus($event)">
+          <option *ngFor="let status of (PlanStatus | keyvalue)" [value]="status.value">{{ status.value }}</option>
+        </select>
+      </label>
+      <button class="btn btn-primary" type="submit">Create plan</button>
+    </form>
   </article>
 
   <article class="panel form-card">
     <header class="panel__header">
       <div>
-        <p class="eyebrow">Create plan</p>
-        <h3>Custom packaging</h3>
+        <p class="eyebrow">Add price</p>
+        <h3>Attach to a plan</h3>
       </div>
-      <span class="badge">Product ops</span>
+      <span class="badge">Price book</span>
     </header>
 
-    <form class="form" (ngSubmit)="addPlan()">
+    <form class="form" (ngSubmit)="addPrice()" aria-label="Add price">
       <label class="input-group">
-        <span>Name</span>
-        <input type="text" [(ngModel)]="newPlan.name" name="name" required />
+        <span>Plan</span>
+        <select name="planId" [ngModel]="newPrice().planId" (ngModelChange)="setPricePlan($event)">
+          <option value="">Select plan</option>
+          <ng-container *ngIf="plans$ | async as plansRaw">
+            <option *ngFor="let plan of plansRaw" [value]="plan.id">{{ plan.name }}</option>
+          </ng-container>
+        </select>
       </label>
-
+      <label class="input-group">
+        <span>Amount</span>
+        <input type="number" step="0.01" name="amount" [ngModel]="newPrice().amount" (ngModelChange)="setPriceAmount($event)" />
+      </label>
+      <label class="input-group">
+        <span>Currency</span>
+        <select name="currency" [ngModel]="newPrice().currency" (ngModelChange)="setPriceCurrency($event)">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+        </select>
+      </label>
       <div class="split">
         <label class="input-group">
-          <span>Price</span>
-          <input type="number" [(ngModel)]="newPlan.price" name="price" min="0" />
-        </label>
-        <label class="input-group">
-          <span>Cadence</span>
-          <select [(ngModel)]="newPlan.cadence" name="cadence">
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
+          <span>Interval</span>
+          <select name="interval" [ngModel]="newPrice().interval" (ngModelChange)="setPriceInterval($event)">
+            <option *ngFor="let interval of (PriceInterval | keyvalue)" [value]="interval.value">{{ interval.value.toLowerCase() }}</option>
           </select>
         </label>
+        <label class="input-group">
+          <span>Interval count</span>
+          <input type="number" min="1" name="intervalCount" [ngModel]="newPrice().intervalCount" (ngModelChange)="setPriceIntervalCount($event)" />
+        </label>
       </div>
-
       <label class="input-group">
-        <span>Included seats</span>
-        <input type="number" [(ngModel)]="newPlan.seatsIncluded" name="seatsIncluded" min="1" />
+        <span>Usage type</span>
+        <select name="usageType" [ngModel]="newPrice().usageType" (ngModelChange)="setPriceUsage($event)">
+          <option *ngFor="let usage of (UsageType | keyvalue)" [value]="usage.value">{{ usage.value }}</option>
+        </select>
       </label>
-
-      <label class="input-group">
-        <span>Features</span>
-        <input type="text" [(ngModel)]="newPlan.features" name="features" placeholder="support, reports" />
-        <small>Comma-separated items.</small>
+      <label class="input-group checkbox">
+        <input type="checkbox" name="active" [ngModel]="newPrice().active" (ngModelChange)="setPriceActive($event)" />
+        <span>Active</span>
       </label>
-
-      <button class="btn btn-primary" type="submit">Add plan</button>
+      <button class="btn btn-primary" type="submit">Add price</button>
     </form>
   </article>
 </section>
@@ -87,27 +165,66 @@
 <section class="panel">
   <header class="panel__header">
     <div>
-      <p class="eyebrow">Seat usage</p>
-      <h3>Accounts by plan</h3>
+      <p class="eyebrow">Coupons</p>
+      <h3>Discounts and promos</h3>
     </div>
+    <span class="badge">Live</span>
   </header>
-  <div class="table" *ngIf="(accounts$ | async) as accounts">
-    <div class="table__head usage-head">
-      <span>Buyer</span>
-      <span>Plan</span>
-      <span>Seats</span>
+
+  <div class="table" *ngIf="coupons$ | async as couponPage">
+    <div class="table__head coupons-head">
+      <span>Code</span>
+      <span>Value</span>
+      <span>Duration</span>
+      <span>Redemptions</span>
       <span>Status</span>
     </div>
-    <div class="table__row usage-row" *ngFor="let account of accounts">
-      <div>
-        <p class="cell-title">{{ account.name }}</p>
-        <p class="cell-sub">{{ account.email }}</p>
-      </div>
-      <span class="pill">{{ account.plan }}</span>
-      <span>{{ account.seats }}</span>
-      <span class="pill" [ngClass]="{ 'pill--danger': account.status === 'past_due' }">
-        {{ account.status.replace('_', ' ') }}
+    <div class="table__row coupons-row" *ngFor="let coupon of couponPage.items">
+      <span class="cell-title">{{ coupon.code }}</span>
+      <span>
+        <ng-container *ngIf="coupon.percentOff; else amountOff">
+          {{ coupon.percentOff }}% off
+        </ng-container>
+        <ng-template #amountOff>{{ formatAmount(coupon.amountOff, 'USD') }}</ng-template>
       </span>
+      <span>{{ coupon.duration }}</span>
+      <span>{{ coupon.maxRedemptions || '∞' }}</span>
+      <span class="pill">{{ coupon.valid ? 'Valid' : 'Expired' }}</span>
     </div>
+    <p class="empty" *ngIf="couponPage.items.length === 0">No coupons defined.</p>
   </div>
+
+  <form class="form coupon-form" (ngSubmit)="createCoupon()" aria-label="Create coupon">
+    <label class="input-group">
+      <span>Code</span>
+      <input type="text" name="couponCode" [ngModel]="newCoupon().code" (ngModelChange)="setCouponCode($event)" required />
+    </label>
+    <div class="split">
+      <label class="input-group">
+        <span>Percent off</span>
+        <input type="number" min="0" max="100" name="percentOff" [ngModel]="newCoupon().percentOff" (ngModelChange)="setCouponPercent($event)" />
+      </label>
+      <label class="input-group">
+        <span>Amount off ($)</span>
+        <input type="number" min="0" step="0.01" name="amountOff" [ngModel]="newCoupon().amountOff" (ngModelChange)="setCouponAmount($event)" />
+      </label>
+    </div>
+    <label class="input-group">
+      <span>Duration</span>
+      <select name="duration" [ngModel]="newCoupon().duration" (ngModelChange)="setCouponDuration($event)">
+        <option *ngFor="let duration of (CouponDuration | keyvalue)" [value]="duration.value">{{ duration.value }}</option>
+      </select>
+    </label>
+    <label class="input-group">
+      <span>Max redemptions</span>
+      <input
+        type="number"
+        min="0"
+        name="maxRedemptions"
+        [ngModel]="newCoupon().maxRedemptions"
+        (ngModelChange)="updateCouponMaxRedemptions($event)"
+      />
+    </label>
+    <button class="btn btn-primary" type="submit">Create coupon</button>
+  </form>
 </section>

@@ -19,13 +19,13 @@
 
 .accounts-head {
   display: grid;
-  grid-template-columns: 2fr 1fr 0.7fr 0.7fr 1fr 1.4fr;
+  grid-template-columns: 0.3fr 2fr 1.2fr 0.8fr 1fr 1fr 1.6fr;
   align-items: center;
 }
 
 .accounts-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 0.7fr 0.7fr 1fr 1.4fr;
+  grid-template-columns: 0.3fr 2fr 1.2fr 0.8fr 1fr 1fr 1.6fr;
   align-items: start;
   gap: 0.5rem;
 }
@@ -48,9 +48,26 @@
   gap: 0.75rem;
 }
 
-.tag-list {
+.sort-buttons {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin-top: 0.25rem;
+  gap: 0.35rem;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 0.75rem;
+  background: var(--primary);
+  color: #0a0f1e;
+  border-radius: 8px;
 }

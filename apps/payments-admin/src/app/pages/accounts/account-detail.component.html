@@ -1,0 +1,294 @@
+<a class="skip-link" href="#account-tabpanel">Skip to account content</a>
+
+<ng-container *ngIf="account$ | async as account; else missingAccount">
+  <section class="page-header">
+    <div>
+      <p class="eyebrow">Account</p>
+      <h1>{{ account?.name || 'Account' }}</h1>
+      <p class="lede">Contacts, billing methods, subscriptions, invoices, and audit history for this buyer.</p>
+      <div class="pill-row">
+        <span class="pill" [ngClass]="statusClass(account?.status)">{{ account?.status || 'UNKNOWN' }}</span>
+        <span class="pill">Currency: {{ account?.currency || 'USD' }}</span>
+        <span class="pill" *ngIf="account?.stripeCustomerId">Stripe: {{ account?.stripeCustomerId }}</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn-secondary" routerLink="/accounts">Back to accounts</a>
+      <button class="btn btn-primary" type="button" disabled>Actions (coming soon)</button>
+    </div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Account sections">
+    <button
+      *ngFor="let tab of tabs"
+      class="tab"
+      type="button"
+      role="tab"
+      [attr.aria-selected]="selectedTab() === tab"
+      [attr.aria-controls]="'tab-panel-' + tab"
+      (click)="changeTab(tab)"
+    >
+      {{ tab.replace('-', ' ') | titlecase }}
+    </button>
+  </nav>
+
+  <section
+    id="account-tabpanel"
+    [attr.aria-labelledby]="'tab-' + selectedTab()"
+    class="tab-panel"
+    tabindex="-1"
+  >
+    <ng-container [ngSwitch]="selectedTab()">
+      <div *ngSwitchCase="'overview'" id="tab-panel-overview">
+        <ng-container *ngIf="overview$ | async as overview">
+          <div class="overview-grid">
+            <article class="card">
+              <p class="label">Status</p>
+              <h3 [ngClass]="statusClass(overview.account?.status)">{{ overview.account?.status || 'UNKNOWN' }}</h3>
+              <p class="hint">Created {{ overview.account?.createdAt | date: 'medium' }}</p>
+            </article>
+            <article class="card">
+              <p class="label">Subscriptions</p>
+              <h3>{{ overview.pastDueSubs }} past due</h3>
+              <p class="hint">{{ overview.account?.id }}</p>
+            </article>
+            <article class="card">
+              <p class="label">Invoices</p>
+              <h3>{{ overview.unpaidInvoices }} open/past due</h3>
+              <p class="hint">Includes open, past due, uncollectible</p>
+            </article>
+          </div>
+
+          <div class="notes">
+            <div>
+              <p class="eyebrow">Inline notes</p>
+              <p class="lede">Capture quick context for revenue ops. (Local only for now.)</p>
+              <textarea aria-label="Add note" rows="3" #noteBox></textarea>
+              <div class="actions">
+                <button class="btn btn-primary" type="button" (click)="addNote(noteBox)">Add note</button>
+              </div>
+              <ul class="note-list">
+                <li *ngFor="let note of localNotes()">
+                  <p class="cell-title">{{ note.text }}</p>
+                  <p class="cell-sub">{{ note.createdAt | date: 'short' }}</p>
+                </li>
+                <li *ngIf="localNotes().length === 0" class="cell-sub">No notes yet.</li>
+              </ul>
+            </div>
+            <div>
+              <p class="eyebrow">Activity feed</p>
+              <ul class="audit-feed" *ngIf="auditLogs$ | async as logs">
+                <li *ngFor="let log of logs">
+                  <div>
+                    <p class="cell-title">{{ log.action }}</p>
+                    <p class="cell-sub">{{ log.entityType }} • {{ log.entityId }}</p>
+                  </div>
+                  <span class="cell-sub">{{ log.createdAt | date: 'short' }}</span>
+                </li>
+                <li *ngIf="logs.length === 0" class="cell-sub">No activity recorded.</li>
+              </ul>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div *ngSwitchCase="'contacts'" id="tab-panel-contacts">
+        <header class="panel__header">
+          <div>
+            <p class="eyebrow">Billing contacts</p>
+            <h3>Who receives invoices and dunning sequences</h3>
+          </div>
+          <button class="btn btn-primary" type="button" [disabled]="!canEdit()">Add contact (API hooked)" ></button>
+        </header>
+        <div class="table" *ngIf="contacts$ | async as contacts">
+          <div class="table__head">
+            <span>Name</span>
+            <span>Email</span>
+            <span>Role</span>
+            <span>Primary</span>
+          </div>
+          <div class="table__row" *ngFor="let contact of contacts">
+            <span class="cell-title">{{ contact.name }}</span>
+            <span class="cell-sub">{{ contact.email }}</span>
+            <span>{{ contact.role || '—' }}</span>
+            <span>{{ contact.primary ? 'Yes' : 'No' }}</span>
+          </div>
+          <p class="empty" *ngIf="contacts.length === 0">No contacts yet.</p>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'payment-methods'" id="tab-panel-payment-methods">
+        <header class="panel__header">
+          <div>
+            <p class="eyebrow">Payment methods</p>
+            <h3>Cards and bank accounts on file</h3>
+            <p class="hint">Viewers see redacted details; operators can update or remove.</p>
+          </div>
+          <button class="btn btn-primary" type="button" [disabled]="!canEdit()" (click)="showAddPaymentForm.set(true)">
+            Add payment method
+          </button>
+        </header>
+        <div class="table" *ngIf="paymentMethods$ | async as methods">
+          <div class="table__head">
+            <span>Type</span>
+            <span>Brand</span>
+            <span>Last4</span>
+            <span>Status</span>
+            <span>Actions</span>
+          </div>
+          <div class="table__row" *ngFor="let method of methods">
+            <span>{{ method.type }}</span>
+            <span>{{ method.brand || '—' }}</span>
+            <span>{{ canEdit() ? method.last4 || '—' : '••••' }}</span>
+            <span class="pill" [ngClass]="method.defaultMethod ? 'pill--active' : ''">
+              {{ method.status }}
+            </span>
+            <div class="actions" *ngIf="canEdit()">
+              <button
+                class="btn btn-ghost"
+                type="button"
+                [disabled]="paymentMethodActionLoading().has(method.id || '')"
+                (click)="setDefaultMethod(account?.id, method)"
+              >
+                Set default
+              </button>
+              <button
+                class="btn btn-ghost"
+                type="button"
+                [disabled]="paymentMethodActionLoading().has(method.id || '')"
+                (click)="removePaymentMethod(account?.id, method)"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+          <p class="empty" *ngIf="methods.length === 0">No payment methods on file.</p>
+        </div>
+
+        <section class="form-card" *ngIf="showAddPaymentForm()">
+          <h4>Add card (Stripe-ready placeholder)</h4>
+          <p class="hint">For production use, swap this manual form with Stripe Elements setup_intent confirmation.</p>
+          <div class="form">
+            <label class="input-group">
+              <span>Billing name</span>
+              <input type="text" [ngModel]="newPaymentMethod().billingName" (ngModelChange)="setPaymentBillingName($event)" />
+            </label>
+            <label class="input-group">
+              <span>Brand</span>
+              <input type="text" [ngModel]="newPaymentMethod().brand" (ngModelChange)="setPaymentBrand($event)" />
+            </label>
+            <label class="input-group">
+              <span>Last 4</span>
+              <input type="text" maxlength="4" [ngModel]="newPaymentMethod().last4" (ngModelChange)="setPaymentLast4($event)" />
+            </label>
+            <div class="split">
+              <label class="input-group">
+                <span>Exp month</span>
+                <input type="number" min="1" max="12" [ngModel]="newPaymentMethod().expMonth" (ngModelChange)="setPaymentExpMonth($event)" />
+              </label>
+              <label class="input-group">
+                <span>Exp year</span>
+                <input type="number" min="2024" max="2100" [ngModel]="newPaymentMethod().expYear" (ngModelChange)="setPaymentExpYear($event)" />
+              </label>
+            </div>
+            <div class="actions">
+              <button
+                class="btn btn-primary"
+                type="button"
+                [disabled]="paymentMethodActionLoading().has('create')"
+                (click)="addPaymentMethod(account?.id)"
+              >
+                Save payment method
+              </button>
+              <button class="btn btn-ghost" type="button" (click)="showAddPaymentForm.set(false)">Cancel</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div *ngSwitchCase="'subscriptions'" id="tab-panel-subscriptions">
+        <p class="eyebrow">Subscription timeline</p>
+        <div class="timeline" *ngIf="subscriptions$ | async as subs">
+          <div class="timeline__item" *ngFor="let sub of subs">
+            <div class="timeline__marker"></div>
+            <div class="timeline__content">
+              <p class="cell-title">
+                {{ sub.status }} • {{ sub.currency }}
+              </p>
+              <p class="cell-sub">From: {{ sub.currentPeriodStart | date: 'mediumDate' }} → {{ sub.currentPeriodEnd | date: 'mediumDate' }}</p>
+              <p class="cell-sub">Collection: {{ sub.collectionMethod || 'CHARGE_AUTOMATICALLY' }}</p>
+            </div>
+          </div>
+          <p class="empty" *ngIf="subs.length === 0">No subscriptions yet.</p>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'invoices'" id="tab-panel-invoices">
+        <p class="eyebrow">Invoice history</p>
+        <div class="table" *ngIf="invoices$ | async as invoices">
+          <div class="table__head">
+            <span>Number</span>
+            <span>Status</span>
+            <span>Total</span>
+            <span>Due</span>
+          </div>
+          <div class="table__row" *ngFor="let inv of invoices">
+            <span class="cell-title">{{ inv.number || inv.id }}</span>
+            <span [ngClass]="statusClass(inv.status)">{{ inv.status }}</span>
+            <span>{{ formatAmount(inv.total, inv.currency) }}</span>
+            <span>{{ inv.dueDate | date: 'mediumDate' }}</span>
+          </div>
+          <p class="empty" *ngIf="invoices.length === 0">No invoices yet.</p>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'dunning'" id="tab-panel-dunning">
+        <p class="eyebrow">Dunning notes</p>
+        <div class="table" *ngIf="dunningEvents$ | async as events">
+          <div class="table__head">
+            <span>Step</span>
+            <span>Status</span>
+            <span>Channel</span>
+            <span>Attempt</span>
+            <span>Occurred</span>
+          </div>
+          <div class="table__row" *ngFor="let event of events">
+            <span class="cell-title">{{ event.stepName || 'Step' }}</span>
+            <span [ngClass]="statusClass(event.status)">{{ event.status }}</span>
+            <span>{{ event.channel || '—' }}</span>
+            <span>{{ event.attemptNumber ?? '—' }}</span>
+            <span>{{ event.occurredAt | date: 'medium' }}</span>
+          </div>
+          <p class="empty" *ngIf="events.length === 0">No dunning entries yet.</p>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'audit'" id="tab-panel-audit">
+        <p class="eyebrow">Audit log</p>
+        <div class="table" *ngIf="auditLogs$ | async as logs">
+          <div class="table__head">
+            <span>Action</span>
+            <span>Entity</span>
+            <span>Actor</span>
+            <span>When</span>
+          </div>
+          <div class="table__row" *ngFor="let log of logs">
+            <span class="cell-title">{{ log.action }}</span>
+            <span>{{ log.entityType }} — {{ log.entityId }}</span>
+            <span class="cell-sub">{{ log.actorEmail || 'system' }}</span>
+            <span>{{ log.createdAt | date: 'short' }}</span>
+          </div>
+          <p class="empty" *ngIf="logs.length === 0">No audit entries yet.</p>
+        </div>
+      </div>
+    </ng-container>
+  </section>
+</ng-container>
+
+<ng-template #missingAccount>
+  <section class="panel">
+    <p class="eyebrow">Account missing</p>
+    <p class="lede">We could not load this account. It may have been deleted or you may not have access.</p>
+    <a class="btn btn-secondary" routerLink="/accounts">Return to accounts</a>
+  </section>
+</ng-template>

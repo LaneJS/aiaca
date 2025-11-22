@@ -1,0 +1,46 @@
+<div class="auth-shell">
+  <section class="auth-card" aria-labelledby="login-title">
+    <p class="eyebrow">AACA • Payments Admin</p>
+    <h1 id="login-title">Sign in to Billing Desk</h1>
+    <p class="lede">Use your admin or operator credentials. Viewer access is read-only.</p>
+
+    <form class="auth-form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="email">Work email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          [ngModel]="form().email"
+          (ngModelChange)="updateField('email', $event)"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          [ngModel]="form().password"
+          (ngModelChange)="updateField('password', $event)"
+          required
+        />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="loading()">
+          {{ loading() ? 'Signing in…' : 'Sign in' }}
+        </button>
+        <p class="hint">SSO support coming soon. Contact billing-ops for access requests.</p>
+      </div>
+
+      <div class="error" *ngIf="error()" aria-live="assertive">
+        {{ error() }}
+      </div>
+    </form>
+  </section>
+</div>

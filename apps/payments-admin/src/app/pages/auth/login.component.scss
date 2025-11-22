@@ -1,0 +1,72 @@
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 20% 20%, rgba(91, 141, 239, 0.1), transparent 30%),
+    radial-gradient(circle at 80% 10%, rgba(12, 30, 66, 0.12), transparent 28%),
+    linear-gradient(135deg, #0a0f1e, #11182f 60%, #0a0f1e);
+  padding: 1.5rem;
+}
+
+.auth-card {
+  width: min(420px, 100%);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: #f5f7ff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  display: grid;
+  gap: 0.9rem;
+}
+
+.auth-card h1 {
+  margin: 0;
+}
+
+.auth-card .lede {
+  color: var(--muted);
+  margin: 0;
+}
+
+.auth-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-weight: 600;
+}
+
+.field input {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+}
+
+.field input:focus {
+  border-color: rgba(91, 141, 239, 0.6);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(91, 141, 239, 0.2);
+}
+
+.form-actions {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.error {
+  color: #ffc6c6;
+  background: rgba(204, 68, 68, 0.15);
+  border: 1px solid rgba(204, 68, 68, 0.3);
+  padding: 0.75rem;
+  border-radius: 10px;
+}

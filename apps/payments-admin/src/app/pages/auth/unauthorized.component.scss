@@ -1,0 +1,36 @@
+.unauthorized {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #0a0f1e, #0d1530);
+}
+
+.unauthorized__card {
+  max-width: 540px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: #f5f7ff;
+  display: grid;
+  gap: 0.75rem;
+  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.3);
+}
+
+.unauthorized__card h1 {
+  margin: 0;
+}
+
+.unauthorized__card .lede {
+  color: var(--muted);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}

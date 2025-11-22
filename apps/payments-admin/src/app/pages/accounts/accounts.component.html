@@ -1,11 +1,16 @@
+<a class="skip-link" href="#accounts-table">Skip to accounts table</a>
+
 <section class="page-header">
   <div>
     <p class="eyebrow">Accounts</p>
     <h1>Manage buyers and entitlements</h1>
-    <p class="lede">Track payment status, seats, and plan assignments for every customer.</p>
+    <p class="lede">Search, filter, and audit every buyer. Click into details for subscriptions, invoices, and dunning.</p>
   </div>
   <div class="header-actions">
-    <button class="btn btn-secondary" (click)="resetFilters()">Reset filters</button>
+    <button class="btn btn-secondary" type="button" (click)="resetFilters()">Reset filters</button>
+    <button class="btn btn-primary" type="button" (click)="bulkFlag()">
+      Bulk actions ({{ selected().size }} selected)
+    </button>
   </div>
 </section>
 
@@ -23,16 +28,26 @@
     <span>Status</span>
     <select [(ngModel)]="filters.status" (ngModelChange)="applyFilter({ status: $event })">
       <option value="all">All</option>
-      <option *ngFor="let status of statusOptions" [value]="status">{{ status.replace('_', ' ') }}</option>
+      <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
     </select>
   </label>
   <label class="input-group">
-    <span>Plan</span>
-    <select [(ngModel)]="filters.plan" (ngModelChange)="applyFilter({ plan: $event })">
-      <option value="all">All plans</option>
-      <option *ngFor="let plan of planOptions" [value]="plan">{{ plan }}</option>
+    <span>Currency</span>
+    <select [(ngModel)]="filters.currency" (ngModelChange)="applyFilter({ currency: $event })">
+      <option value="all">Any</option>
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
     </select>
   </label>
+  <div class="input-group">
+    <span>Sort</span>
+    <div class="sort-buttons">
+      <button class="btn btn-ghost" type="button" (click)="changeSort('name')">Name</button>
+      <button class="btn btn-ghost" type="button" (click)="changeSort('createdAt')">Created</button>
+      <button class="btn btn-ghost" type="button" (click)="changeSort('status')">Status</button>
+    </div>
+  </div>
 </section>
 
 <section class="grid">
@@ -40,39 +55,43 @@
     <header class="panel__header">
       <div>
         <p class="eyebrow">Buyer roster</p>
-        <h3>Active and trialing accounts</h3>
+        <h3>Accounts connected to billing</h3>
       </div>
       <span class="badge">Live data</span>
     </header>
 
-    <div class="table" *ngIf="accounts$ | async as accounts">
+    <div class="table" id="accounts-table" *ngIf="displayAccounts$ | async as accounts">
       <div class="table__head accounts-head">
+        <span>
+          <input type="checkbox" aria-label="Select all" (change)="selectAll(accounts)" />
+        </span>
         <span>Buyer</span>
-        <span>Plan</span>
-        <span>Seats</span>
-        <span>MRR</span>
+        <span>Email</span>
+        <span>Currency</span>
         <span>Status</span>
+        <span>Created</span>
         <span>Actions</span>
       </div>
 
       <div class="table__row accounts-row" *ngFor="let account of accounts">
+        <input
+          type="checkbox"
+          aria-label="Select account"
+          [checked]="selected().has(account.id)"
+          (change)="toggleSelection(account.id, $event.target.checked)"
+        />
         <div>
-          <p class="cell-title">{{ account.name }}</p>
-          <p class="cell-sub">{{ account.email }}</p>
-          <div class="tag-list">
-            <span class="pill" *ngFor="let tag of account.tags">{{ tag }}</span>
-          </div>
+          <a class="cell-title" [routerLink]="['/accounts', account.id]">{{ account.name }}</a>
+          <p class="cell-sub">{{ account.id }}</p>
         </div>
-        <span class="pill">{{ account.plan }}</span>
-        <span>{{ account.seats }}</span>
-        <span>$ {{ account.mrr | number: '1.0-0' }}</span>
-        <span [ngClass]="badgeClass(account.status)">{{ account.status.replace('_', ' ') }}</span>
+        <span class="cell-sub">{{ account.primaryContactEmail || '—' }}</span>
+        <span class="pill">{{ account.currency }}</span>
+        <span [ngClass]="badgeClass(account.status)">{{ account.status }}</span>
+        <span>{{ account.createdAt | date: 'mediumDate' }}</span>
         <div class="actions">
-          <button class="btn btn-ghost" (click)="updateStatus(account.id, 'active')">Mark active</button>
-          <button class="btn btn-ghost" (click)="updateStatus(account.id, 'paused')">Pause</button>
-          <button class="btn btn-danger" (click)="clearBalance(account.id)" [disabled]="account.outstandingBalance === 0">
-            Clear $ {{ account.outstandingBalance | number: '1.0-0' }}
-          </button>
+          <button class="btn btn-ghost" type="button" (click)="updateStatus(account.id, AccountStatus.ACTIVE)">Mark active</button>
+          <button class="btn btn-ghost" type="button" (click)="updateStatus(account.id, AccountStatus.DELINQUENT)">Mark delinquent</button>
+          <a class="btn btn-secondary" [routerLink]="['/accounts', account.id]">View</a>
         </div>
       </div>
 
@@ -84,56 +103,65 @@
     <header class="panel__header">
       <div>
         <p class="eyebrow">New buyer</p>
-        <h3>Add a paying account</h3>
+        <h3>Add an account</h3>
       </div>
       <span class="badge">Onboard</span>
     </header>
 
-    <form class="form" (ngSubmit)="addAccount()">
+    <form class="form" (ngSubmit)="createAccount()">
       <label class="input-group">
         <span>Buyer name</span>
-        <input type="text" [(ngModel)]="newAccount.name" name="name" required />
+        <input
+          type="text"
+          name="name"
+          [ngModel]="newAccount().name"
+          (ngModelChange)="setAccountName($event)"
+          required
+        />
       </label>
 
       <label class="input-group">
         <span>Billing email</span>
-        <input type="email" [(ngModel)]="newAccount.email" name="email" required />
+        <input
+          type="email"
+          name="email"
+          [ngModel]="newAccount().primaryContactEmail"
+          (ngModelChange)="setAccountEmail($event)"
+        />
       </label>
 
       <label class="input-group">
-        <span>Plan</span>
-        <select [(ngModel)]="newAccount.plan" name="plan">
-          <option *ngFor="let plan of planOptions" [value]="plan">{{ plan }}</option>
+        <span>Currency</span>
+        <select
+          name="currency"
+          [ngModel]="newAccount().currency"
+          (ngModelChange)="setAccountCurrency($event)"
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
         </select>
       </label>
-
-      <div class="split">
-        <label class="input-group">
-          <span>Seats</span>
-          <input type="number" [(ngModel)]="newAccount.seats" name="seats" min="1" />
-        </label>
-        <label class="input-group">
-          <span>MRR ($)</span>
-          <input type="number" [(ngModel)]="newAccount.mrr" name="mrr" min="0" />
-        </label>
-      </div>
 
       <label class="input-group">
         <span>Status</span>
-        <select [(ngModel)]="newAccount.status" name="status">
-          <option *ngFor="let status of statusOptions" [value]="status">{{ status.replace('_', ' ') }}</option>
+        <select
+          name="status"
+          [ngModel]="newAccount().status"
+          (ngModelChange)="setAccountStatus($event)"
+        >
+          <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
         </select>
       </label>
 
-      <label class="input-group">
-        <span>Renews on</span>
-        <input type="date" [(ngModel)]="newAccount.renewsOn" name="renewsOn" />
-      </label>
-
-      <label class="input-group">
-        <span>Tags</span>
-        <input type="text" placeholder="agency, priority" [(ngModel)]="newAccount.tags" name="tags" />
-        <small>Add comma-separated labels</small>
+      <label class="input-group checkbox">
+        <input
+          type="checkbox"
+          name="taxExempt"
+          [ngModel]="newAccount().taxExempt"
+          (ngModelChange)="setAccountTaxExempt($event)"
+        />
+        <span>Tax exempt</span>
       </label>
 
       <button class="btn btn-primary" type="submit">Create buyer</button>

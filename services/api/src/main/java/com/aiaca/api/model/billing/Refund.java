@@ -1,0 +1,56 @@
+package com.aiaca.api.model.billing;
+
+import com.aiaca.api.model.BaseAuditedEntity;
+import com.aiaca.api.model.billing.enums.RefundStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Table(name = "refunds")
+@Getter
+@Setter
+public class Refund extends BaseAuditedEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "charge_id", nullable = false)
+    private Charge charge;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private RefundStatus status = RefundStatus.PENDING;
+
+    @Column(nullable = false)
+    private long amount;
+
+    @Column(nullable = false, length = 3)
+    private String currency;
+
+    @Column(length = 100)
+    private String reason;
+
+    @Column(name = "stripe_refund_id", unique = true, length = 255)
+    private String stripeRefundId;
+
+    @Column(name = "refunded_at")
+    private LocalDateTime refundedAt;
+
+    @Column(columnDefinition = "jsonb")
+    private String metadata;
+}

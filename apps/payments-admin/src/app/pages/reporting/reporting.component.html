@@ -1,0 +1,84 @@
+<a class="skip-link" href="#reporting-summary">Skip to reporting content</a>
+
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Reporting & Audit</p>
+    <h1>Revenue, risk, and governance</h1>
+    <p class="lede">Track collections health and review audit trails with export-ready data.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-secondary" type="button" (click)="refresh()">Refresh</button>
+    <button class="btn btn-ghost" type="button" (click)="exportPlaceholder('payments')">Export payments</button>
+    <button class="btn btn-ghost" type="button" (click)="exportPlaceholder('invoices')">Export invoices</button>
+  </div>
+</section>
+
+<section class="summary-grid" id="reporting-summary" *ngIf="summary$ | async as summary">
+  <article class="card">
+    <p class="label">Collected</p>
+    <h2>{{ formatAmount(summary.collected) }}</h2>
+    <p class="hint">Charge status: succeeded</p>
+  </article>
+  <article class="card">
+    <p class="label">Refunds</p>
+    <h2>{{ formatAmount(summary.refunds) }}</h2>
+    <p class="hint">Refunded amount to date</p>
+  </article>
+  <article class="card">
+    <p class="label">Failed charges</p>
+    <h2>{{ summary.failed }}</h2>
+    <p class="hint">Retries recommended</p>
+  </article>
+  <article class="card">
+    <p class="label">Open/Past Due invoices</p>
+    <h2>{{ summary.openInvoices }} / {{ summary.pastDueInvoices }}</h2>
+    <p class="hint">Open vs past due buckets</p>
+  </article>
+</section>
+
+<section class="panel">
+  <header class="panel__header">
+    <div>
+      <p class="eyebrow">Audit log</p>
+      <h3>Who did what, and when</h3>
+    </div>
+    <div class="filters">
+      <label class="input-group">
+        <span>Account</span>
+        <select [ngModel]="filters().accountId" (ngModelChange)="applyAccountFilter($event)">
+          <option value="all">All</option>
+          <ng-container *ngIf="accounts$ | async as accounts">
+            <option *ngFor="let account of accounts" [value]="account.id">{{ account.name }}</option>
+          </ng-container>
+        </select>
+      </label>
+      <button class="btn btn-ghost" type="button" (click)="exportPlaceholder('audit')">Export audit logs</button>
+    </div>
+  </header>
+
+  <div class="table" *ngIf="auditLogs$ | async as page">
+    <div class="table__head audit-head">
+      <span>Action</span>
+      <span>Entity</span>
+      <span>Actor</span>
+      <span>Request</span>
+      <span>When</span>
+    </div>
+    <div class="table__row audit-row" *ngFor="let log of page.items">
+      <span class="cell-title">{{ log.action }}</span>
+      <span>{{ log.entityType }} — {{ log.entityId }}</span>
+      <span class="cell-sub">{{ log.actorEmail || 'system' }}</span>
+      <span class="cell-sub">{{ log.requestId || '—' }}</span>
+      <span>{{ log.createdAt | date: 'short' }}</span>
+    </div>
+    <p class="empty" *ngIf="page.items.length === 0">No audit events match your filters.</p>
+
+    <div class="pagination">
+      <button class="btn btn-ghost" type="button" (click)="changeAuditPage(-1)" [disabled]="page.page === 0">Prev</button>
+      <span class="cell-sub">Page {{ page.page + 1 }}</span>
+      <button class="btn btn-ghost" type="button" (click)="changeAuditPage(1)" [disabled]="(page.page + 1) * page.pageSize >= page.total">
+        Next
+      </button>
+    </div>
+  </div>
+</section>

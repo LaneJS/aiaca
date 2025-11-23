@@ -81,7 +81,23 @@ export class AuthService {
   }
 
   logout(): void {
+    const token = this.getToken();
+
+    // Clear session immediately (don't wait for API call)
     this.clearSession();
+
+    // Call backend to blacklist token (fire and forget)
+    // Note: We manually attach the Authorization header since we've already cleared the session
+    if (token) {
+      this.http.post('/api/v1/auth/logout', {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).subscribe({
+        error: () => {
+          // Ignore errors - user is already logged out locally
+        }
+      });
+    }
+
     this.router.navigate(['/auth']);
   }
 

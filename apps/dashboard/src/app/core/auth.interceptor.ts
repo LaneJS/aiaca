@@ -15,9 +15,14 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
+        // Handle authentication failures (expired/invalid token, not logged in)
+        // 401 = Unauthorized (authentication required)
+        // Note: Avoid handling auth endpoints to prevent logout loops
         if (error.status === 401 && !req.url.includes('/auth/')) {
-          this.auth.logout();
+          console.warn('[AuthInterceptor] Authentication failed (401). Logging out user.');
+          this.auth.logout(); // Clears session and redirects to /auth
         }
+
         return throwError(() => error);
       })
     );

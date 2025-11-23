@@ -197,7 +197,7 @@ public class ScanService {
     }
 
     public ScanDtos.ScanSummary toSummary(Scan scan) {
-        return new ScanDtos.ScanSummary(scan.getId(), scan.getCreatedAt(), scan.getStatus(), scan.getScore());
+        return new ScanDtos.ScanSummary(scan.getId(), scan.getSite() != null ? scan.getSite().getId() : null, scan.getCreatedAt(), scan.getStatus(), scan.getScore(), scan.getIssues().size());
     }
 
     public ScanDtos.ScanDetail toDetail(Scan scan) {

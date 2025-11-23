@@ -13,21 +13,9 @@
       Built for small teams that need WCAG wins without hiring a full accessibility specialist.
     </p>
   </div>
-  <div class="hero__panel" aria-label="Product highlights">
-    <ul>
-      <li>
-        <p class="metric">95</p>
-        <p class="label">Average accessibility score after one guided sprint.</p>
-      </li>
-      <li>
-        <p class="metric">3 steps</p>
-        <p class="label">Scan → Fix → Stay compliant with simple guardrails.</p>
-      </li>
-      <li>
-        <p class="metric"><span aria-hidden="true">⚡</span> Minutes</p>
-        <p class="label">From scan to prioritized fixes with AI help.</p>
-      </li>
-    </ul>
+
+  <div class="hero__visual">
+    <img src="assets/images/hero-illustration.png" alt="AI brain connecting to desktop, tablet, and mobile devices" class="img-fluid">
   </div>
 </section>
 
@@ -41,14 +29,23 @@
   </div>
   <div class="problem__grid">
     <article>
+      <div class="icon-wrapper">
+        <img src="assets/images/icon-gravel.png" alt="" aria-hidden="true" width="64" height="64">
+      </div>
       <h3>Reduce risk</h3>
       <p>Mitigate ADA and WCAG non-compliance issues before they become costly legal notices.</p>
     </article>
     <article>
+      <div class="icon-wrapper">
+        <img src="assets/images/icon-users.png" alt="" aria-hidden="true" width="64" height="64">
+      </div>
       <h3>Serve everyone</h3>
       <p>Deliver inclusive experiences with clear headings, alternative text, and keyboard-friendly flows.</p>
     </article>
     <article>
+      <div class="icon-wrapper">
+        <img src="assets/images/icon-chart.jpg" alt="" aria-hidden="true" width="64" height="64">
+      </div>
       <h3>Grow with confidence</h3>
       <p>Accessible sites keep customers engaged longer and help you win SEO-conscious buyers.</p>
     </article>
@@ -61,6 +58,11 @@
     <h2 id="how-heading">Three guided steps to compliance</h2>
     <p class="lead">We bundle automation, AI suggestions, and a lightweight auto-fix script.</p>
   </div>
+
+  <div class="how__visual" style="margin-bottom: 2rem; text-align: center;">
+      <img src="assets/images/process-flow.png" alt="Step 1: Scan, Step 2: Fix, Step 3: Stay Compliant" style="max-width: 100%; height: auto;">
+  </div>
+
   <div class="steps" role="list">
     <div class="step" *ngFor="let step of steps" role="listitem">
       <p class="step__badge">{{ step.title }}</p>
@@ -108,7 +110,7 @@
   </div>
 </section>
 
-<section class="social-proof" aria-labelledby="social-proof-heading">
+<section class="social-proof footer-bg" aria-labelledby="social-proof-heading">
   <div class="section-header">
     <p class="eyebrow">Trusted results</p>
     <h2 id="social-proof-heading">Social proof coming soon</h2>

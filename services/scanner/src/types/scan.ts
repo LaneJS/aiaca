@@ -18,9 +18,12 @@ export interface NormalizedIssue {
   helpUrl?: string;
 }
 
+export type WaitUntilOption = 'load' | 'domcontentloaded' | 'networkidle' | 'commit';
+
 export interface ScanRequestBody {
   url: string;
   htmlSnapshot?: string;
+  waitUntil?: WaitUntilOption;
 }
 
 export interface ScanResult {

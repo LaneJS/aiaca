@@ -49,6 +49,7 @@ services:
     environment:
       PORT: ${SCANNER_PORT:-4001}
       API_BASE_URL: ${API_INTERNAL_URL:-http://api:8080}
+      SCANNER_TIMEOUT_MS: ${SCANNER_TIMEOUT_MS:-60000}
     ports:
       - "${SCANNER_PORT:-4001}:4001"
     healthcheck:

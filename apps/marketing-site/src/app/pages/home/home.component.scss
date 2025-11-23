@@ -1,62 +1,56 @@
+/* Hero Section */
 .hero {
   display: grid;
+  /* Keeps the 2-column layout on desktop, stacks on mobile */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  gap: 3rem; /* Increased gap for better visual separation */
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 0 3rem;
+  padding: 2rem 0 4rem;
 }
 
 .hero__content h1 {
   font-size: clamp(2rem, 3vw, 2.75rem);
   margin-bottom: 1rem;
+  line-height: 1.2;
 }
 
 .lead {
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   color: #334155;
   margin-bottom: 1.5rem;
+  line-height: 1.6;
 }
 
 .hero__actions {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.5rem; /* Increased margin to separate from supporting text */
 }
 
 .supporting {
-  color: #475569;
+  font-size: 0.875rem;
+  color: #64748b; /* Slightly lighter slate for secondary text */
 }
 
-.hero__panel {
-  background: #0f172a;
-  color: #e2e8f0;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+/* UPDATED: New styles for the Hero Image container */
+.hero__visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    /* Optional: Adds a subtle lift/shadow to the illustration itself */
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1)); 
+  }
 }
 
-.hero__panel ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 1rem;
-}
-
-.hero__panel .metric {
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin: 0 0 0.25rem;
-}
-
-.hero__panel .label {
-  margin: 0;
-  color: #cbd5e1;
-}
-
+/* Global Section Spacing */
 .problem,
 .how,
 .features,
@@ -64,26 +58,29 @@
 .social-proof {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 4rem 0; /* Added vertical padding for breathing room */
 }
 
 .section-header {
   max-width: 800px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
+/* Grids */
 .problem__grid,
 .feature-grid,
 .steps,
 .placeholder,
 .pricing-card {
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem; /* Consistent gap */
 }
 
 .problem__grid {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
+/* Cards */
 .problem__grid article,
 .feature-grid article,
 .pricing-card,
@@ -91,8 +88,43 @@
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+  }
+}
+
+/* UPDATED: Icon wrapper for the Problem/Risk section */
+.icon-wrapper {
+  margin-bottom: 1rem;
+  display: inline-block;
+  
+  img {
+    display: block;
+    width: 48px; /* Enforce consistent icon size */
+    height: 48px;
+  }
+}
+
+.problem__grid h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* How it Works */
+.how__visual {
+  margin: 0 auto 3rem;
+  max-width: 800px;
+  
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 .steps {
@@ -103,37 +135,46 @@
   background: #0f172a;
   color: #e2e8f0;
   border-radius: 1rem;
-  padding: 1.25rem;
+  padding: 1.5rem;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
 }
 
 .step__badge {
   font-weight: 700;
-  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.75rem;
+  color: #38bdf8; /* Light blue accent for badges on dark bg */
 }
 
 .step__copy {
   margin: 0;
   color: #cbd5e1;
+  line-height: 1.5;
 }
 
+/* Features */
 .feature-grid {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+/* Pricing */
 .pricing-card {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  align-items: center;
+  align-items: flex-start; /* Align to top */
 }
 
 .pricing-card .price {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  margin: 0.25rem 0 0.5rem;
+  color: #0f172a;
+  margin: 0.5rem 0 0.5rem;
 }
 
 .pricing-card .divider {
   height: 100%;
+  min-height: 100px;
   width: 1px;
   background: #e2e8f0;
   justify-self: center;
@@ -141,16 +182,70 @@
 
 .pricing-card .actions {
   display: flex;
+  flex-direction: column; /* Stack buttons on the right for better mobile/desktop flow */
   gap: 0.75rem;
-  flex-wrap: wrap;
 }
 
+/* Social Proof & Footer BG */
 .social-proof .placeholder {
   text-align: center;
+  padding: 3rem 1.5rem;
+  border-style: dashed; /* Differentiate placeholder visually */
+  border-color: #cbd5e1;
 }
 
+/* UPDATED: Footer Background Utility */
+.footer-bg {
+  position: relative;
+  background: linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+  color: #f8fafc; /* Light text for contrast */
+  margin: 4rem 0 0;
+  padding: 4.5rem 1.5rem 5.5rem;
+  border-top: 1px solid #1e293b;
+  max-width: none;
+  width: 100%;
+}
+
+/* Overrides for text inside the dark footer area */
+.footer-bg .lead {
+  color: #cbd5e1;
+}
+
+.footer-bg h2 {
+  color: #ffffff;
+}
+
+.footer-bg .section-header,
+.footer-bg .placeholder {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer-bg .placeholder {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
   .pricing-card .divider {
     display: none;
+  }
+  
+  .hero {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .hero__actions {
+    justify-content: center;
+  }
+  
+  .problem__grid article {
+    align-items: center;
+    text-align: center;
   }
 }

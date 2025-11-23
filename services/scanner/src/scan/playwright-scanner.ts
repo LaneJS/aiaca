@@ -69,15 +69,17 @@ export class PlaywrightScanner {
   }
 
   private async navigate(page: Page, body: ScanRequestBody) {
+    const waitUntil = body.waitUntil ?? 'domcontentloaded';
+
     if (body.htmlSnapshot) {
       const htmlWithBase = this.injectBaseHref(body.htmlSnapshot, body.url);
-      await page.setContent(htmlWithBase, { waitUntil: 'networkidle' });
-      logger.debug({ url: body.url }, 'Loaded snapshot content');
+      await page.setContent(htmlWithBase, { waitUntil });
+      logger.debug({ url: body.url, waitUntil }, 'Loaded snapshot content');
       return;
     }
 
-    await page.goto(body.url, { waitUntil: 'networkidle' });
-    logger.debug({ url: body.url }, 'Loaded URL');
+    await page.goto(body.url, { waitUntil });
+    logger.debug({ url: body.url, waitUntil }, 'Loaded URL');
   }
 
   private injectBaseHref(html: string, baseHref?: string) {

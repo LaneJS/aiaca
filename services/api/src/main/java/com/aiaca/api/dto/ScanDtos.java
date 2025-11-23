@@ -19,7 +19,7 @@ public class ScanDtos {
 
     public record IssueDetail(UUID id, String type, IssueSeverity severity, IssueStatus status, String description, String selector, String suggestion) {}
 
-    public record ScanSummary(UUID id, LocalDateTime createdAt, ScanStatus status, Double score) {}
+    public record ScanSummary(UUID id, UUID siteId, LocalDateTime createdAt, ScanStatus status, Double score, Integer issueCount) {}
 
     public record ScanDetail(UUID id, UUID siteId, LocalDateTime createdAt, ScanStatus status, Double score, List<ScanIssueDto> issues) {}
 }

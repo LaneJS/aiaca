@@ -72,7 +72,7 @@ public class ScanController {
         if (!scan.getSite().getOwner().getId().equals(owner.getId())) {
             return ResponseEntity.status(403).build();
         }
-        return ResponseEntity.ok(scanService.toDetail(scan));
+        return ResponseEntity.ok(scanService.getDetailById(id));
     }
 
     @PatchMapping("/scans/{scanId}/issues/{issueId}")

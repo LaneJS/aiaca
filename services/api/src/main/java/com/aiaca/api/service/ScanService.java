@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ScanService {
@@ -175,25 +176,43 @@ public class ScanService {
         return Math.max(0, 100 - issueCount * 5);
     }
 
+    @Transactional(readOnly = true)
     public List<Scan> listByUser(com.aiaca.api.model.User user) {
         // Get all sites owned by the user, then get all scans for those sites
         return siteRepository.findByOwner(user).stream()
-                .flatMap(site -> scanRepository.findBySite(site).stream())
+                .flatMap(site -> scanRepository.findBySiteWithIssues(site).stream())
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<Scan> listBySite(Site site) {
-        return scanRepository.findBySite(site);
+        return scanRepository.findBySiteWithIssues(site);
     }
 
+    @Transactional(readOnly = true)
     public Scan getById(UUID id) {
-        return scanRepository.findById(id)
+        return scanRepository.findByIdWithIssues(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Scan not found"));
     }
 
+    @Transactional(readOnly = true)
     public Scan getByIdForSite(UUID scanId, Site site) {
-        return scanRepository.findByIdAndSite(scanId, site)
+        return scanRepository.findByIdAndSiteWithIssues(scanId, site)
                 .orElseThrow(() -> new ResourceNotFoundException("Scan not found for site"));
+    }
+
+    @Transactional(readOnly = true)
+    public ScanDtos.ScanDetail getDetailById(UUID id) {
+        Scan scan = scanRepository.findByIdWithIssues(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Scan not found"));
+        return toDetail(scan);
+    }
+
+    @Transactional(readOnly = true)
+    public ScanDtos.ScanDetail getDetailByIdForSite(UUID scanId, Site site) {
+        Scan scan = scanRepository.findByIdAndSiteWithIssues(scanId, site)
+                .orElseThrow(() -> new ResourceNotFoundException("Scan not found for site"));
+        return toDetail(scan);
     }
 
     public ScanDtos.ScanSummary toSummary(Scan scan) {

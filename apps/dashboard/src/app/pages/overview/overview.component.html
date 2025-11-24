@@ -48,6 +48,7 @@
           <th scope="col">Score</th>
           <th scope="col">Issues</th>
           <th scope="col">When</th>
+          <th scope="col">Status</th>
         </tr>
       </thead>
       <tbody>
@@ -56,6 +57,11 @@
           <td><span class="pill">{{ scan.score }}</span></td>
           <td>{{ scan.issueCount }}</td>
           <td>{{ scan.createdAt | date: 'short' }}</td>
+          <td>
+            <span class="status" [class.running]="scan.status === 'running' || scan.status === 'queued'" [class.failed]="scan.status === 'failed'">
+              {{ scan.status }}
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -69,10 +75,11 @@
     </header>
     <div *ngIf="sites().length; else empty">
       <label class="muted" for="scan-site">Choose site</label>
-      <select id="scan-site" aria-label="Choose site to scan" (change)="runScan($any($event.target).value)">
+      <select id="scan-site" aria-label="Choose site to scan" [(ngModel)]="selectedSiteId">
         <option value="">Select site</option>
         <option *ngFor="let site of sites()" [value]="site.id">{{ site.name }}</option>
       </select>
+      <button class="ghost" type="button" [disabled]="!selectedSiteId()" (click)="runScan()">Start scan</button>
     </div>
     <ng-template #empty>
       <p>Add a site first to trigger scans.</p>

@@ -61,13 +61,43 @@
         >
           Deactivate
         </button>
-        <button class="btn btn-secondary" type="button" (click)="scheduledChangePlaceholder(entry.plan)">
+        <button class="btn btn-secondary" type="button" (click)="initScheduleChange(entry.plan)">
           Scheduled change
         </button>
       </div>
     </div>
 
     <p class="empty" *ngIf="plans.length === 0">No plans available.</p>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showScheduleChangeForm()">
+    <div class="modal">
+      <header>
+        <h3>Schedule change for {{ selectedPlanForSchedule()?.name }}</h3>
+        <button class="btn-icon" (click)="cancelScheduleChange()">✕</button>
+      </header>
+      <div class="modal-body">
+        <p class="hint">Changes will apply automatically on the effective date.</p>
+        <label class="input-group">
+          <span>Effective Date</span>
+          <input type="date" [ngModel]="newScheduleChange().effectiveDate" (ngModelChange)="setScheduleDate($event)" />
+        </label>
+        <label class="input-group">
+          <span>New Name (Optional)</span>
+          <input type="text" [ngModel]="newScheduleChange().newName" (ngModelChange)="setScheduleName($event)" />
+        </label>
+        <label class="input-group">
+          <span>New Description (Optional)</span>
+          <textarea [ngModel]="newScheduleChange().newDescription" (ngModelChange)="setScheduleDescription($event)"></textarea>
+        </label>
+      </div>
+      <footer>
+        <button class="btn btn-ghost" (click)="cancelScheduleChange()">Cancel</button>
+        <button class="btn btn-primary" [disabled]="scheduleChangeLoading()" (click)="submitScheduleChange()">
+          {{ scheduleChangeLoading() ? 'Scheduling...' : 'Schedule Change' }}
+        </button>
+      </footer>
+    </div>
   </div>
 </section>
 

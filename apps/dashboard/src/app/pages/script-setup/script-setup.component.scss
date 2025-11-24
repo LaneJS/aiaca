@@ -5,27 +5,122 @@
   padding: 1.2rem;
 }
 
-select,
-textarea,
-button {
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.content {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+label {
+  font-weight: 600;
+  display: block;
   margin-top: 0.5rem;
 }
 
-textarea {
+select {
   width: 100%;
-  min-height: 80px;
+  padding: 0.75rem;
   background: rgba(255, 255, 255, 0.05);
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 0.65rem;
+  color: white;
+  margin-top: 0.35rem;
 }
 
-button {
-  background: #38bdf8;
-  color: #0b1223;
-  border: none;
-  padding: 0.65rem 1rem;
-  border-radius: 10px;
-  cursor: pointer;
+.snippet {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 0.75rem;
+
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    background: transparent;
+    color: white;
+    border: none;
+    font-family: monospace;
+    margin-bottom: 0.75rem;
+  }
+
+  button {
+    background: #38bdf8;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #0f172a;
+    font-weight: 700;
+  }
+}
+
+.embed-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  align-items: center;
+
+  code {
+    display: inline-block;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    word-break: break-all;
+  }
+}
+
+.verify {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+
+  .ghost {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .status {
+    font-weight: 600;
+  }
+
+  .status.success {
+    color: #22c55e;
+  }
+
+  .status.error {
+    color: #f87171;
+  }
+}
+
+.info {
+  margin-top: 0.5rem;
+
+  ul {
+    margin: 0.35rem 0 0;
+    padding-left: 1.25rem;
+  }
 }

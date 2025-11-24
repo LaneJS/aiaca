@@ -94,6 +94,26 @@ h2 {
   background: rgba(255, 255, 255, 0.02);
 }
 
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  text-transform: capitalize;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.status.running {
+  background: rgba(56, 189, 248, 0.15);
+  color: #67e8f9;
+}
+
+.status.failed {
+  background: rgba(248, 113, 113, 0.15);
+  color: #fecdd3;
+}
+
 .pill {
   background: rgba(56, 189, 248, 0.15);
   color: #67e8f9;

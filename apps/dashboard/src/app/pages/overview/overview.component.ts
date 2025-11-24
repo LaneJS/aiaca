@@ -1,28 +1,31 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/api.service';
 import { OnboardingStep, ScanSummary, SiteSummary } from '../../core/models';
 import { ToastService } from '../../core/toast.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner.component';
 import { ErrorStateComponent } from '../../shared/components/error-state.component';
 import { HttpErrorResponse } from '@angular/common/http';
-import { interval, takeWhile } from 'rxjs';
+import { ScanTrackerService } from '../../core/scan-tracker.service';
 
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, ErrorStateComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, ErrorStateComponent],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
 })
 export class OverviewComponent implements OnInit {
   private readonly api = inject(ApiService);
   private readonly toasts = inject(ToastService);
+  private readonly scanTracker = inject(ScanTrackerService);
   protected sites = signal<SiteSummary[]>([]);
   protected scans = signal<ScanSummary[]>([]);
   protected isLoading = signal<boolean>(true);
   protected error = signal<string | null>(null);
   protected runningScanIds = new Set<string>();
+  protected selectedSiteId = signal<string>('');
 
   protected onboarding = computed<OnboardingStep[]>(() => {
     const hasSite = this.sites().length > 0;
@@ -82,6 +85,7 @@ export class OverviewComponent implements OnInit {
       next: (scans) => {
         this.scans.set(scans);
         this.isLoading.set(false);
+        this.watchInProgress(scans);
       },
       error: () => {
         this.isLoading.set(false);
@@ -90,19 +94,26 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  runScan(siteId: string): void {
+  runScan(): void {
+    const siteId = this.selectedSiteId();
     const site = this.sites().find((s) => s.id === siteId);
     if (!site) {
       this.toasts.push('Site not found', 'error');
       return;
     }
 
-    this.api.triggerScan(siteId, site.url).subscribe({
+    this.scanTracker.triggerAndWatch(siteId, site.url).subscribe({
       next: (scan) => {
-        this.toasts.push('Scan started', 'success');
-        this.scans.set([scan, ...this.scans()]);
-        this.runningScanIds.add(scan.id);
-        this.pollScanStatus(scan.id);
+        this.upsertScan(scan);
+        if (scan.status === 'completed') {
+          this.runningScanIds.delete(scan.id);
+          this.toasts.push('Scan completed', 'success');
+        } else if (scan.status === 'failed') {
+          this.runningScanIds.delete(scan.id);
+          this.toasts.push('Scan failed', 'error');
+        } else {
+          this.runningScanIds.add(scan.id);
+        }
       },
       error: (err: HttpErrorResponse) => {
         const message = err.error?.message || 'Failed to start scan';
@@ -111,41 +122,44 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  private pollScanStatus(scanId: string): void {
-    interval(3000)
-      .pipe(takeWhile(() => this.runningScanIds.has(scanId)))
-      .subscribe(() => {
-        this.api.getScanStatus(scanId).subscribe({
-          next: (scan) => {
-            const currentScans = this.scans();
-            const index = currentScans.findIndex(s => s.id === scanId);
-            if (index !== -1) {
-              const updatedScans = [...currentScans];
-              updatedScans[index] = scan;
-              this.scans.set(updatedScans);
-            }
-
-            if (scan.status === 'completed' || scan.status === 'failed') {
-              this.runningScanIds.delete(scanId);
-              if (scan.status === 'completed') {
-                this.toasts.push('Scan completed', 'success');
-              } else {
-                this.toasts.push('Scan failed', 'error');
-              }
-            }
-          },
-          error: () => {
-            this.runningScanIds.delete(scanId);
-          }
-        });
-      });
-  }
-
   getSiteName(siteId: string): string {
     return this.sites().find((s) => s.id === siteId)?.name || 'Unknown';
   }
 
   isScanRunning(scanId: string): boolean {
     return this.runningScanIds.has(scanId);
+  }
+
+  private watchInProgress(scans: ScanSummary[]): void {
+    scans.filter((s) => s.status === 'queued' || s.status === 'running').forEach((scan) => {
+      this.runningScanIds.add(scan.id);
+      this.scanTracker.watchScan(scan.id).subscribe({
+        next: (updated) => {
+          this.upsertScan(updated);
+          if (updated.status === 'completed') {
+            this.toasts.push('Scan completed', 'success');
+            this.runningScanIds.delete(updated.id);
+          } else if (updated.status === 'failed') {
+            this.toasts.push('Scan failed', 'error');
+            this.runningScanIds.delete(updated.id);
+          }
+        },
+        error: () => {
+          this.runningScanIds.delete(scan.id);
+        }
+      });
+    });
+  }
+
+  private upsertScan(scan: ScanSummary): void {
+    const list = this.scans();
+    const idx = list.findIndex((s) => s.id === scan.id);
+    if (idx >= 0) {
+      const next = [...list];
+      next[idx] = scan;
+      this.scans.set(next);
+    } else {
+      this.scans.set([scan, ...list]);
+    }
   }
 }

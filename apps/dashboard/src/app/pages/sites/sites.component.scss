@@ -24,11 +24,15 @@
   padding: 0.85rem;
   background: rgba(255, 255, 255, 0.02);
   cursor: pointer;
+  display: grid;
+  gap: 0.75rem;
 }
 
-.meta {
+.site-header {
   display: flex;
+  justify-content: space-between;
   gap: 0.5rem;
+  align-items: flex-start;
 }
 
 .pill {
@@ -43,6 +47,53 @@
 .alert {
   background: rgba(248, 113, 113, 0.1);
   color: #fecdd3;
+}
+
+.meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.url {
+  word-break: break-all;
+}
+
+.embed {
+  code {
+    display: inline-block;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    word-break: break-all;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  .ghost {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &.danger {
+      border-color: rgba(248, 113, 113, 0.6);
+      color: #fecdd3;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
 }
 
 /* Modal styles */
@@ -182,11 +233,11 @@
   }
 }
 
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  padding-top: 1rem;
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 
   button {
@@ -214,6 +265,15 @@
 
       &:hover:not(:disabled) {
         background: #0ea5e9;
+      }
+
+      &.danger {
+        background: #ef4444;
+        color: #fff7ed;
+
+        &:hover:not(:disabled) {
+          background: #dc2626;
+        }
       }
     }
 

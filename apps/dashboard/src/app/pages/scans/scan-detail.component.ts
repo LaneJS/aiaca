@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/api.service';
@@ -8,11 +8,12 @@ import { issueTypeCopy, severityCopy } from './copy';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner.component';
 import { ErrorStateComponent } from '../../shared/components/error-state.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-scan-detail',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, ErrorStateComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, ErrorStateComponent],
   templateUrl: './scan-detail.component.html',
   styleUrl: './scan-detail.component.scss',
 })
@@ -22,13 +23,21 @@ export class ScanDetailComponent implements OnInit {
   private readonly toasts = inject(ToastService);
 
   protected scan?: ScanDetail;
-  protected filter: 'all' | 'open' | 'fixed' = 'all';
+  protected filter = signal<'all' | 'open' | 'fixed'>('all');
+  protected severityFilter = signal<string>('all');
+  protected typeFilter = signal<string>('all');
   protected readonly severityCopy = severityCopy;
   protected readonly severityOrder: Array<keyof typeof severityCopy> = ['high', 'medium', 'low'];
   protected readonly issueTypeCopy = issueTypeCopy;
   protected isLoading = true;
   protected error: string | null = null;
   protected updatingIssues = new Set<string>();
+  protected filteredIssues = computed(() => this.applyFilters());
+  protected aiSummaryExpanded = false;
+  protected exportStatus: Record<'pdf' | 'html', 'idle' | 'loading' | 'error'> = { pdf: 'idle', html: 'idle' };
+  protected exportError: string | null = null;
+  protected shareStatus: 'idle' | 'loading' | 'error' | 'ready' = 'idle';
+  protected shareLink: string | null = null;
 
   ngOnInit(): void {
     this.loadScan();
@@ -57,12 +66,6 @@ export class ScanDetailComponent implements OnInit {
           : 'Failed to load scan details. Please try again.';
       }
     });
-  }
-
-  issues(): IssueDetail[] {
-    if (!this.scan) return [];
-    if (this.filter === 'all') return this.scan.issues;
-    return this.scan.issues.filter((i) => i.status === this.filter);
   }
 
   toggle(issue: IssueDetail): void {
@@ -96,5 +99,72 @@ export class ScanDetailComponent implements OnInit {
 
   isUpdating(issueId: string): boolean {
     return this.updatingIssues.has(issueId);
+  }
+
+  export(format: 'pdf' | 'html'): void {
+    if (!this.scan) return;
+    this.exportStatus[format] = 'loading';
+    this.exportError = null;
+    this.api.exportScan(this.scan.id, format).subscribe({
+      next: (blob) => {
+        const filename = `scan-${this.scan?.id}.${format}`;
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = filename;
+        anchor.click();
+        URL.revokeObjectURL(url);
+        this.toasts.push(`Exported ${format.toUpperCase()} report`, 'success');
+        this.exportStatus[format] = 'idle';
+      },
+      error: (err: HttpErrorResponse) => {
+        this.exportStatus[format] = 'error';
+        if (err.status === 404 || err.status === 501) {
+          this.exportError = 'Reports are not available yet. Please try again after backend support is enabled.';
+        } else {
+          this.exportError = err.error?.message || 'Failed to export report.';
+        }
+        this.toasts.push(this.exportError, 'error');
+      }
+    });
+  }
+
+  generateShare(): void {
+    if (!this.scan) return;
+    this.shareStatus = 'loading';
+    this.shareLink = null;
+    this.api.createShareLink(this.scan.id).subscribe({
+      next: (res) => {
+        this.shareStatus = 'ready';
+        this.shareLink = res.link;
+        this.toasts.push('Share link generated', 'success');
+      },
+      error: (err: HttpErrorResponse) => {
+        this.shareStatus = 'error';
+        const message =
+          err.status === 404 || err.status === 501
+            ? 'Share links are not available yet. Coordinate with backend to enable.'
+            : err.error?.message || 'Failed to generate share link.';
+        this.toasts.push(message, 'error');
+      }
+    });
+  }
+
+  copyShare(): void {
+    if (!this.shareLink) return;
+    navigator.clipboard.writeText(this.shareLink).then(
+      () => this.toasts.push('Share link copied', 'success'),
+      () => this.toasts.push('Unable to copy share link', 'error')
+    );
+  }
+
+  private applyFilters(): IssueDetail[] {
+    if (!this.scan) return [];
+    return this.scan.issues.filter((issue) => {
+      const statusPass = this.filter() === 'all' || issue.status === this.filter();
+      const severityPass = this.severityFilter() === 'all' || issue.severity === this.severityFilter();
+      const typePass = this.typeFilter() === 'all' || issue.category === this.typeFilter();
+      return statusPass && severityPass && typePass;
+    });
   }
 }

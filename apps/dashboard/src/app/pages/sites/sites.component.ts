@@ -30,6 +30,7 @@ export class SitesComponent implements OnInit {
   protected newSiteName = '';
   protected newSiteUrl = '';
   protected isSubmitting = false;
+  protected busyAction: 'create' | 'update' | 'delete' | null = null;
   protected shouldTriggerScan = true;
   protected isLoading = true;
   protected error: string | null = null;
@@ -112,6 +113,7 @@ export class SitesComponent implements OnInit {
     }
 
     this.isSubmitting = true;
+    this.busyAction = 'create';
     this.api.createSite(this.newSiteName.trim(), this.newSiteUrl.trim()).subscribe({
       next: (site) => {
         this.toast.push('Site added successfully', 'success');
@@ -122,11 +124,13 @@ export class SitesComponent implements OnInit {
           this.triggerInitialScan(site.id, site.url);
         }
         this.isSubmitting = false;
+        this.busyAction = null;
       },
       error: (err: HttpErrorResponse) => {
-        const message = err.error?.message || 'Failed to add site';
+        const message = this.formatError(err, 'Failed to add site');
         this.toast.push(message, 'error');
         this.isSubmitting = false;
+        this.busyAction = null;
       }
     });
   }
@@ -137,6 +141,7 @@ export class SitesComponent implements OnInit {
     }
 
     this.isSubmitting = true;
+    this.busyAction = 'update';
     const updates = {
       name: this.newSiteName.trim(),
       url: this.newSiteUrl.trim()
@@ -148,11 +153,13 @@ export class SitesComponent implements OnInit {
         this.closeEditModal();
         this.loadSites();
         this.isSubmitting = false;
+        this.busyAction = null;
       },
       error: (err: HttpErrorResponse) => {
-        const message = err.error?.message || 'Failed to update site';
+        const message = this.formatError(err, 'Failed to update site');
         this.toast.push(message, 'error');
         this.isSubmitting = false;
+        this.busyAction = null;
       }
     });
   }
@@ -163,17 +170,20 @@ export class SitesComponent implements OnInit {
     }
 
     this.isSubmitting = true;
+    this.busyAction = 'delete';
     this.api.deleteSite(this.deletingSite.id).subscribe({
       next: () => {
         this.toast.push('Site deleted successfully', 'success');
         this.closeDeleteModal();
         this.loadSites();
         this.isSubmitting = false;
+        this.busyAction = null;
       },
       error: (err: HttpErrorResponse) => {
-        const message = err.error?.message || 'Failed to delete site';
+        const message = this.formatError(err, 'Failed to delete site');
         this.toast.push(message, 'error');
         this.isSubmitting = false;
+        this.busyAction = null;
         this.closeDeleteModal();
       }
     });
@@ -189,6 +199,19 @@ export class SitesComponent implements OnInit {
         this.toast.push(message, 'error');
       }
     });
+  }
+
+  private formatError(err: HttpErrorResponse, fallback: string): string {
+    if (err.status === 0) {
+      return 'Network error. Check your connection and try again.';
+    }
+    if (err.status === 409) {
+      return err.error?.message || 'A site with this domain already exists.';
+    }
+    if (err.status === 400 && err.error?.message) {
+      return err.error.message;
+    }
+    return err.error?.message || fallback;
   }
 
   view(site: SiteSummary): void {

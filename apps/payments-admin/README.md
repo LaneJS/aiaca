@@ -12,7 +12,7 @@ This Angular application provides a comprehensive interface for managing:
 
 ## Architecture
 
-This application follows **Angular's modern standalone component architecture** (as of Angular 15+):
+This application follows **Angular's modern standalone component architecture** (as of Angular 15+) and connects to a Spring Boot backend API.
 
 ### Standalone Components Best Practices
 
@@ -75,9 +75,9 @@ apps/payments-admin/
 │   │   │   ├── accounts/        # Customer account management
 │   │   │   ├── payments/        # Payment & invoice tracking
 │   │   │   └── plans/           # Billing plan configuration
-│   │   ├── services/
-│   │   │   └── billing-data.service.ts  # Centralized data management
-│   │   ├── types.ts             # TypeScript interfaces & types
+│   │   ├── core/
+│   │   │   ├── api/             # HTTP API clients
+│   │   │   └── state/           # Shared state services
 │   │   ├── app.ts               # Root component
 │   │   └── app.routes.ts        # Application routes
 │   └── main.ts                  # Standalone bootstrap entry point
@@ -139,20 +139,19 @@ docker run -p 8080:80 payments-admin
 
 ## Services
 
-### BillingDataService
+### BillingApiService
 
-The central service managing all billing data using RxJS observables:
+The central service managing all billing data via HTTP calls to the backend API:
 
-- `accounts$` - Observable stream of customer accounts
-- `payments$` - Observable stream of payment records
-- `plans$` - Observable stream of billing plans
-- `summary$` - Computed billing summary metrics
+- `listAccounts`, `getAccount`, `createAccount`, `updateAccount`
+- `listCharges`, `createCharge`, `refundCharge`
+- `listSubscriptions`, `createSubscription`
+- `listPlans`, `createPlan`
 
-All state is managed in-memory using `BehaviorSubject` for reactive data flow.
+All data is fetched from the backend and managed using RxJS observables in the components.
 
 ## Future Enhancements
 
-- Backend API integration (currently uses in-memory data)
 - Real-time payment webhooks
 - Automated dunning workflows
 - Advanced analytics and reporting

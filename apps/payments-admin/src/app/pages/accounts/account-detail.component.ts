@@ -31,6 +31,14 @@ type PaymentMethodFormState = {
   billingName: string;
 };
 
+type ContactFormState = {
+  id?: string;
+  name: string;
+  email: string;
+  role: string;
+  primary: boolean;
+};
+
 type TabKey = 'overview' | 'contacts' | 'payment-methods' | 'subscriptions' | 'invoices' | 'dunning' | 'audit';
 
 @Component({
@@ -47,6 +55,7 @@ export class AccountDetailComponent {
   private readonly loading = inject(LoadingService);
   private readonly auth = inject(AuthService);
   private readonly paymentMethodsRefresh$ = new BehaviorSubject<void>(undefined);
+  private readonly contactsRefresh$ = new BehaviorSubject<void>(undefined);
 
   readonly selectedTab = signal<TabKey>('overview');
   readonly tabs: TabKey[] = ['overview', 'contacts', 'payment-methods', 'subscriptions', 'invoices', 'dunning', 'audit'];
@@ -60,6 +69,16 @@ export class AccountDetailComponent {
     billingName: '',
   });
   readonly paymentMethodActionLoading = signal<Set<string>>(new Set());
+
+  readonly showContactForm = signal(false);
+  readonly contactFormMode = signal<'create' | 'edit'>('create');
+  readonly newContact = signal<ContactFormState>({
+    name: '',
+    email: '',
+    role: '',
+    primary: false,
+  });
+  readonly contactActionLoading = signal<Set<string>>(new Set());
 
   private readonly accountId$ = this.route.paramMap.pipe(
     map((params) => params.get('id')),
@@ -88,8 +107,8 @@ export class AccountDetailComponent {
     shareReplay(1)
   );
 
-  readonly contacts$ = this.accountId$.pipe(
-    switchMap((id) => (id ? this.loading.track(this.api.listContacts(id)) : of([] as Contact[]))),
+  readonly contacts$ = combineLatest([this.accountId$, this.contactsRefresh$]).pipe(
+    switchMap(([id]) => (id ? this.loading.track(this.api.listContacts(id)) : of([] as Contact[]))),
     catchError(() => of([] as Contact[])),
     shareReplay(1)
   );
@@ -335,5 +354,121 @@ export class AccountDetailComponent {
 
   private patchPaymentMethod(update: Partial<PaymentMethodFormState>): void {
     this.newPaymentMethod.update((curr) => ({ ...curr, ...update }));
+  }
+
+  // Contact Management
+
+  initCreateContact(): void {
+    this.resetContactForm();
+    this.contactFormMode.set('create');
+    this.showContactForm.set(true);
+  }
+
+  editContact(contact: Contact): void {
+    this.newContact.set({
+      id: contact.id,
+      name: contact.name,
+      email: contact.email,
+      role: contact.role || '',
+      primary: contact.primary || false,
+    });
+    this.contactFormMode.set('edit');
+    this.showContactForm.set(true);
+  }
+
+  cancelContactForm(): void {
+    this.showContactForm.set(false);
+    this.resetContactForm();
+  }
+
+  saveContact(accountId: string | undefined): void {
+    if (!accountId) return;
+    const payload = this.newContact();
+    if (!payload.name || !payload.email) {
+      this.notifications.warning('Name and email are required');
+      return;
+    }
+
+    const action =
+      this.contactFormMode() === 'create'
+        ? this.api.addContact(accountId, {
+            name: payload.name,
+            email: payload.email,
+            role: payload.role,
+            primary: payload.primary,
+          })
+        : this.api.updateContact(accountId, payload.id!, {
+            name: payload.name,
+            email: payload.email,
+            role: payload.role,
+            primary: payload.primary,
+          });
+
+    this.contactActionLoading.update((set) => new Set(set).add('save'));
+    this.loading
+      .track(action)
+      .pipe(
+        finalize(() =>
+          this.contactActionLoading.update((set) => {
+            const next = new Set(set);
+            next.delete('save');
+            return next;
+          })
+        )
+      )
+      .subscribe({
+        next: () => {
+          this.notifications.success(this.contactFormMode() === 'create' ? 'Contact added' : 'Contact updated');
+          this.cancelContactForm();
+          this.contactsRefresh$.next();
+        },
+        error: () => this.notifications.error('Failed to save contact'),
+      });
+  }
+
+  deleteContact(accountId: string | undefined, contact: Contact): void {
+    if (!accountId || !contact.id) return;
+    if (!window.confirm(`Remove contact ${contact.name}?`)) return;
+
+    this.contactActionLoading.update((set) => new Set(set).add(contact.id!));
+    this.loading
+      .track(this.api.deleteContact(accountId, contact.id))
+      .pipe(
+        finalize(() =>
+          this.contactActionLoading.update((set) => {
+            const next = new Set(set);
+            next.delete(contact.id!);
+            return next;
+          })
+        )
+      )
+      .subscribe({
+        next: () => {
+          this.notifications.success('Contact removed');
+          this.contactsRefresh$.next();
+        },
+        error: () => this.notifications.error('Failed to remove contact'),
+      });
+  }
+
+  setContactName(value: string): void {
+    this.newContact.update((c) => ({ ...c, name: value }));
+  }
+
+  setContactEmail(value: string): void {
+    this.newContact.update((c) => ({ ...c, email: value }));
+  }
+
+  setContactRole(value: string): void {
+    this.newContact.update((c) => ({ ...c, role: value }));
+  }
+
+  setContactPrimary(value: boolean | string): void {
+    const bool = typeof value === 'string' ? value === 'true' || value === 'on' : !!value;
+    this.newContact.update((c) => ({ ...c, primary: bool }));
+  }
+
+  private resetContactForm(): void {
+    this.newContact.set({ name: '', email: '', role: '', primary: false });
   }
 }

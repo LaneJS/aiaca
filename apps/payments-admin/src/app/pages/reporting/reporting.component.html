@@ -8,8 +8,8 @@
   </div>
   <div class="header-actions">
     <button class="btn btn-secondary" type="button" (click)="refresh()">Refresh</button>
-    <button class="btn btn-ghost" type="button" (click)="exportPlaceholder('payments')">Export payments</button>
-    <button class="btn btn-ghost" type="button" (click)="exportPlaceholder('invoices')">Export invoices</button>
+    <button class="btn btn-ghost" type="button" (click)="exportData('payments')">Export payments</button>
+    <button class="btn btn-ghost" type="button" (click)="exportData('invoices')">Export invoices</button>
   </div>
 </section>
 
@@ -52,7 +52,7 @@
           </ng-container>
         </select>
       </label>
-      <button class="btn btn-ghost" type="button" (click)="exportPlaceholder('audit')">Export audit logs</button>
+      <button class="btn btn-ghost" type="button" (click)="exportData('audit')">Export audit logs</button>
     </div>
   </header>
 

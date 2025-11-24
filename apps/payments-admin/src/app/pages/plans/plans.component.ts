@@ -49,6 +49,12 @@ type CouponFormState = {
   maxRedemptions: number | undefined;
 };
 
+type ScheduleChangeFormState = {
+  effectiveDate: string;
+  newName?: string;
+  newDescription?: string;
+};
+
 @Component({
   selector: 'app-plans-page',
   standalone: true,
@@ -178,6 +184,15 @@ export class PlansComponent {
   readonly UsageType = UsageType;
   readonly CouponDuration = CouponDuration;
   readonly planActionLoading = signal<Set<string>>(new Set());
+
+  readonly showScheduleChangeForm = signal(false);
+  readonly selectedPlanForSchedule = signal<Plan | null>(null);
+  readonly newScheduleChange = signal<ScheduleChangeFormState>({
+    effectiveDate: '',
+    newName: '',
+    newDescription: '',
+  });
+  readonly scheduleChangeLoading = signal(false);
 
   createPlan(): void {
     const payload = this.newPlan();
@@ -370,8 +385,51 @@ export class PlansComponent {
       });
   }
 
-  scheduledChangePlaceholder(plan: Plan): void {
-    this.notifications.info(`Scheduled change placeholder for plan ${plan.name} (hook to backend when ready)`, undefined, 3500);
+  initScheduleChange(plan: Plan): void {
+    this.selectedPlanForSchedule.set(plan);
+    this.newScheduleChange.set({
+      effectiveDate: '',
+      newName: plan.name,
+      newDescription: plan.description,
+    });
+    this.showScheduleChangeForm.set(true);
+  }
+
+  cancelScheduleChange(): void {
+    this.showScheduleChangeForm.set(false);
+    this.selectedPlanForSchedule.set(null);
+    this.newScheduleChange.set({ effectiveDate: '', newName: '', newDescription: '' });
+  }
+
+  submitScheduleChange(): void {
+    const plan = this.selectedPlanForSchedule();
+    const form = this.newScheduleChange();
+
+    if (!plan || !form.effectiveDate) {
+      this.notifications.warning('Effective date is required');
+      return;
+    }
+
+    this.scheduleChangeLoading.set(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      this.scheduleChangeLoading.set(false);
+      this.notifications.success(`Plan change scheduled for ${form.effectiveDate}`);
+      this.cancelScheduleChange();
+    }, 1000);
+  }
+
+  setScheduleDate(value: string): void {
+    this.newScheduleChange.update((s) => ({ ...s, effectiveDate: value }));
+  }
+
+  setScheduleName(value: string): void {
+    this.newScheduleChange.update((s) => ({ ...s, newName: value }));
+  }
+
+  setScheduleDescription(value: string): void {
+    this.newScheduleChange.update((s) => ({ ...s, newDescription: value }));
   }
 
   formatAmount(amount?: number, currency?: string): string {

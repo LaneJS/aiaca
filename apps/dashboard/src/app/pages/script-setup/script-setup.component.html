@@ -1,18 +1,78 @@
-<section class="card">
+<div class="card">
   <header class="section-header">
     <div>
       <p class="eyebrow">Script setup</p>
       <h1>Enable auto-fix</h1>
+      <p class="muted">Copy your site-specific snippet and verify the embed endpoint responds.</p>
     </div>
+    <button type="button" class="ghost" (click)="loadSites()">Refresh sites</button>
   </header>
-  <label class="muted" for="site">Site</label>
-  <select id="site" (change)="select($any($event.target).value)">
-    <option value="">Choose a site</option>
-    <option *ngFor="let site of sites" [value]="site.id">{{ site.name }}</option>
-  </select>
-  <div *ngIf="selected" class="snippet">
-    <p class="muted">Copy this snippet into your <code>&lt;head&gt;</code>.</p>
-    <textarea #code aria-label="Embed snippet" readonly>{{ snippet() }}</textarea>
-    <button type="button" (click)="copy(code)">Copy snippet</button>
-  </div>
-</section>
+
+  <ng-container *ngIf="isLoading">
+    <app-loading-spinner message="Loading your sites..." />
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && error">
+    <app-error-state title="Cannot load sites" [message]="error" (retry)="loadSites()"></app-error-state>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <app-empty-state
+      *ngIf="!sites.length"
+      icon="🌐"
+      title="No sites yet"
+      message="Add your first site to generate an embed snippet."
+      actionLabel="Open Sites"
+      (action)="toasts.push('Open the Sites tab to add your first site.', 'info')"
+    ></app-empty-state>
+
+    <div *ngIf="sites.length" class="content">
+      <label for="site">Site</label>
+      <select id="site" (change)="select($any($event.target).value)" [value]="selected?.id">
+        <option value="">Choose a site</option>
+        <option *ngFor="let site of sites" [value]="site.id">{{ site.name }} — {{ site.url }}</option>
+      </select>
+
+      <div class="snippet" *ngIf="selected">
+        <p class="muted">Copy this snippet into your <code>&lt;head&gt;</code>.</p>
+        <textarea #code aria-label="Embed snippet" readonly>{{ snippet() }}</textarea>
+        <button type="button" (click)="copy(code)">Copy snippet</button>
+      </div>
+
+      <div class="embed-meta" *ngIf="selected">
+        <div>
+          <p class="muted">Embed key</p>
+          <code>{{ selected.embedKey || 'Available after first fetch' }}</code>
+        </div>
+        <div>
+          <p class="muted">Last embed config</p>
+          <span>{{ embedConfig?.updatedAt ? (embedConfig?.updatedAt | date:'short') : 'Not fetched yet' }}</span>
+        </div>
+      </div>
+
+      <div class="verify" *ngIf="selected">
+        <button type="button" class="ghost" (click)="verifyInstall()" [disabled]="verifyStatus === 'checking'">
+          {{ verifyStatus === 'checking' ? 'Checking...' : 'Verify embed endpoint' }}
+        </button>
+        <span
+          class="status"
+          [class.success]="verifyStatus === 'success'"
+          [class.error]="verifyStatus === 'error'"
+          aria-live="polite"
+          *ngIf="verifyStatus !== 'idle'"
+        >
+          {{ verifyMessage }}
+        </span>
+      </div>
+
+      <div class="info">
+        <h3>What this script does</h3>
+        <ul>
+          <li>Adds skip links for keyboard users</li>
+          <li>Applies AI-generated alt text to images missing descriptions</li>
+          <li>Improves focus outlines for better visibility</li>
+        </ul>
+      </div>
+    </div>
+  </ng-container>
+</div>

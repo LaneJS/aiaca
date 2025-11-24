@@ -1,8 +1,63 @@
 <section class="card">
-  <header>
-    <p class="eyebrow">Account</p>
-    <h1>User profile</h1>
+  <header class="section-header">
+    <div>
+      <p class="eyebrow">Account</p>
+      <h1>User & Billing</h1>
+      <p class="muted">Manage your subscription and payment preferences.</p>
+    </div>
   </header>
-  <p>Name: {{ auth.user()?.name }}</p>
-  <p>Email: {{ auth.user()?.email }}</p>
+
+  <div class="profile">
+    <p><strong>Name:</strong> {{ auth.user()?.name }}</p>
+    <p><strong>Email:</strong> {{ auth.user()?.email }}</p>
+  </div>
+
+  <ng-container *ngIf="isLoading">
+    <app-loading-spinner message="Loading billing..." />
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && error">
+    <app-error-state [message]="error" (retry)="loadBilling()"></app-error-state>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <section class="billing">
+      <div class="plans">
+        <h2>Plans</h2>
+        <ul>
+          <li *ngFor="let plan of plans" [class.selected]="plan.id === selectedPlanId">
+            <div>
+              <p class="title">{{ plan.name }}</p>
+              <p class="muted">{{ plan.description || 'No description provided.' }}</p>
+            </div>
+            <button class="ghost" type="button" (click)="selectedPlanId = plan.id; selectedPriceId = null; loadPrices(plan.id)">View prices</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="prices" *ngIf="selectedPlanId">
+        <h3>Prices</h3>
+        <p class="muted" *ngIf="!(prices[selectedPlanId]?.length)">No prices available for this plan.</p>
+        <ul *ngIf="prices[selectedPlanId]?.length">
+          <li *ngFor="let price of prices[selectedPlanId]" [class.selected]="price.id === selectedPriceId">
+            <div>
+              <p class="title">{{ (price.amount / 100) | currency: price.currency }}</p>
+              <p class="muted">{{ price.intervalCount }} × {{ price.interval }}</p>
+            </div>
+            <button class="ghost" type="button" (click)="selectedPriceId = price.id">Select</button>
+          </li>
+        </ul>
+        <p class="hint">Upgrades/downgrades occur via Stripe webhooks; contact support to change plans if not available.</p>
+      </div>
+    </section>
+
+    <section class="subscriptions">
+      <h2>Subscriptions</h2>
+      <p class="muted" *ngIf="!subscriptions.length">No active subscriptions.</p>
+      <div *ngFor="let sub of subscriptions" class="subscription">
+        <p class="title">Subscription {{ sub.id }}</p>
+        <p class="muted">Status: {{ sub.status }}</p>
+      </div>
+    </section>
+  </ng-container>
 </section>

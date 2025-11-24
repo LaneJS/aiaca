@@ -6,12 +6,12 @@ Production-ready authenticated dashboard for the A11y Assistant product with onb
 
 ### Routing & Authentication
 - **Protected Routes:** `ShellComponent` wraps all authenticated pages (Overview, Sites, Scans, Script Setup, Account)
-- **Auth Flow:** `/auth` route handles login/signup with real backend integration
-- **Auth Guard:** Redirects unauthenticated users to login
-- **Auth Interceptor:** Automatically attaches JWT tokens and handles 401 redirects
+- **Auth Flow:** `/auth` handles login/signup plus password reset request + confirm flows aligned to backend error messages
+- **Auth Guard:** Redirects unauthenticated or expired sessions to login with context + redirect intent
+- **Auth Interceptor:** Automatically attaches JWT tokens, handles 401 redirects, and clears expired sessions
 
 ### State Management & Services
-- **Auth Service:** Manages user session, token storage (localStorage), and authentication state using Angular signals
+- **Auth Service:** Manages user session, token storage (sessionStorage with in-memory fallback), and authentication state using Angular signals
 - **API Service:** Centralized HTTP client for all backend endpoints with proper error handling
 - **Toast Service:** Global notification system for user feedback
 - **No Mock Data:** All mock data and demo fallbacks removed for production
@@ -20,7 +20,7 @@ Production-ready authenticated dashboard for the A11y Assistant product with onb
 - **Development:** `src/environments/environment.ts`
 - **Production:** `src/environments/environment.prod.ts`
 - **CDN URL:** Configurable via `environment.cdnBaseUrl`
-- **API Base:** Configured via `environment.apiBaseUrl`
+- **API Base:** Configured via `environment.apiBaseUrl` and consumed by `AuthService` + `ApiService`
 
 ### UI Components
 - **Error States:** Consistent error display with retry actions
@@ -31,31 +31,35 @@ Production-ready authenticated dashboard for the A11y Assistant product with onb
 ## API Integration
 
 ### Implemented Endpoints
-All endpoints use real backend integration (no mock data):
+All endpoints are built off `environment.apiBaseUrl` (no hardcoded paths):
 
 #### Authentication
-- `POST /api/v1/auth/login` - User login
-- `POST /api/v1/auth/register` - User signup
+- `POST /auth/login` - User login
+- `POST /auth/register` - User signup
+- `POST /auth/password-reset/request` - Request password reset link (backend implementation pending)
+- `POST /auth/password-reset/confirm` - Confirm new password with reset token (backend implementation pending)
 
 #### Sites
-- `GET /api/v1/sites` - List all user sites
-- `GET /api/v1/sites/:id` - Get site details
-- `POST /api/v1/sites` - Create new site
-- `PATCH /api/v1/sites/:id` - Update site (name, URL)
-- `DELETE /api/v1/sites/:id` - Delete site
+- `GET /sites` - List all user sites
+- `GET /sites/:id` - Get site details
+- `POST /sites` - Create new site
+- `PATCH /sites/:id` - Update site (name, URL)
+- `DELETE /sites/:id` - Delete site
 
 #### Scans
-- `GET /api/v1/scans` - List all scans
-- `GET /api/v1/sites/:siteId/scans` - List scans for a site
-- `GET /api/v1/scans/:id` - Get scan details with issues
-- `POST /api/v1/sites/:siteId/scans` - Trigger new scan
-- `PATCH /api/v1/scans/:scanId/issues/:issueId` - Update issue status
+- `GET /scans` - List all scans
+- `GET /sites/:siteId/scans` - List scans for a site
+- `GET /scans/:id` - Get scan details with issues
+- `POST /sites/:siteId/scans` - Trigger new scan
+- `PATCH /scans/:scanId/issues/:issueId` - Update issue status
 
 ### Backend Requirements
 The following endpoints must be implemented by the backend API agent:
-- `PATCH /api/v1/sites/:id` - Update site details
-- `DELETE /api/v1/sites/:id` - Delete site
-- `PATCH /api/v1/scans/:scanId/issues/:issueId` - Update issue status (open/fixed)
+- `PATCH /sites/:id` - Update site details
+- `DELETE /sites/:id` - Delete site
+- `PATCH /scans/:scanId/issues/:issueId` - Update issue status (open/fixed)
+- `POST /auth/password-reset/request` and `/auth/password-reset/confirm` - Needed for the new recovery flow
+- `POST /auth/refresh` (or equivalent) - To enable silent token rotation instead of forced re-login
 
 ## Features
 
@@ -79,6 +83,11 @@ The following endpoints must be implemented by the backend API agent:
 - Visual feedback for status updates
 - Error recovery with automatic rollback
 
+### Authentication & Recovery
+- Login/signup backed by API with session-expired guard/interceptor messaging
+- Password reset request + confirm flows with lockout/rate-limit messaging; shows fallback note if backend endpoint is unavailable
+- Post-auth redirect preserves the originally requested route via `redirectTo` when the guard blocks access
+
 ### Script Setup
 - Dynamic embed script generation
 - Production CDN URL from environment config
@@ -88,18 +97,21 @@ The following endpoints must be implemented by the backend API agent:
 ## Token Storage Security
 
 ### Current Implementation
-Tokens are stored in localStorage with user profile data. This is suitable for MVP but has known security limitations.
+Tokens and user profile data are stored in `sessionStorage` with an in-memory fallback for non-browser contexts. JWT expiry is decoded to schedule auto-logout and redirect back to `/auth` with a session-expired reason and the attempted route.
+
+### Refresh Strategy
+No refresh endpoint exists yet. The dashboard currently forces re-login when tokens expire or a 401 is returned. Once the API exposes `/auth/refresh` (or equivalent), plan to switch to short-lived access tokens with a HttpOnly refresh token and silent refresh handled inside `AuthService`.
 
 ### Security Considerations
-- **XSS Vulnerability:** localStorage is accessible to JavaScript, making it vulnerable to XSS attacks
-- **Production Recommendation:** Implement HttpOnly cookies or memory-only storage with refresh tokens
-- **CSRF Protection:** If using cookies, implement CSRF token validation
+- **XSS Exposure:** `sessionStorage` remains script-accessible; keep CSP/audits tight
+- **Idle Expiry:** Closing the tab clears the session; guard/interceptor preserve redirect intent to reduce friction
+- **CSRF Protection:** If the backend moves to cookies, pair with CSRF tokens
 
 ### Future Enhancements
 Consider implementing:
-1. **HttpOnly Cookies:** Most secure, requires backend coordination for cookie management
-2. **Memory + Refresh Token:** Store access token in memory, refresh token in HttpOnly cookie
-3. **Token Rotation:** Implement automatic token refresh before expiration
+1. **HttpOnly Cookies:** Most secure; requires backend coordination for cookie issuance + CSRF protection
+2. **Memory + Refresh Token:** Store access token in memory with refresh token in HttpOnly cookie
+3. **Token Rotation:** Automatically refresh before expiration once backend endpoint exists
 
 ## Running & Testing
 
@@ -130,15 +142,17 @@ npx nx build dashboard --configuration=production
 ### Manual Testing Checklist
 1. **User Signup:** Create account with real API (no demo fallback)
 2. **User Login:** Authenticate with proper error handling
-3. **Add Site:** Create site, verify error messages for invalid input
-4. **Edit Site:** Update site name/URL
-5. **Delete Site:** Confirm deletion with modal
-6. **Trigger Scan:** Start scan and verify polling updates
-7. **View Scan Results:** See real data from backend
-8. **Toggle Issue Status:** Mark issue fixed, verify persistence after refresh
-9. **Copy Embed Script:** Copy production CDN URL
-10. **Logout:** Clear session and redirect to login
-11. **Error Scenarios:** Test with network disconnected, API down, invalid data
+3. **Password Reset:** Request reset link and confirm new password (UI shows friendly fallback until backend endpoint ships)
+4. **Add Site:** Create site, verify error messages for invalid input
+5. **Edit Site:** Update site name/URL
+6. **Delete Site:** Confirm deletion with modal
+7. **Trigger Scan:** Start scan and verify polling updates
+8. **View Scan Results:** See real data from backend
+9. **Toggle Issue Status:** Mark issue fixed, verify persistence after refresh
+10. **Copy Embed Script:** Copy production CDN URL
+11. **Logout:** Clear session and redirect to login
+12. **Session Expiry:** Allow token to expire or force a 401 to confirm redirect with session-expired notice
+13. **Error Scenarios:** Test with network disconnected, API down, invalid data
 
 ## Error Handling
 
@@ -150,7 +164,8 @@ npx nx build dashboard --configuration=production
 
 ### Error Messages
 - **Network Error:** "Unable to connect to server. Please check your internet connection."
-- **401 Unauthorized:** "Invalid email or password" (or auto-logout for other requests)
+- **401 Unauthorized:** "Invalid email or password" (or session-expired redirect for other requests)
+- **429 Rate Limited:** "Too many attempts. Please wait and try again."
 - **409 Conflict:** "An account with this email already exists"
 - **500 Server Error:** "Server error. Please try again later."
 - **Generic:** "An unexpected error occurred. Please try again."
@@ -171,7 +186,8 @@ npx nx build dashboard --configuration=production
 - Linting passes with zero issues
 
 ### Known Limitations
-- Token storage uses localStorage (acceptable for MVP, should upgrade for production scale)
+- Password reset endpoints are not yet implemented on the backend; UI shows a friendly fallback until they ship
+- Token refresh/rotation not yet available; JWT expiry forces re-login
 - Some components show unused import warnings (components used conditionally based on state)
 - Budget warning for nx-welcome component (not critical, can be removed if needed)
 

@@ -98,7 +98,7 @@
             <p class="eyebrow">Billing contacts</p>
             <h3>Who receives invoices and dunning sequences</h3>
           </div>
-          <button class="btn btn-primary" type="button" [disabled]="!canEdit()">Add contact (API hooked)" ></button>
+          <button class="btn btn-primary" type="button" [disabled]="!canEdit()" (click)="initCreateContact()">Add contact</button>
         </header>
         <div class="table" *ngIf="contacts$ | async as contacts">
           <div class="table__head">
@@ -106,15 +106,67 @@
             <span>Email</span>
             <span>Role</span>
             <span>Primary</span>
+            <span>Actions</span>
           </div>
           <div class="table__row" *ngFor="let contact of contacts">
             <span class="cell-title">{{ contact.name }}</span>
             <span class="cell-sub">{{ contact.email }}</span>
             <span>{{ contact.role || '—' }}</span>
             <span>{{ contact.primary ? 'Yes' : 'No' }}</span>
+            <div class="actions" *ngIf="canEdit()">
+              <button
+                class="btn btn-ghost"
+                type="button"
+                [disabled]="contactActionLoading().has(contact.id || '')"
+                (click)="editContact(contact)"
+              >
+                Edit
+              </button>
+              <button
+                class="btn btn-ghost"
+                type="button"
+                [disabled]="contactActionLoading().has(contact.id || '')"
+                (click)="deleteContact(account?.id, contact)"
+              >
+                Remove
+              </button>
+            </div>
           </div>
           <p class="empty" *ngIf="contacts.length === 0">No contacts yet.</p>
         </div>
+
+        <section class="form-card" *ngIf="showContactForm()">
+          <h4>{{ contactFormMode() === 'create' ? 'Add contact' : 'Edit contact' }}</h4>
+          <div class="form">
+            <label class="input-group">
+              <span>Name</span>
+              <input type="text" [ngModel]="newContact().name" (ngModelChange)="setContactName($event)" />
+            </label>
+            <label class="input-group">
+              <span>Email</span>
+              <input type="email" [ngModel]="newContact().email" (ngModelChange)="setContactEmail($event)" />
+            </label>
+            <label class="input-group">
+              <span>Role</span>
+              <input type="text" [ngModel]="newContact().role" (ngModelChange)="setContactRole($event)" placeholder="e.g. Billing, Technical" />
+            </label>
+            <label class="checkbox-group">
+              <input type="checkbox" [ngModel]="newContact().primary" (ngModelChange)="setContactPrimary($event)" />
+              <span>Primary contact</span>
+            </label>
+            <div class="actions">
+              <button
+                class="btn btn-primary"
+                type="button"
+                [disabled]="contactActionLoading().has('save')"
+                (click)="saveContact(account?.id)"
+              >
+                {{ contactFormMode() === 'create' ? 'Add contact' : 'Save changes' }}
+              </button>
+              <button class="btn btn-ghost" type="button" (click)="cancelContactForm()">Cancel</button>
+            </div>
+          </div>
+        </section>
       </div>
 
       <div *ngSwitchCase="'payment-methods'" id="tab-panel-payment-methods">
@@ -166,8 +218,7 @@
         </div>
 
         <section class="form-card" *ngIf="showAddPaymentForm()">
-          <h4>Add card (Stripe-ready placeholder)</h4>
-          <p class="hint">For production use, swap this manual form with Stripe Elements setup_intent confirmation.</p>
+          <h4>Add Payment Method</h4>
           <div class="form">
             <label class="input-group">
               <span>Billing name</span>

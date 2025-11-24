@@ -9,6 +9,8 @@ import com.aiaca.api.service.SiteService;
 import com.aiaca.api.service.UrlSanitizer;
 import com.aiaca.api.repository.UserRepository;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -73,6 +76,40 @@ public class ScanController {
             return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok(scanService.getDetailById(id));
+    }
+
+    @GetMapping("/scans/{id}/export")
+    public ResponseEntity<byte[]> exportScan(@AuthenticationPrincipal UserPrincipal principal,
+                                             @PathVariable UUID id,
+                                             @RequestParam(name = "format", defaultValue = "pdf") String format) {
+        if (!format.equalsIgnoreCase("pdf") && !format.equalsIgnoreCase("html")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(("Unsupported format: " + format).getBytes());
+        }
+        User owner = userRepository.findById(principal.getId()).orElseThrow();
+        var scan = scanService.getById(id);
+        if (!scan.getSite().getOwner().getId().equals(owner.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        // Placeholder implementation to keep API stable; replace with real report generation.
+        String body = "Report generation is not enabled yet.";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=scan-" + id + "." + format.toLowerCase());
+        headers.add(HttpHeaders.CONTENT_TYPE, format.equalsIgnoreCase("pdf") ? "application/pdf" : "text/html");
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).headers(headers).body(body.getBytes());
+    }
+
+    @PostMapping("/scans/{id}/share")
+    public ResponseEntity<ScanDtos.ShareLinkResponse> createShareLink(@AuthenticationPrincipal UserPrincipal principal,
+                                                                      @PathVariable UUID id) {
+        User owner = userRepository.findById(principal.getId()).orElseThrow();
+        var scan = scanService.getById(id);
+        if (!scan.getSite().getOwner().getId().equals(owner.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        // Placeholder share link; replace with signed token-based links when feature is implemented.
+        String link = "/share/scan/" + id;
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ScanDtos.ShareLinkResponse(link, null));
     }
 
     @PatchMapping("/scans/{scanId}/issues/{issueId}")

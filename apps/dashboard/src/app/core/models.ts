@@ -46,3 +46,64 @@ export interface OnboardingStep {
   description: string;
   completed: boolean;
 }
+
+export interface EmbedConfig {
+  siteId: string;
+  features?: Record<string, unknown>;
+  updatedAt?: string;
+}
+
+export interface SiteSchedule {
+  cadence: 'daily' | 'weekly' | 'monthly';
+  timeUtc: string;
+  timezone: string;
+  windowStart?: string;
+  windowEnd?: string;
+  nextRun?: string;
+  lastRun?: string;
+  isActive: boolean;
+}
+
+export interface ScanShareLink {
+  link: string;
+  expiresAt?: string;
+}
+
+export interface NotificationSettings {
+  emailEnabled: boolean;
+  slackWebhookUrl?: string;
+  webhookUrl?: string;
+  digestCadence?: 'daily' | 'weekly';
+}
+
+export interface Plan {
+  id: string;
+  code: string;
+  name: string;
+  description?: string;
+  status?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface Price {
+  id: string;
+  planId: string;
+  amount: number;
+  currency: string;
+  interval: string;
+  intervalCount: number;
+  trialPeriodDays?: number;
+  active: boolean;
+}
+
+export interface Subscription {
+  id: string;
+  accountId: string;
+  status: string;
+  items?: SubscriptionItem[];
+}
+
+export interface SubscriptionItem {
+  priceId: string;
+  quantity?: number;
+}

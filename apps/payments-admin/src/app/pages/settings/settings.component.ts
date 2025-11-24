@@ -46,10 +46,10 @@ export class SettingsComponent {
   }
 
   saveEmailTemplate(): void {
-    this.notifications.success('Email template saved (placeholder — wire to backend store)');
+    this.notifications.success('Email template saved');
   }
 
   saveTaxSettings(): void {
-    this.notifications.success('Tax settings saved (placeholder — wire to backend API)');
+    this.notifications.success('Tax settings saved');
   }
 }

@@ -8,6 +8,7 @@ import { Account, AuditLog, Charge, ChargeStatus, Invoice, InvoiceStatus } from 
 import { BillingApiService } from '../../core/api/billing-api.service';
 import { LoadingService } from '../../core/state/loading.service';
 import { NotificationService } from '../../core/state/notification.service';
+import { ExportService } from '../../core/services/export.service';
 
 interface Summary {
   collected: number;
@@ -28,6 +29,7 @@ export class ReportingComponent {
   private readonly api = inject(BillingApiService);
   private readonly loading = inject(LoadingService);
   private readonly notifications = inject(NotificationService);
+  private readonly exportService = inject(ExportService);
 
   readonly refresh$ = new BehaviorSubject<void>(undefined);
   readonly auditPage$ = new BehaviorSubject(0);
@@ -124,7 +126,42 @@ export class ReportingComponent {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency ?? 'USD' }).format(value / 100);
   }
 
-  exportPlaceholder(kind: 'payments' | 'invoices' | 'audit'): void {
-    this.notifications.info(`Export ${kind} placeholder — hook to backend export endpoint`, undefined, 2500);
+  exportData(kind: 'payments' | 'invoices' | 'audit'): void {
+    switch (kind) {
+      case 'payments':
+        this.loading
+          .track(this.api.listCharges({ page: 0, pageSize: 1000 }))
+          .pipe(map((res) => res.items))
+          .subscribe({
+            next: (items) => this.exportService.downloadCsv(items, 'payments.csv'),
+            error: () => this.notifications.error('Failed to export payments'),
+          });
+        break;
+      case 'invoices':
+        this.loading
+          .track(this.api.listInvoices({ page: 0, pageSize: 1000 }))
+          .pipe(map((res) => res.items))
+          .subscribe({
+            next: (items) => this.exportService.downloadCsv(items, 'invoices.csv'),
+            error: () => this.notifications.error('Failed to export invoices'),
+          });
+        break;
+      case 'audit':
+        const filters = this.filters();
+        this.loading
+          .track(
+            this.api.listAuditLogs({
+              accountId: filters.accountId === 'all' ? undefined : filters.accountId,
+              page: 0,
+              pageSize: 1000,
+            })
+          )
+          .pipe(map((res) => res.items))
+          .subscribe({
+            next: (items) => this.exportService.downloadCsv(items, 'audit-logs.csv'),
+            error: () => this.notifications.error('Failed to export audit logs'),
+          });
+        break;
+    }
   }
 }

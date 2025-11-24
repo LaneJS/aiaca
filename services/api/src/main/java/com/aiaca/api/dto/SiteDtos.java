@@ -11,4 +11,22 @@ public class SiteDtos {
     public record UpdateSiteRequest(String name, String url) {}
 
     public record SiteResponse(UUID id, String name, String url, String embedKey, LocalDateTime createdAt) {}
+
+    public record SiteScheduleDto(
+            String cadence,
+            String timeUtc,
+            String timezone,
+            String windowStart,
+            String windowEnd,
+            String nextRun,
+            String lastRun,
+            boolean isActive
+    ) {}
+
+    public record NotificationSettingsDto(
+            boolean emailEnabled,
+            String slackWebhookUrl,
+            String webhookUrl,
+            String digestCadence
+    ) {}
 }

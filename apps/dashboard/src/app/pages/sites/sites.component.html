@@ -3,19 +3,63 @@
     <div>
       <p class="eyebrow">Sites</p>
       <h1>Tracked properties</h1>
+      <p class="muted">Add, edit, or remove domains tied to your account.</p>
     </div>
     <button class="ghost" type="button" (click)="openAddModal()">Add site</button>
   </header>
-  <div class="grid">
-    <article *ngFor="let site of sites" class="site" tabindex="0" (click)="view(site)" (keypress.enter)="view(site)" role="button">
-      <p class="muted">{{ site.url }}</p>
-      <h3>{{ site.name }}</h3>
-      <div class="meta">
-        <span class="pill">Score {{ site.score || '—' }}</span>
-        <span class="pill alert">{{ site.issuesOpen || 0 }} open</span>
-      </div>
-    </article>
-  </div>
+
+  <ng-container *ngIf="isLoading">
+    <app-loading-spinner message="Loading your sites..." />
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && error">
+    <app-error-state title="Cannot load sites" [message]="error" (retry)="retryLoad()"></app-error-state>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <app-empty-state
+      *ngIf="!sites.length"
+      icon="🌐"
+      title="No sites yet"
+      message="Add your first domain to start tracking accessibility scans."
+      actionLabel="Add a site"
+      (action)="openAddModal()"
+    ></app-empty-state>
+
+    <div class="grid" *ngIf="sites.length">
+      <article
+        *ngFor="let site of sites"
+        class="site"
+        tabindex="0"
+        (click)="view(site)"
+        (keypress.enter)="view(site)"
+        role="button"
+        aria-label="View site {{ site.name }}"
+      >
+        <div class="site-header">
+          <div>
+            <p class="muted url">{{ site.url }}</p>
+            <h3>{{ site.name }}</h3>
+          </div>
+          <div class="meta">
+            <span class="pill">Score {{ site.score || '—' }}</span>
+            <span class="pill alert">{{ site.issuesOpen || 0 }} open</span>
+          </div>
+        </div>
+
+        <div class="embed">
+          <p class="muted">Embed key</p>
+          <code>{{ site.embedKey || 'Available after first fetch' }}</code>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="ghost" (click)="view(site); $event.stopPropagation()">Open</button>
+          <button type="button" class="ghost" (click)="openEditModal(site); $event.stopPropagation()">Edit</button>
+          <button type="button" class="ghost danger" (click)="openDeleteModal(site); $event.stopPropagation()">Delete</button>
+        </div>
+      </article>
+    </div>
+  </ng-container>
 </section>
 
 <!-- Add Site Modal -->
@@ -82,5 +126,81 @@
         </button>
       </footer>
     </form>
+  </div>
+</div>
+
+<!-- Edit Site Modal -->
+<div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+  <div class="modal" role="dialog" aria-labelledby="edit-site-title" aria-modal="true" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2 id="edit-site-title">Edit site</h2>
+      <button type="button" class="close-btn" (click)="closeEditModal()" aria-label="Close modal">&times;</button>
+    </header>
+
+    <form (ngSubmit)="submitEditSite()" class="modal-body">
+      <div class="form-group">
+        <label for="edit-site-name">Site name</label>
+        <input
+          id="edit-site-name"
+          type="text"
+          [(ngModel)]="newSiteName"
+          name="editSiteName"
+          placeholder="e.g., My Business Website"
+          required
+          [disabled]="isSubmitting"
+          autocomplete="off"
+        />
+        <p class="form-hint">A friendly name to identify this site</p>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-site-url">Website URL</label>
+        <input
+          id="edit-site-url"
+          type="url"
+          [(ngModel)]="newSiteUrl"
+          name="editSiteUrl"
+          placeholder="https://example.com"
+          required
+          [disabled]="isSubmitting"
+          autocomplete="url"
+        />
+        <p class="form-hint">The full URL including https://</p>
+        <p class="form-error" *ngIf="newSiteUrl && !isValidUrl(newSiteUrl)">
+          Please enter a valid HTTP or HTTPS URL
+        </p>
+      </div>
+
+      <footer class="modal-footer">
+        <button type="button" class="ghost" (click)="closeEditModal()" [disabled]="isSubmitting">
+          Cancel
+        </button>
+        <button type="submit" class="primary" [disabled]="!isFormValid() || isSubmitting">
+          {{ isSubmitting && busyAction === 'update' ? 'Saving...' : 'Save changes' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Site Modal -->
+<div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+  <div class="modal" role="dialog" aria-labelledby="delete-site-title" aria-modal="true" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2 id="delete-site-title">Delete site</h2>
+      <button type="button" class="close-btn" (click)="closeDeleteModal()" aria-label="Close modal">&times;</button>
+    </header>
+
+    <div class="modal-body">
+      <p>Are you sure you want to delete <strong>{{ deletingSite?.name }}</strong>? This removes the site and its scan history.</p>
+      <footer class="modal-footer">
+        <button type="button" class="ghost" (click)="closeDeleteModal()" [disabled]="isSubmitting">
+          Cancel
+        </button>
+        <button type="button" class="primary danger" (click)="confirmDelete()" [disabled]="isSubmitting">
+          {{ isSubmitting && busyAction === 'delete' ? 'Deleting...' : 'Delete site' }}
+        </button>
+      </footer>
+    </div>
   </div>
 </div>

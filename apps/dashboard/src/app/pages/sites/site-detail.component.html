@@ -1,33 +1,144 @@
-<section class="card" *ngIf="site">
-  <header class="section-header">
-    <div>
-      <p class="eyebrow">Site</p>
-      <h1>{{ site.name }}</h1>
-      <p class="muted">{{ site.url }}</p>
-    </div>
-    <div class="meta">
-      <span class="pill">Score {{ site.score }}</span>
-      <span class="pill alert">{{ site.issuesOpen }} open</span>
-    </div>
-  </header>
-  <div class="grid">
-    <div>
-      <p class="muted">Last scan</p>
-      <p>{{ site.lastScan | date: 'short' }}</p>
-    </div>
-    <div>
-      <p class="muted">Embed key</p>
-      <p>{{ site.embedKey }}</p>
-    </div>
-  </div>
-  <h3>Recent scans</h3>
-  <ul class="scans">
-    <li *ngFor="let scan of scans">
+<section class="card">
+  <ng-container *ngIf="isLoading">
+    <app-loading-spinner message="Loading site details..." />
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && error">
+    <app-error-state title="Cannot load site" [message]="error" (retry)="load(route.snapshot.paramMap.get('id')!)"></app-error-state>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && !error && site">
+    <header class="section-header">
       <div>
-        <p class="title">{{ scan.createdAt | date: 'short' }}</p>
-        <p class="muted">Score {{ scan.score }}</p>
+        <p class="eyebrow">Site</p>
+        <h1>{{ site.name }}</h1>
+        <p class="muted">{{ site.url }}</p>
       </div>
-      <a [routerLink]="['/scans', scan.id]">View</a>
-    </li>
-  </ul>
+      <div class="meta">
+        <span class="pill">Score {{ site.score || '—' }}</span>
+        <span class="pill alert">{{ site.issuesOpen || 0 }} open</span>
+      </div>
+    </header>
+    <div class="grid">
+      <div>
+        <p class="muted">Last scan</p>
+        <p>{{ site.lastScan ? (site.lastScan | date: 'short') : 'Not scanned yet' }}</p>
+      </div>
+      <div class="embed-row">
+        <div>
+          <p class="muted">Embed key</p>
+          <p class="key">{{ site.embedKey || 'Available after first fetch' }}</p>
+        </div>
+        <button class="ghost" type="button" (click)="copyEmbedKey(site.embedKey)" [disabled]="!site.embedKey">Copy</button>
+      </div>
+    </div>
+    <section class="schedule" aria-label="Scan schedule">
+      <div class="schedule-header">
+        <div>
+          <p class="muted">Scheduled monitoring</p>
+          <h3>Recurring scans</h3>
+        </div>
+        <span class="badge" *ngIf="schedule?.isActive">Active</span>
+        <span class="badge muted" *ngIf="!schedule?.isActive">Paused</span>
+      </div>
+
+      <ng-container *ngIf="scheduleLoading">
+        <app-loading-spinner message="Loading schedule..." />
+      </ng-container>
+
+      <ng-container *ngIf="!scheduleLoading && scheduleUnavailable">
+        <p class="muted">Scheduling is not available in this environment. Coordinate with the backend to enable it.</p>
+      </ng-container>
+
+      <ng-container *ngIf="!scheduleLoading && !scheduleUnavailable">
+        <div class="schedule-grid">
+          <label>
+            Cadence
+            <select [(ngModel)]="scheduleForm.cadence">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </label>
+          <label>
+            Time (UTC)
+            <input type="time" [(ngModel)]="scheduleForm.timeUtc" />
+          </label>
+          <label>
+            Timezone
+            <input type="text" [(ngModel)]="scheduleForm.timezone" placeholder="UTC" />
+          </label>
+          <label>
+            Active
+            <input type="checkbox" [(ngModel)]="scheduleForm.isActive" />
+          </label>
+        </div>
+        <p class="muted">
+          Next run: {{ schedule?.nextRun ? (schedule?.nextRun | date:'short') : 'Not scheduled' }} · Last run:
+          {{ schedule?.lastRun ? (schedule?.lastRun | date:'short') : 'Not available' }}
+        </p>
+        <p class="form-error" *ngIf="scheduleError">{{ scheduleError }}</p>
+        <button class="ghost" type="button" (click)="saveSchedule()" [disabled]="scheduleSaving">
+          {{ scheduleSaving ? 'Saving...' : 'Save schedule' }}
+        </button>
+      </ng-container>
+    </section>
+    <section class="schedule" aria-label="Notifications">
+      <div class="schedule-header">
+        <div>
+          <p class="muted">Notifications</p>
+          <h3>Stay informed</h3>
+        </div>
+      </div>
+
+      <ng-container *ngIf="notificationsLoading">
+        <app-loading-spinner message="Loading notifications..." />
+      </ng-container>
+
+      <ng-container *ngIf="!notificationsLoading && notificationsUnavailable">
+        <p class="muted">Notifications are not available in this environment. Coordinate with the backend to enable them.</p>
+      </ng-container>
+
+      <ng-container *ngIf="!notificationsLoading && !notificationsUnavailable">
+        <div class="schedule-grid">
+          <label>
+            Email alerts
+            <input type="checkbox" [(ngModel)]="notificationsForm.emailEnabled" />
+          </label>
+          <label>
+            Digest cadence
+            <select [(ngModel)]="notificationsForm.digestCadence">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </label>
+          <label>
+            Slack webhook URL
+            <input type="url" [(ngModel)]="notificationsForm.slackWebhookUrl" placeholder="https://hooks.slack.com/..." />
+          </label>
+          <label>
+            Webhook URL
+            <input type="url" [(ngModel)]="notificationsForm.webhookUrl" placeholder="https://example.com/hook" />
+          </label>
+        </div>
+        <p class="form-error" *ngIf="notificationsError">{{ notificationsError }}</p>
+        <button class="ghost" type="button" (click)="saveNotifications()" [disabled]="notificationsSaving">
+          {{ notificationsSaving ? 'Saving...' : 'Save notifications' }}
+        </button>
+      </ng-container>
+    </section>
+    <h3>Recent scans</h3>
+    <ul class="scans" *ngIf="scans.length; else noScans">
+      <li *ngFor="let scan of scans">
+        <div>
+          <p class="title">{{ scan.createdAt | date: 'short' }}</p>
+          <p class="muted">Score {{ scan.score }}</p>
+        </div>
+        <a [routerLink]="['/scans', scan.id]">View</a>
+      </li>
+    </ul>
+    <ng-template #noScans>
+      <p class="muted">No scans yet. Trigger your first scan from the site list or overview.</p>
+    </ng-template>
+  </ng-container>
 </section>

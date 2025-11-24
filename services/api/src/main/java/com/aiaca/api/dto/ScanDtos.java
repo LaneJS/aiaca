@@ -22,4 +22,6 @@ public class ScanDtos {
     public record ScanSummary(UUID id, UUID siteId, LocalDateTime createdAt, ScanStatus status, Double score, Integer issueCount) {}
 
     public record ScanDetail(UUID id, UUID siteId, LocalDateTime createdAt, ScanStatus status, Double score, List<ScanIssueDto> issues) {}
+
+    public record ShareLinkResponse(String link, String expiresAt) {}
 }

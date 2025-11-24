@@ -20,7 +20,7 @@ export class AuthInterceptor implements HttpInterceptor {
         // Note: Avoid handling auth endpoints to prevent logout loops
         if (error.status === 401 && !req.url.includes('/auth/')) {
           console.warn('[AuthInterceptor] Authentication failed (401). Logging out user.');
-          this.auth.logout(); // Clears session and redirects to /auth
+          this.auth.logout('expired'); // Clears session and redirects to /auth
         }
 
         return throwError(() => error);

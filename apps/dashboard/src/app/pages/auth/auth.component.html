@@ -1,21 +1,77 @@
 <div class="auth">
   <form class="panel" (ngSubmit)="submit()" [formGroup]="form" novalidate>
     <p class="eyebrow">A11y Assistant</p>
-    <h1>{{ mode === 'login' ? 'Welcome back' : 'Create account' }}</h1>
+    <h1>
+      {{
+        mode === 'login'
+          ? 'Welcome back'
+          : mode === 'signup'
+            ? 'Create account'
+            : mode === 'reset-request'
+              ? 'Reset password'
+              : 'Set new password'
+      }}
+    </h1>
+
+    <p class="muted" *ngIf="sessionNotice">{{ sessionNotice }}</p>
+
+    <div *ngIf="successMessage" class="alert success" role="status" aria-live="polite">{{ successMessage }}</div>
+    <div *ngIf="lockoutMessage" class="alert warn" role="alert" aria-live="assertive">{{ lockoutMessage }}</div>
+    <div *ngIf="errorMessage" class="alert error" role="alert" aria-live="assertive">{{ errorMessage }}</div>
+
     <label class="field" *ngIf="mode === 'signup'">
       <span>Name</span>
       <input formControlName="name" type="text" required />
     </label>
-    <label class="field">
+
+    <label class="field" *ngIf="mode !== 'reset-confirm'">
       <span>Email</span>
-      <input formControlName="email" type="email" required aria-required="true" />
+      <input formControlName="email" type="email" [attr.required]="mode !== 'reset-confirm' ? true : null" aria-required="true" />
     </label>
-    <label class="field">
+
+    <label class="field" *ngIf="mode === 'reset-confirm'">
+      <span>Reset code</span>
+      <input formControlName="resetToken" type="text" autocomplete="one-time-code" required aria-required="true" />
+      <small class="hint">Paste the code from your email</small>
+    </label>
+
+    <label class="field" *ngIf="mode !== 'reset-request'">
       <span>Password</span>
-      <input formControlName="password" type="password" required aria-required="true" />
+      <input formControlName="password" type="password" [attr.required]="mode !== 'reset-request' ? true : null" aria-required="true" />
     </label>
-    <button type="submit" [disabled]="form.invalid">{{ mode === 'login' ? 'Login' : 'Sign up' }}</button>
-    <p class="muted" *ngIf="mode === 'login'">Need an account? <a (click)="mode = 'signup'">Sign up</a></p>
-    <p class="muted" *ngIf="mode === 'signup'">Have an account? <a (click)="mode = 'login'">Login</a></p>
+
+    <label class="field" *ngIf="mode === 'signup' || mode === 'reset-confirm'">
+      <span>Confirm password</span>
+      <input formControlName="confirmPassword" type="password" required aria-required="true" />
+    </label>
+
+    <button type="submit" [disabled]="form.invalid || isLoading">
+      {{
+        mode === 'login'
+          ? 'Login'
+          : mode === 'signup'
+            ? 'Sign up'
+            : mode === 'reset-request'
+              ? 'Send reset link'
+              : 'Update password'
+      }}
+    </button>
+
+    <p class="muted" *ngIf="mode === 'login'">
+      Need an account?
+      <button type="button" class="link-button" (click)="setMode('signup')">Sign up</button>
+    </p>
+    <p class="muted" *ngIf="mode === 'signup'">
+      Have an account?
+      <button type="button" class="link-button" (click)="setMode('login')">Login</button>
+    </p>
+    <p class="muted" *ngIf="mode === 'login'">
+      Forgot password?
+      <button type="button" class="link-button" (click)="setMode('reset-request')">Reset it</button>
+    </p>
+    <p class="muted" *ngIf="mode === 'reset-request' || mode === 'reset-confirm'">
+      Remembered your password?
+      <button type="button" class="link-button" (click)="setMode('login')">Back to login</button>
+    </p>
   </form>
 </div>

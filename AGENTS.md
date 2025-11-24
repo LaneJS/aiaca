@@ -115,6 +115,7 @@ This document defines **agents** (human or AI) that collaborate on the monorepo,
 - **Bootstrap with bootstrapApplication()** - Use standalone bootstrapping instead of NgModule-based `bootstrapModule()`
 - **No NgModules** - Do not create or use NgModule files (app.module.ts, etc.) in new applications
 - Reference: https://angular.dev/reference/migrations/standalone
+- **Tooling note:** In this environment avoid `nx` CLI invocations; prefer equivalent `npm` scripts or Docker commands (e.g., `npm run lint -- --projects=dashboard`) to sidestep plugin worker failures.
 
 **Inputs:** Product specs, design & copy.
 **Outputs:** Production-ready Angular apps.

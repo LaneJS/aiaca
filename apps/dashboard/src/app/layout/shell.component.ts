@@ -29,7 +29,7 @@ export class ShellComponent {
   ];
 
   logout(): void {
-    this.auth.logout();
+    this.auth.logout('manual');
   }
 
   navigate(item: NavItem): void {

@@ -4,25 +4,58 @@
       <p class="eyebrow">Scans</p>
       <h1>Recent activity</h1>
     </div>
+    <div class="run-controls" *ngIf="sites.length">
+      <label for="scan-site">Run scan</label>
+      <select id="scan-site" [(ngModel)]="selectedSiteId">
+        <option value="">Select site</option>
+        <option *ngFor="let site of sites" [value]="site.id">{{ site.name }}</option>
+      </select>
+      <button type="button" class="ghost" (click)="runScan()" [disabled]="!selectedSiteId">Start</button>
+    </div>
   </header>
-  <table class="table" role="grid">
-    <thead>
-      <tr>
-        <th scope="col">Site</th>
-        <th scope="col">Score</th>
-        <th scope="col">Issues</th>
-        <th scope="col">Status</th>
-        <th scope="col">Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let scan of scans" (click)="view(scan)" tabindex="0" role="button" (keypress.enter)="view(scan)">
-        <td>{{ siteName(scan) }}</td>
-        <td>{{ scan.score }}</td>
-        <td>{{ scan.issueCount }}</td>
-        <td>{{ scan.status }}</td>
-        <td>{{ scan.createdAt | date: 'short' }}</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <ng-container *ngIf="isLoading">
+    <app-loading-spinner message="Loading scans..." />
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && error">
+    <app-error-state title="Cannot load scans" [message]="error" (retry)="retryLoad()"></app-error-state>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <app-empty-state
+      *ngIf="!scans.length"
+      icon="🧪"
+      title="No scans yet"
+      message="Run your first scan to see issues and scores."
+      [actionLabel]="sites.length ? 'Run a scan' : ''"
+      (action)="sites.length ? runScan() : null"
+    ></app-empty-state>
+
+    <table class="table" role="grid" *ngIf="scans.length">
+      <thead>
+        <tr>
+          <th scope="col">Site</th>
+          <th scope="col">Score</th>
+          <th scope="col">Issues</th>
+          <th scope="col">Status</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let scan of scans" (click)="view(scan)" tabindex="0" role="button" (keypress.enter)="view(scan)">
+          <td>{{ siteName(scan) }}</td>
+          <td>{{ scan.score }}</td>
+          <td>{{ scan.issueCount }}</td>
+          <td>
+            <span class="status" [class.running]="scan.status === 'running' || scan.status === 'queued'" [class.failed]="scan.status === 'failed'">
+              {{ scan.status }}
+              <span class="dot" *ngIf="isScanRunning(scan.id)"></span>
+            </span>
+          </td>
+          <td>{{ scan.createdAt | date: 'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
 </section>

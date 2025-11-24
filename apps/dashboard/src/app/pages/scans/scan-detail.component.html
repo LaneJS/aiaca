@@ -1,16 +1,43 @@
-<section class="card" *ngIf="scan">
+<section class="card" *ngIf="scan; else loading">
   <header class="section-header">
     <div>
       <p class="eyebrow">Scan detail</p>
       <h1>{{ scan.createdAt | date: 'longDate' }}</h1>
-      <p class="muted">Score {{ scan.score }} · {{ scan.aiSummary }}</p>
+      <p class="muted">Score {{ scan.score }} · Issues {{ scan.issueCount }} · Status {{ scan.status }}</p>
+      <div class="ai" *ngIf="scan.aiSummary">
+        <button class="link-button" type="button" (click)="aiSummaryExpanded = !aiSummaryExpanded">
+          {{ aiSummaryExpanded ? 'Hide AI summary' : 'Show AI summary' }}
+        </button>
+        <p *ngIf="aiSummaryExpanded" class="ai-summary">{{ scan.aiSummary }}</p>
+      </div>
     </div>
   </header>
-  <div class="controls" role="group" aria-label="Issue filters">
-    <button type="button" [class.active]="filter === 'all'" (click)="filter = 'all'">All</button>
-    <button type="button" [class.active]="filter === 'open'" (click)="filter = 'open'">Open</button>
-    <button type="button" [class.active]="filter === 'fixed'" (click)="filter = 'fixed'">Fixed</button>
+
+  <div class="filters" role="group" aria-label="Issue filters">
+    <label>
+      Status
+      <select [(ngModel)]="filter">
+        <option value="all">All</option>
+        <option value="open">Open</option>
+        <option value="fixed">Fixed</option>
+      </select>
+    </label>
+    <label>
+      Severity
+      <select [(ngModel)]="severityFilter">
+        <option value="all">All</option>
+        <option *ngFor="let level of severityOrder" [value]="level">{{ severityCopy[level].label }}</option>
+      </select>
+    </label>
+    <label>
+      Type
+      <select [(ngModel)]="typeFilter">
+        <option value="all">All</option>
+        <option *ngFor="let type of issueTypeCopy" [value]="type.label">{{ type.label }}</option>
+      </select>
+    </label>
   </div>
+
   <div class="helper-grid" aria-label="Issue guidance" id="issue-guidance">
     <section aria-label="Severity definitions">
       <h2>Severity levels</h2>
@@ -32,15 +59,51 @@
       <p class="hint">Need a refresher? See the marketing site guide “How to read your accessibility report.”</p>
     </section>
   </div>
-  <ul class="issues">
-    <li *ngFor="let issue of issues()">
+
+  <ng-container *ngIf="filteredIssues().length; else noIssues">
+    <ul class="issues">
+      <li *ngFor="let issue of filteredIssues()">
+        <div>
+          <p class="title">{{ issue.title }}</p>
+          <p class="muted">{{ issue.description }}</p>
+          <p class="hint" *ngIf="issue.suggestion">Suggested fix: {{ issue.suggestion }}</p>
+          <p class="hint" *ngIf="issue.selector">Selector: {{ issue.selector }}</p>
+        </div>
+        <button type="button" [disabled]="isUpdating(issue.id)" (click)="toggle(issue)">
+          {{ issue.status === 'fixed' ? 'Mark open' : 'Mark fixed' }}
+        </button>
+      </li>
+    </ul>
+  </ng-container>
+  <ng-template #noIssues>
+    <p class="muted">No issues match your filters.</p>
+  </ng-template>
+
+  <section class="reports">
+    <header>
       <div>
-        <p class="title">{{ issue.title }}</p>
-        <p class="muted">{{ issue.description }}</p>
-        <p class="hint">{{ issue.suggestion }}</p>
-        <p class="hint">Selector: {{ issue.selector }}</p>
+        <p class="eyebrow">Reports & sharing</p>
+        <h3>Export this scan</h3>
       </div>
-      <button type="button" (click)="toggle(issue)">{{ issue.status === 'fixed' ? 'Mark open' : 'Mark fixed' }}</button>
-    </li>
-  </ul>
+    </header>
+    <div class="actions">
+      <button type="button" class="ghost" (click)="export('pdf')" [disabled]="exportStatus.pdf === 'loading'">
+        {{ exportStatus.pdf === 'loading' ? 'Exporting PDF...' : 'Download PDF' }}
+      </button>
+      <button type="button" class="ghost" (click)="export('html')" [disabled]="exportStatus.html === 'loading'">
+        {{ exportStatus.html === 'loading' ? 'Exporting HTML...' : 'Download HTML' }}
+      </button>
+      <button type="button" class="ghost" (click)="generateShare()" [disabled]="shareStatus === 'loading'">
+        {{ shareStatus === 'loading' ? 'Generating link...' : 'Generate share link' }}
+      </button>
+      <button type="button" class="ghost" (click)="copyShare()" [disabled]="!shareLink">Copy share link</button>
+    </div>
+    <p class="form-error" *ngIf="exportError">{{ exportError }}</p>
+    <p class="muted" *ngIf="shareStatus === 'error'">Share links may require backend support.</p>
+    <p class="muted" *ngIf="shareLink">Share link: <code>{{ shareLink }}</code></p>
+  </section>
 </section>
+<ng-template #loading>
+  <app-loading-spinner *ngIf="isLoading" message="Loading scan..." />
+  <app-error-state *ngIf="!isLoading && error" [message]="error || 'Unable to load scan'" (retry)="loadScan()"></app-error-state>
+</ng-template>

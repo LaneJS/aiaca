@@ -1,15 +1,14 @@
 .site-footer {
-  background: #0f172a;
-  color: #e2e8f0;
+  background: linear-gradient(135deg, #0d1a30 0%, #0f2238 60%, #0fb39d 120%);
+  color: #e8f5f1;
   padding: 3rem 1.25rem 2rem;
   margin-top: 4rem;
 }
 
 .shell {
-  max-width: 1200px;
   margin: 0 auto 1.5rem;
   display: grid;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .brand {
@@ -21,21 +20,27 @@
 .logo-mark {
   width: 44px;
   height: 44px;
-  border-radius: 10px;
-  background: #1d4ed8;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0fb39d 0%, #f6b23c 100%);
   display: grid;
   place-items: center;
   font-weight: 800;
 }
 
 .title {
-  font-weight: 700;
+  font-weight: 800;
   margin: 0;
 }
 
 .tagline {
   margin: 0;
-  color: #cbd5e1;
+  color: rgba(232, 245, 241, 0.85);
+}
+
+.promise {
+  margin: 0;
+  color: rgba(232, 245, 241, 0.85);
+  font-weight: 600;
 }
 
 .footer-links {
@@ -58,13 +63,13 @@ ul {
 }
 
 a {
-  color: #e2e8f0;
+  color: #e8f5f1;
   text-decoration: none;
 }
 
 a:hover,
 a:focus {
-  color: #bfdbfe;
+  color: #0fb39d;
 }
 
 .copy {
@@ -75,5 +80,5 @@ a:focus {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   padding-top: 1rem;
   text-align: center;
-  color: #cbd5e1;
+  color: rgba(232, 245, 241, 0.8);
 }

@@ -1,33 +1,95 @@
-<section class="scan" aria-labelledby="scan-heading">
-  <p class="eyebrow">Free tool</p>
-  <h1 id="scan-heading">Run a free accessibility scan</h1>
-  <p class="lead">Submit one URL to receive a score and the top issues. No account required.</p>
+<section class="scan shell" aria-labelledby="scan-heading">
+  <div class="scan__intro">
+    <p class="eyebrow">Free tool</p>
+    <h1 id="scan-heading">Instant accessibility reality check</h1>
+    <p class="lead">
+      Enter one URL. We run a headless browser audit with WCAG 2.2 rules, explain the issues in plain language, and
+      preview AI-backed fixes.
+    </p>
+  </div>
 
-  <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
-    <label for="url">Website URL</label>
-    <input
-      id="url"
-      name="url"
-      type="url"
-      required
-      [(ngModel)]="url"
-      placeholder="https://example.com"
-      aria-describedby="consent"
-    />
-    <p id="consent" class="consent">By submitting, you confirm you have permission to scan this page.</p>
-    <ui-cta-button type="submit" label="Start scan" variant="primary"></ui-cta-button>
-    <span class="status" *ngIf="submitting" aria-live="polite">Submitting scan…</span>
-    <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
-  </form>
+  <div class="scan__layout">
+    <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
+      <div class="form-header">
+        <div>
+          <p class="form-label">Website URL</p>
+          <p class="microcopy">Safe to run on marketing and logged-out pages. No credit card.</p>
+        </div>
+        <span class="pill">Takes ~1 minute</span>
+      </div>
+      <label class="sr-only" for="url">Website URL</label>
+      <input
+        id="url"
+        name="url"
+        type="url"
+        required
+        [(ngModel)]="url"
+        placeholder="https://example.com"
+        aria-describedby="consent"
+      />
+      <p id="consent" class="consent">You confirm you have permission to scan this page.</p>
+      <ui-cta-button type="submit" label="Start scan" variant="primary"></ui-cta-button>
+      <span class="status" *ngIf="submitting" aria-live="polite">Submitting scan…</span>
+      <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+    </form>
+
+    <div class="preview">
+      <div class="preview__header">
+        <p class="badge">What you'll see</p>
+        <h2>Score + top issues + AI explanations</h2>
+        <p>We bundle the “why this matters” text so you can share with clients or leadership.</p>
+      </div>
+      <div class="preview__grid">
+        <div>
+          <p class="stat-number">Top 5</p>
+          <p class="stat-label">Most critical issues</p>
+        </div>
+        <div>
+          <p class="stat-number">Score</p>
+          <p class="stat-label">Simple number to track progress</p>
+        </div>
+        <div>
+          <p class="stat-number">AI guidance</p>
+          <p class="stat-label">Copy/paste text or CSS suggestions</p>
+        </div>
+      </div>
+      <div class="preview__list" aria-label="Sample findings">
+        <div class="item">
+          <span class="dot good" aria-hidden="true"></span>
+          <div>
+            <p class="item-title">Missing alt text</p>
+            <p class="item-copy">AI proposes an alt description that matches the screenshot.</p>
+          </div>
+        </div>
+        <div class="item">
+          <span class="dot warn" aria-hidden="true"></span>
+          <div>
+            <p class="item-title">Contrast issue</p>
+            <p class="item-copy">CSS snippet to nudge color without breaking your palette.</p>
+          </div>
+        </div>
+        <div class="item">
+          <span class="dot mint" aria-hidden="true"></span>
+          <div>
+            <p class="item-title">Keyboard navigation</p>
+            <p class="item-copy">Skip link + focus states added by the optional script.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <section *ngIf="result" class="results" aria-live="polite" aria-label="Scan results">
     <div class="summary">
       <p class="eyebrow">Score</p>
       <p class="score">{{ result.score }}</p>
-      <p class="note">Score is limited for the free scan. Create an account to see the full report.</p>
+      <p class="note">Limited free scan — upgrade for full report and monitoring.</p>
     </div>
     <div class="issues">
-      <h2>Top issues</h2>
+      <div class="issues__header">
+        <h2>Top issues</h2>
+        <p class="microcopy">Sorted by severity so you know what to tackle first.</p>
+      </div>
       <ul>
         <li *ngFor="let issue of result.issues">
           <p class="issue-type">{{ issue.type }} ({{ issue.severity }})</p>
@@ -39,7 +101,7 @@
         <p class="limited-notice">
           <strong>Showing {{ result.issues.length }} of {{ result.totalIssues }} issues found.</strong>
         </p>
-        <p class="upgrade">Sign up to see all issues, AI-powered fix suggestions, and the auto-fix script.</p>
+        <p class="upgrade">Sign up to see every issue, AI-powered fixes, and the auto-fix script.</p>
         <ui-cta-button routerLink="/signup" label="Get full access" variant="primary"></ui-cta-button>
       </div>
       <div class="upgrade-box" *ngIf="!result.limited">

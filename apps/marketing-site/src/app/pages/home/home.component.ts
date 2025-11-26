@@ -11,48 +11,92 @@ import { SeoService } from '../../services/seo.service';
   imports: [CommonModule, CTAButtonComponent],
 })
 export class HomeComponent implements OnInit {
-  readonly steps = [
+  readonly scannerStages = [
     {
-      title: 'Scan',
-      description: 'Run an automated audit with WCAG rules and real-browser context.',
+      title: 'Headings & landmarks',
+      description: 'Landmarks mapped, page outline verified.',
+      tone: 'good',
     },
     {
-      title: 'Fix',
-      description: 'Prioritize issues with AI guidance and clear, plain-language explanations.',
+      title: 'Contrast',
+      description: '3 flagged combinations need attention.',
+      tone: 'warn',
     },
     {
-      title: 'Stay compliant',
-      description: 'Monitor new pages, ship changes with confidence, and export reports.',
+      title: 'Keyboard traps',
+      description: 'No traps detected on primary flows.',
+      tone: 'good',
+    },
+    {
+      title: 'ARIA labels',
+      description: '2 empty buttons need labels — AI suggests text.',
+      tone: 'warn',
     },
   ];
 
-  readonly features = [
-    {
-      title: 'Accessibility scanner',
-      copy: 'Covers headings, landmarks, color contrast, keyboard traps, and media alternatives.',
-    },
-    {
-      title: 'AI suggestions',
-      copy: 'Get fix-ready snippets or suggested alt text, tailored to the exact node in your DOM.',
-    },
-    {
-      title: 'Auto-fix script',
-      copy: 'Optionally inject a light script to add skip links, focus states, and safe alt text.',
-    },
-    {
-      title: 'Monitoring & alerts',
-      copy: 'Track regressions over time and keep stakeholders aligned with shareable reports.',
-    },
+  readonly beforeAfter = {
+    before: [
+      {
+        title: '“Click here” link',
+        description: 'No context for screen readers or SEO. Risky anchor text.',
+        tag: 'Confusing',
+      },
+      {
+        title: 'Unnamed form fields',
+        description: 'Email input has no label. WCAG 3.3.2 failure.',
+        tag: 'Blocking',
+      },
+      {
+        title: 'Missing alt text',
+        description: 'Hero banner is invisible to assistive tech and lawsuits love this.',
+        tag: 'Risk',
+      },
+    ],
+    after: [
+      {
+        title: 'Actionable links',
+        description: '“View catering menu (PDF)” — purpose spoken and indexed.',
+        tag: 'Fixed',
+      },
+      {
+        title: 'Guided form labels',
+        description: 'AI suggests “Work email” with helper text for clarity.',
+        tag: 'Guided',
+      },
+      {
+        title: 'Meaningful alt text',
+        description: '“Barista pouring latte art in a ceramic cup” generated and applied.',
+        tag: 'Auto',
+      },
+    ],
+  };
+
+  readonly momentumStats = [
+    { value: '48s', label: 'Average free scan turnaround' },
+    { value: '92%', label: 'Critical issues resolved by the auto-fix script' },
+    { value: 'WCAG 2.2', label: 'Coverage mapped to compliance language' },
   ];
+
+  readonly promises = [
+    'Plain-language explanations for every issue and every role.',
+    'Deterministic AI: suggestions must match the DOM snapshot we validate.',
+    'Optional auto-fix script stays lightweight and privacy-friendly.',
+  ];
+
+  viewMode: 'before' | 'after' = 'before';
 
   private readonly seo = inject(SeoService);
 
   ngOnInit(): void {
     this.seo.update({
-      title: 'AI-powered accessibility compliance for small websites',
+      title: 'A11y Assistant — compliance clarity without hiring a specialist',
       description:
-        'Run a free accessibility scan, see prioritized issues, and get AI-powered fixes built for small business websites.',
+        'Run a free accessibility scan, watch the fixes, and keep shipping with confidence. Built for small teams that need WCAG/ADA wins fast.',
       path: '/',
     });
+  }
+
+  setViewMode(mode: 'before' | 'after'): void {
+    this.viewMode = mode;
   }
 }

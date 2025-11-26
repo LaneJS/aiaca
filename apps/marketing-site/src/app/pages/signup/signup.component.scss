@@ -1,13 +1,32 @@
 .signup {
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
+}
+
+.signup__intro h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 0.35rem;
+}
+
+.pill-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.pill {
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(15, 179, 157, 0.12);
+  color: #0c1228;
+  font-weight: 700;
 }
 
 .signup-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
   align-items: start;
 
   @media (max-width: 768px) {
@@ -17,28 +36,41 @@
 
 .signup-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.card-header {
+  margin-bottom: 0.75rem;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(15, 179, 157, 0.18);
+  color: #0c1228;
+  font-weight: 800;
 }
 
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink-strong);
 }
 
 .required {
@@ -46,17 +78,18 @@ label {
 }
 
 input {
-  padding: 0.75rem 1rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.85rem;
   font-size: 1rem;
   font-family: inherit;
-  transition: border-color 0.2s ease;
+  background: #fefbf5;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:focus {
     outline: none;
-    border-color: #1d4ed8;
-    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+    border-color: #0fb39d;
+    box-shadow: 0 0 0 3px rgba(15, 179, 157, 0.18);
   }
 
   &::placeholder {
@@ -80,36 +113,37 @@ input {
 }
 
 .pricing-info {
-  background: #f8fafc;
+  background: #fef8ea;
   padding: 1rem;
-  border-radius: 0.5rem;
-  margin-top: 0.5rem;
+  border-radius: 0.8rem;
+  margin-top: 0.25rem;
+  border: 1px solid var(--border);
 }
 
 .price-highlight {
   font-size: 1.1rem;
-  font-weight: 700;
-  color: #1d4ed8;
-  margin: 0 0 0.5rem;
+  font-weight: 800;
+  color: #0c1228;
+  margin: 0 0 0.35rem;
 }
 
 .terms-text {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: #64748b;
   margin: 0;
 
   a {
-    color: #1d4ed8;
+    color: #0fb39d;
     text-decoration: underline;
 
     &:hover {
-      color: #1e40af;
+      color: #0c1228;
     }
   }
 }
 
 .status {
-  text-align: center;
+  text-align: left;
   color: #64748b;
   font-size: 0.9rem;
   font-style: italic;
@@ -119,46 +153,52 @@ input {
   background: #fee2e2;
   color: #991b1b;
   padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   border: 1px solid #fecaca;
   margin: 0;
   font-size: 0.9rem;
 }
 
 .benefits {
-  background: #f8fafc;
-  padding: 2rem;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
+  background: #0f162a;
+  color: #e8f5f1;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-strong);
 
   h2 {
     margin-top: 0;
-    color: #0f172a;
-    font-size: 1.5rem;
+    color: #ffffff;
+    font-size: 1.4rem;
   }
 
   ul {
-    padding-left: 1.5rem;
+    padding-left: 1.25rem;
     margin: 0;
     list-style: none;
+    display: grid;
+    gap: 0.6rem;
 
     li {
       position: relative;
-      padding-left: 1.5rem;
-      margin-bottom: 0.75rem;
-      color: #334155;
+      padding-left: 1.25rem;
+      color: #e8f5f1;
 
       &::before {
         content: '✓';
         position: absolute;
         left: 0;
-        color: #22c55e;
+        color: #0fb39d;
         font-weight: bold;
       }
     }
   }
 
-  @media (max-width: 768px) {
-    order: -1;
+  .trust {
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 0.9rem;
+    background: rgba(255, 255, 255, 0.05);
   }
 }

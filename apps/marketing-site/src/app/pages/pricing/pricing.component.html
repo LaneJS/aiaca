@@ -1,38 +1,60 @@
-<section class="pricing" aria-labelledby="pricing-page-heading">
-  <p class="eyebrow">Plans</p>
-  <h1 id="pricing-page-heading">Pricing designed for small teams</h1>
-  <p class="lead">Keep the free scan forever or upgrade for monitoring and the auto-fix script.</p>
+<section class="pricing shell" aria-labelledby="pricing-page-heading">
+  <div class="pricing__intro">
+    <p class="eyebrow">Plans</p>
+    <h1 id="pricing-page-heading">Simple plans that start with a free scan.</h1>
+    <p class="lead">
+      Run the free scan to see your top five issues. Upgrade when you’re ready for monitoring, full AI guidance, and the
+      auto-fix script.
+    </p>
+    <div class="price-notes">
+      <span class="pill">Cancel anytime</span>
+      <span class="pill">Designed for agencies & founders</span>
+      <span class="pill">WCAG 2.2 AA coverage</span>
+    </div>
+  </div>
 
   <div class="plan-grid">
-    <article *ngFor="let plan of plans">
-      <h2>{{ plan.name }}</h2>
-      <p class="price">{{ plan.price }}</p>
-      <p>{{ plan.description }}</p>
+    <article *ngFor="let plan of plans" [ngClass]="{ featured: plan.name === 'Starter' }">
+      <div class="plan-header">
+        <p class="badge">{{ plan.name }}</p>
+        <div>
+          <p class="price">{{ plan.price }}</p>
+          <p class="plan-desc">{{ plan.description }}</p>
+        </div>
+      </div>
       <ul>
         <li *ngFor="let feature of plan.features">{{ feature }}</li>
       </ul>
       <ui-cta-button
         [routerLink]="plan.routerLink"
-        label="{{ plan.cta }}"
-        variant="primary"
+        [label]="plan.cta"
+        [variant]="plan.name === 'Starter' ? 'primary' : 'ghost'"
       ></ui-cta-button>
+      <p class="fine-print" *ngIf="plan.name === 'Starter'">Stripe checkout • Invoice receipts • Safe for client work</p>
     </article>
   </div>
 
   <div class="faq" aria-labelledby="faq-heading">
-    <h2 id="faq-heading">Quick questions</h2>
+    <div>
+      <h2 id="faq-heading">Quick questions</h2>
+      <p class="lead">Short answers for the things teams usually ask before they scan.</p>
+    </div>
     <dl>
       <div>
         <dt>Does the free scan include AI suggestions?</dt>
-        <dd>We share a limited set of AI-backed suggestions on the first few issues to help you take action.</dd>
+        <dd>Yes, we preview AI-backed suggestions on the first issues so you can see the guidance style.</dd>
       </div>
       <div>
         <dt>Can I cancel anytime?</dt>
-        <dd>Yes. Plans are month-to-month with no hidden fees.</dd>
+        <dd>Absolutely. Plans are month-to-month with no hidden fees or long-term commitments.</dd>
       </div>
       <div>
         <dt>Do you handle privacy-sensitive pages?</dt>
-        <dd>We avoid storing forms or logged-in data and document what we collect in the privacy policy.</dd>
+        <dd>We avoid storing form fields and clearly document what is collected in our privacy policy.</dd>
+      </div>
+      <div>
+        <dt>Is the auto-fix script required?</dt>
+        <dd>No. It’s optional and lightweight. Use it for fast wins while your team ships deeper fixes.</dd>
       </div>
     </dl>
   </div>

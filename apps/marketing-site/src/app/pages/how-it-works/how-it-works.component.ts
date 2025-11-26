@@ -14,15 +14,15 @@ export class HowItWorksComponent implements OnInit {
   readonly steps = [
     {
       title: '1. Run a scan',
-      body: 'Point us at one URL. We launch a headless browser, apply axe-core rules, and capture context for AI suggestions.',
+      body: 'Point us at one URL. We launch a headless browser, apply axe-core rules, and capture screenshots for AI context.',
     },
     {
       title: '2. Review prioritized issues',
-      body: 'See severity, impacted elements, and a clear explanation of why it matters. Top issues stay free.',
+      body: 'See severity, location, and the business impact in plain language. Top issues stay free.',
     },
     {
       title: '3. Apply fixes with help',
-      body: 'Use AI-authored alt text, improved link labels, or CSS tweaks. Add the auto-fix script for quick wins.',
+      body: 'Use AI-authored alt text, improved link labels, or CSS tweaks. Add the auto-fix script for quick, reversible wins.',
     },
     {
       title: '4. Monitor changes',
@@ -32,9 +32,9 @@ export class HowItWorksComponent implements OnInit {
 
   readonly commitments = [
     'Plain-language explanations for every issue.',
+    'Deterministic AI suggestions tied to the scanned DOM.',
     'Keyboard-friendly navigation and strong focus styles.',
-    'Built-in skip links and semantic landmarks.',
-    'Accessible defaults for all shared components.',
+    'Lightweight auto-fix script that respects your design.',
   ];
 
   private readonly seo = inject(SeoService);

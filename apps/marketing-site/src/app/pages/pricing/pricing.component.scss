@@ -1,48 +1,115 @@
 .pricing {
-  max-width: 1000px;
-  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
+}
+
+.pricing__intro h1 {
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  margin-bottom: 0.35rem;
+}
+
+.price-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.pill {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(15, 179, 157, 0.12);
+  color: #0c1228;
+  font-weight: 700;
 }
 
 .plan-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
 }
 
 .plan-grid article {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
   padding: 1.25rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 0.85rem;
+  position: relative;
+}
+
+.plan-grid article.featured {
+  background: linear-gradient(135deg, #fef8ea 0%, #e7f8f2 100%);
+  border-color: rgba(15, 179, 157, 0.4);
+}
+
+.plan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(15, 179, 157, 0.18);
+  color: #0c1228;
+  font-weight: 800;
+  margin: 0;
 }
 
 .price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0.25rem 0 0.5rem;
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.plan-desc {
+  margin: 0.2rem 0 0;
+  color: var(--ink-soft);
 }
 
 ul {
-  padding-left: 1.25rem;
+  padding-left: 1.1rem;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fine-print {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
 }
 
 .faq {
-  margin-top: 3rem;
+  margin-top: 2.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+dl {
+  margin: 0;
+  display: grid;
+  gap: 0.8rem;
 }
 
 dl div {
-  margin-bottom: 1rem;
-  background: #f8fafc;
+  background: #ffffff;
+  border: 1px solid var(--border);
   padding: 1rem;
-  border-radius: 0.75rem;
+  border-radius: 0.95rem;
+  box-shadow: var(--shadow-soft);
 }
 
 dt {
-  font-weight: 700;
+  font-weight: 800;
+  margin: 0 0 0.25rem;
 }
 
 dd {
-  margin: 0.25rem 0 0;
+  margin: 0;
 }

@@ -1,22 +1,54 @@
-<section class="page" aria-labelledby="how-page-heading">
-  <p class="eyebrow">Process</p>
-  <h1 id="how-page-heading">How AACA keeps your site accessible</h1>
-  <p class="lead">
-    We combine automated testing, AI-powered suggestions, and an optional auto-fix script to reduce WCAG violations fast.
-  </p>
+<section class="page shell" aria-labelledby="how-page-heading">
+  <div class="intro">
+    <p class="eyebrow">Process</p>
+    <h1 id="how-page-heading">From “did we break accessibility?” to “we know exactly what to fix.”</h1>
+    <p class="lead">
+      A11y Assistant pairs automated WCAG checks with AI that explains fixes in plain language. You see the “why” and
+      the fix in the same view.
+    </p>
+  </div>
 
-  <div class="step-grid" role="list">
-    <article *ngFor="let step of steps" role="listitem">
-      <h2>{{ step.title }}</h2>
-      <p>{{ step.body }}</p>
+  <div class="timeline" role="list">
+    <article *ngFor="let step of steps; let i = index" class="timeline__item" role="listitem">
+      <div class="step-number" aria-hidden="true">{{ i + 1 }}</div>
+      <div>
+        <h2>{{ step.title }}</h2>
+        <p>{{ step.body }}</p>
+      </div>
     </article>
   </div>
 
+  <div class="automation">
+    <div>
+      <h3>Automated for you</h3>
+      <ul>
+        <li>Headless browser scan + axe-core rules</li>
+        <li>Screenshot-aware AI suggestions</li>
+        <li>Optional auto-fix script for quick wins</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Kept under your control</h3>
+      <ul>
+        <li>Approve or edit every suggestion</li>
+        <li>Export reports for clients and leadership</li>
+        <li>Monitor with alerts you can schedule</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="callout" aria-label="Accessibility commitments">
-    <h2>Accessibility promises baked into the product</h2>
+    <div>
+      <p class="badge">Guardrails</p>
+      <h2>Accessibility promises baked into the product</h2>
+      <p class="lead">We dogfood our own rules so the experience stays accessible while you browse.</p>
+    </div>
     <ul>
       <li *ngFor="let promise of commitments">{{ promise }}</li>
     </ul>
-    <ui-cta-button routerLink="/scan" label="Try the free scan" variant="primary"></ui-cta-button>
+    <div class="callout__actions">
+      <ui-cta-button routerLink="/scan" label="Try the free scan" variant="primary"></ui-cta-button>
+      <ui-cta-button routerLink="/pricing" label="See pricing" variant="ghost"></ui-cta-button>
+    </div>
   </div>
 </section>

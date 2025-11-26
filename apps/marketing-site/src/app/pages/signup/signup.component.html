@@ -1,20 +1,25 @@
-<section class="signup" aria-labelledby="signup-heading">
-  <p class="eyebrow">Get started</p>
-  <h1 id="signup-heading">Create your account</h1>
-  <p class="lead">Start monitoring your website accessibility and get instant AI-powered fix suggestions.</p>
+<section class="signup shell" aria-labelledby="signup-heading">
+  <div class="signup__intro">
+    <p class="eyebrow">Get started</p>
+    <h1 id="signup-heading">Ship accessible updates with a clear checklist.</h1>
+    <p class="lead">Starter plan includes unlimited scans, AI guidance, monitoring, and the optional auto-fix script.</p>
+    <div class="pill-row">
+      <span class="pill">Stripe checkout</span>
+      <span class="pill">Cancel anytime</span>
+      <span class="pill">WCAG 2.2 AA coverage</span>
+    </div>
+  </div>
 
   <div class="signup-container">
     <div class="signup-card">
+      <div class="card-header">
+        <p class="badge">Starter — $39/mo</p>
+        <p class="microcopy">No setup fees. Safe for agencies and small teams.</p>
+      </div>
       <form class="signup-form" (ngSubmit)="onSubmit()" aria-label="Sign up form">
         <div class="form-group">
           <label for="name">Name (optional)</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            [(ngModel)]="name"
-            placeholder="Jane Doe"
-          />
+          <input id="name" name="name" type="text" [(ngModel)]="name" placeholder="Jane Doe" />
         </div>
 
         <div class="form-group">
@@ -66,19 +71,14 @@
         </div>
 
         <div class="pricing-info">
-          <p class="price-highlight">$39/month &mdash; Cancel anytime</p>
+          <p class="price-highlight">$39/month — cancel anytime</p>
           <p class="terms-text">
             By signing up, you agree to our
             <a href="/legal/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
           </p>
         </div>
 
-        <ui-cta-button
-          type="submit"
-          label="Continue to checkout"
-          variant="primary"
-          [disabled]="submitting"
-        ></ui-cta-button>
+        <ui-cta-button type="submit" label="Continue to checkout" variant="primary" [disabled]="submitting"></ui-cta-button>
 
         <span class="status" *ngIf="submitting" aria-live="polite">Creating your account...</span>
         <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
@@ -86,14 +86,18 @@
     </div>
 
     <div class="benefits">
-      <h2>What's included</h2>
+      <h2>What you get</h2>
       <ul>
-        <li>Unlimited URL scans</li>
-        <li>Full issue reports with AI-powered suggestions</li>
-        <li>Auto-fix script for quick repairs</li>
-        <li>Continuous monitoring and alerts</li>
-        <li>Export reports for compliance</li>
+        <li>Unlimited URL scans and full reports</li>
+        <li>AI suggestions with copy/paste snippets</li>
+        <li>Optional auto-fix script for fast wins</li>
+        <li>Monitoring, alerts, and exports</li>
+        <li>Plain-language guidance for clients</li>
       </ul>
+      <div class="trust">
+        <p class="badge">Guardrails</p>
+        <p class="microcopy">Built-in skip links, keyboard-friendly navigation, and privacy-safe scanning.</p>
+      </div>
     </div>
   </div>
 </section>

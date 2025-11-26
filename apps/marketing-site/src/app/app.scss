@@ -1,7 +1,9 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  background: radial-gradient(circle at 12% 18%, rgba(15, 179, 157, 0.08), transparent 30%),
+    radial-gradient(circle at 90% 10%, rgba(246, 178, 60, 0.08), transparent 35%),
+    var(--foam);
 }
 
 .main-content {
@@ -9,30 +11,8 @@
   padding: 0 1rem 4rem;
 }
 
-.skip-link {
-  position: absolute;
-  left: -999px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
-.skip-link:focus {
-  left: 1rem;
-  top: 1rem;
-  width: auto;
-  height: auto;
-  padding: 0.75rem 1rem;
-  background: #0f172a;
-  color: #ffffff;
-  z-index: 1000;
-  border-radius: 0.375rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
 section {
-  padding: 3rem 0;
+  padding: clamp(1.5rem, 3vw, 2.8rem) 0;
 }
 
 @media (min-width: 1024px) {
@@ -41,6 +21,6 @@ section {
   }
 
   section {
-    padding: 4rem 0;
+    padding: clamp(2rem, 4vw, 4rem) 0;
   }
 }

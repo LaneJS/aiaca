@@ -1,36 +1,118 @@
 .page {
-  max-width: 900px;
-  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
 }
 
-.step-grid {
+.intro h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 0.5rem;
+}
+
+.timeline {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
 }
 
-.step-grid article {
+.timeline__item {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: center;
+  box-shadow: var(--shadow-soft);
+}
+
+.step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: rgba(15, 179, 157, 0.16);
+  color: #0c1228;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+
+.timeline__item h2 {
+  margin: 0 0 0.25rem;
+}
+
+.timeline__item p {
+  margin: 0;
+}
+
+.automation {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.automation div {
+  background: linear-gradient(135deg, #fef8ea 0%, #e7f8f2 100%);
+  border: 1px solid var(--border);
+  border-radius: 1.1rem;
+  padding: 1.1rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.automation h3 {
+  margin-top: 0;
+}
+
+.automation ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
 }
 
 .callout {
-  background: #0f172a;
-  color: #e2e8f0;
+  background: #0f162a;
+  color: #e8f5f1;
   padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 0.5rem;
+}
+
+.callout h2 {
+  margin: 0.3rem 0 0.2rem;
+  color: #ffffff;
+}
+
+.callout .lead {
+  color: rgba(232, 245, 241, 0.85);
 }
 
 .callout ul {
-  margin: 1rem 0;
-  padding-left: 1.25rem;
+  margin: 0.25rem 0 0.5rem;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.3rem;
 }
 
 .callout li {
-  margin-bottom: 0.5rem;
+  color: rgba(232, 245, 241, 0.85);
+}
+
+.badge {
+  display: inline-flex;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(15, 179, 157, 0.2);
+  color: #e8f5f1;
+  font-weight: 800;
+  width: fit-content;
+}
+
+.callout__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }

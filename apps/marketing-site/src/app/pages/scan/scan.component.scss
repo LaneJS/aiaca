@@ -1,37 +1,96 @@
 .scan {
-  max-width: 900px;
-  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
+}
+
+.scan__intro h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 0.4rem;
+}
+
+.scan__layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
 }
 
 .scan-form {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-soft);
   display: grid;
   gap: 0.75rem;
-  margin: 1.5rem 0;
 }
 
-label {
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.form-label {
+  margin: 0;
+  font-weight: 800;
+  color: var(--ink-strong);
+}
+
+.pill {
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(15, 179, 157, 0.12);
+  color: #0c1228;
   font-weight: 700;
 }
 
+.badge {
+  display: inline-flex;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(15, 179, 157, 0.18);
+  color: #0c1228;
+  font-weight: 800;
+  margin: 0 0 0.35rem;
+}
+
+.microcopy {
+  margin: 0.1rem 0 0;
+  color: var(--ink-soft);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 input {
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid #cbd5e1;
+  padding: 0.85rem 1rem;
+  border-radius: 0.85rem;
+  border: 1px solid var(--border);
   font-size: 1rem;
+  background: #fefbf5;
 }
 
 input:focus {
-  outline: 3px solid #bfdbfe;
-  border-color: #1d4ed8;
+  outline: 3px solid var(--accent-amber);
+  border-color: #0fb39d;
 }
 
 .consent {
   margin: 0;
-  color: #475569;
+  color: var(--ink-soft);
 }
 
 .status {
-  color: #0f172a;
+  color: var(--ink-strong);
   font-weight: 600;
 }
 
@@ -40,9 +99,88 @@ input:focus {
   margin: 0;
 }
 
+.preview {
+  background: linear-gradient(135deg, #0d1a30 0%, #0f2238 60%, #0fb39d 120%);
+  color: #e8f5f1;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.preview__header h2 {
+  margin: 0.25rem 0 0.35rem;
+  color: #ffffff;
+}
+
+.preview__header p {
+  margin: 0;
+  color: rgba(232, 245, 241, 0.85);
+}
+
+.preview__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.stat-number {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.stat-label {
+  margin: 0;
+  color: rgba(232, 245, 241, 0.75);
+}
+
+.preview__list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #f6b23c;
+}
+
+.dot.good {
+  background: #0fb39d;
+}
+
+.dot.warn {
+  background: #f6b23c;
+}
+
+.dot.mint {
+  background: #76f0d7;
+}
+
+.item-title {
+  margin: 0;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.item-copy {
+  margin: 0.15rem 0 0;
+  color: rgba(232, 245, 241, 0.8);
+}
+
 .results {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
   margin-top: 1.5rem;
 }
@@ -50,16 +188,24 @@ input:focus {
 .summary,
 .issues {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 1rem;
   padding: 1.25rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-soft);
 }
 
 .score {
-  font-size: 2.25rem;
+  font-size: 2.6rem;
   font-weight: 800;
   margin: 0.25rem 0 0.5rem;
+}
+
+.issues__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .issues ul {
@@ -71,7 +217,7 @@ input:focus {
 }
 
 .issue-type {
-  font-weight: 700;
+  font-weight: 800;
   margin: 0;
 }
 
@@ -81,6 +227,20 @@ input:focus {
   margin: 0.1rem 0;
 }
 
+.upgrade-box {
+  background: #fef8ea;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 0.85rem 1rem;
+}
+
 .upgrade {
   margin: 0 0 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .form-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

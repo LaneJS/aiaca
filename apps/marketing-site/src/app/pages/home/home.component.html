@@ -1,123 +1,189 @@
-<section class="hero">
-  <div class="hero__content">
-    <p class="eyebrow">Accessibility-first marketing site</p>
-    <h1>AI-powered accessibility compliance for small websites.</h1>
-    <p class="lead">
-      Run a free accessibility scan, see the top issues blocking compliance, and ship fixes faster with clear guidance.
-    </p>
-    <div class="hero__actions">
-      <ui-cta-button routerLink="/scan" variant="primary" label="Run a free accessibility scan"></ui-cta-button>
-      <ui-cta-button routerLink="/how-it-works" variant="secondary" label="See how it works"></ui-cta-button>
-    </div>
-    <p class="supporting">
-      Built for small teams that need WCAG wins without hiring a full accessibility specialist.
-    </p>
-  </div>
+<section class="hero section-dark">
+  <div class="shell grid grid-2">
+    <div class="hero__content">
+      <div class="eyebrow-glow">Automated Web Accessibility</div>
+      <h1 class="hero-title">
+        Make your website <span class="text-gradient">accessible</span> to everyone.
+      </h1>
+      <p class="hero-lead">
+        Instant WCAG compliance audits, AI-powered remediation, and legal protection for your business—in minutes, not months.
+      </p>
 
-  <div class="hero__visual">
-    <img src="assets/images/hero-illustration.png" alt="AI brain connecting to desktop, tablet, and mobile devices" class="img-fluid">
-  </div>
-</section>
-
-<section class="problem" aria-labelledby="problem-heading">
-  <div class="section-header">
-    <p class="eyebrow">Why now</p>
-    <h2 id="problem-heading">Accessibility is a legal, moral, and business must-have.</h2>
-    <p class="lead">
-      Avoid demand letters, welcome every visitor, and stay ahead of search ranking changes that reward usable websites.
-    </p>
-  </div>
-  <div class="problem__grid">
-    <article>
-      <div class="icon-wrapper">
-        <img src="assets/images/icon-gravel.png" alt="" aria-hidden="true" width="64" height="64">
+      <div class="hero-scan-form">
+        <label for="scan-url" class="sr-only">Enter your website URL</label>
+        <div class="input-group">
+          <input 
+            type="url" 
+            id="scan-url" 
+            placeholder="e.g. yourwebsite.com" 
+            class="scan-input"
+            #urlInput
+            (keyup.enter)="onScan(urlInput.value)"
+          >
+          <button class="btn btn-primary btn-scan" (click)="onScan(urlInput.value)">
+            Run Free Scan
+          </button>
+        </div>
+        <p class="form-note">
+          <span class="check-icon">✓</span> No credit card required
+          <span class="dot">•</span>
+          <span class="check-icon">✓</span> Instant results
+        </p>
       </div>
-      <h3>Reduce risk</h3>
-      <p>Mitigate ADA and WCAG non-compliance issues before they become costly legal notices.</p>
-    </article>
-    <article>
-      <div class="icon-wrapper">
-        <img src="assets/images/icon-users.png" alt="" aria-hidden="true" width="64" height="64">
+    </div>
+
+    <div class="hero__visual">
+      <!-- CSS-only Scanner Visualization -->
+      <div class="scanner-interface">
+        <div class="scanner-header">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+          <div class="address-bar">https://yourwebsite.com</div>
+        </div>
+        <div class="scanner-body">
+          <div class="skeleton-hero"></div>
+          <div class="skeleton-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+          
+          <!-- The Scanning Beam -->
+          <div class="scan-beam"></div>
+          
+          <!-- Popups/Badges -->
+          <div class="scan-badge badge-1">
+            <span class="icon">⚠️</span> Contrast Error
+          </div>
+          <div class="scan-badge badge-2">
+            <span class="icon">✅</span> Alt Text Fixed
+          </div>
+        </div>
       </div>
-      <h3>Serve everyone</h3>
-      <p>Deliver inclusive experiences with clear headings, alternative text, and keyboard-friendly flows.</p>
-    </article>
-    <article>
-      <div class="icon-wrapper">
-        <img src="assets/images/icon-chart.jpg" alt="" aria-hidden="true" width="64" height="64">
+    </div>
+  </div>
+</section>
+
+<section class="brands section">
+  <div class="shell text-center">
+    <p class="text-muted small">Building a more inclusive web, one site at a time.</p>
+    <div class="logo-grid">
+      <!-- Decorative Placeholders for Brands -->
+      <div class="brand-placeholder" aria-hidden="true">TechCorp</div>
+      <div class="brand-placeholder" aria-hidden="true">GlobalStore</div>
+      <div class="brand-placeholder" aria-hidden="true">StudioDesign</div>
+      <div class="brand-placeholder" aria-hidden="true">HealthPlus</div>
+      <div class="brand-placeholder" aria-hidden="true">EduLearn</div>
+    </div>
+  </div>
+</section>
+
+<section class="problem section section-alt">
+  <div class="shell">
+    <div class="section-header text-center">
+      <span class="eyebrow">The Reality</span>
+      <h2>The hidden risks of an inaccessible web</h2>
+      <p class="lead">Ignoring accessibility isn't just bad for users—it's bad for business.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <article class="card">
+        <div class="card-icon icon-risk">⚖️</div>
+        <h3>Legal Vulnerability</h3>
+        <p>ADA lawsuits targeting small businesses have risen 400% in 5 years. Don't be a target for predatory litigation.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon icon-users">👥</div>
+        <h3>Lost Customers</h3>
+        <p>1 in 4 adults lives with a disability. Inaccessible sites turn away 25% of your potential market instantly.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon icon-growth">📉</div>
+        <h3>SEO Penalties</h3>
+        <p>Search engines prioritize inclusive UX. Poor accessibility signals poor quality, hurting your rankings.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="how-it-works section">
+  <div class="shell">
+    <div class="grid grid-2 align-center">
+      <div class="content">
+        <span class="eyebrow">How It Works</span>
+        <h2>From audit to accessible in three steps.</h2>
+        <p class="lead mb-8">We combine automated scanning with AI-powered code fixes to do the heavy lifting for you.</p>
+        
+        <div class="steps-vertical">
+          <div class="step-item">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Scan your site</h3>
+              <p>Our engine crawls your pages, testing against 50+ WCAG 2.1 success criteria in real-time.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Review AI Fixes</h3>
+              <p>Don't just see errors—see solutions. Our AI suggests code changes for headlines, contrast, and ARIA labels.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Automate & Monitor</h3>
+              <p>Add our lightweight script to auto-fix common issues and get alerts if new problems appear.</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <h3>Grow with confidence</h3>
-      <p>Accessible sites keep customers engaged longer and help you win SEO-conscious buyers.</p>
-    </article>
-  </div>
-</section>
-
-<section class="how" aria-labelledby="how-heading">
-  <div class="section-header">
-    <p class="eyebrow">How it works</p>
-    <h2 id="how-heading">Three guided steps to compliance</h2>
-    <p class="lead">We bundle automation, AI suggestions, and a lightweight auto-fix script.</p>
-  </div>
-
-  <div class="how__visual" style="margin-bottom: 2rem; text-align: center;">
-      <img src="assets/images/process-flow.png" alt="Step 1: Scan, Step 2: Fix, Step 3: Stay Compliant" style="max-width: 100%; height: auto;">
-  </div>
-
-  <div class="steps" role="list">
-    <div class="step" *ngFor="let step of steps" role="listitem">
-      <p class="step__badge">{{ step.title }}</p>
-      <p class="step__copy">{{ step.description }}</p>
+      
+      <div class="visual-demo">
+        <!-- Code Snippet Visualization -->
+        <div class="code-window">
+          <div class="window-header">
+            <span>fix-suggestion.ts</span>
+          </div>
+          <div class="code-body">
+            <div class="line remove">- &lt;img src="photo.jpg" /&gt;</div>
+            <div class="line add">+ &lt;img src="photo.jpg" alt="Happy customer using tablet" /&gt;</div>
+            <div class="line comment">// Fixed: Missing alt attribute (WCAG 1.1.1)</div>
+            <div class="ai-badge">
+              <span class="sparkle">✨</span> AI Suggested Fix
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="features" aria-labelledby="features-heading">
-  <div class="section-header">
-    <p class="eyebrow">What you get</p>
-    <h2 id="features-heading">Built-in accessibility expertise</h2>
-    <p class="lead">Everything you need to identify, explain, and fix WCAG issues without extra vendors.</p>
-  </div>
-  <div class="feature-grid">
-    <article *ngFor="let feature of features">
-      <h3>{{ feature.title }}</h3>
-      <p>{{ feature.copy }}</p>
-    </article>
-  </div>
-</section>
-
-<section class="pricing-preview" aria-labelledby="pricing-heading">
-  <div class="section-header">
-    <p class="eyebrow">Pricing</p>
-    <h2 id="pricing-heading">Start free, upgrade when you need more coverage.</h2>
-    <p class="lead">The free scan includes your top issues. Paid plans start at $39/month for ongoing monitoring.</p>
-  </div>
-  <div class="pricing-card">
-    <div>
-      <p class="eyebrow">Free scan</p>
-      <p class="price">$0</p>
-      <p>Top issues for one URL, with AI-backed explanations.</p>
+<section class="features section section-alt">
+  <div class="shell">
+    <div class="section-header text-center">
+      <span class="eyebrow">Features</span>
+      <h2>Everything you need for compliance</h2>
     </div>
-    <div class="divider" aria-hidden="true"></div>
-    <div>
-      <p class="eyebrow">Starter</p>
-      <p class="price">From $39/mo</p>
-      <p>Full reports, unlimited URLs, monitoring, and the optional auto-fix script.</p>
-    </div>
-    <div class="actions">
-      <ui-cta-button routerLink="/pricing" label="View pricing" variant="primary"></ui-cta-button>
-      <ui-cta-button routerLink="/scan" label="Run a free scan" variant="secondary"></ui-cta-button>
+    
+    <div class="grid grid-3">
+      <article class="feature-card" *ngFor="let feature of features">
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.copy }}</p>
+      </article>
     </div>
   </div>
 </section>
 
-<section class="social-proof footer-bg" aria-labelledby="social-proof-heading">
-  <div class="section-header">
-    <p class="eyebrow">Trusted results</p>
-    <h2 id="social-proof-heading">Social proof coming soon</h2>
-    <p class="lead">Testimonials and case studies are in progress. Request access to our pilot cohort.</p>
-  </div>
-  <div class="placeholder">
-    <p>Placeholder for testimonials, case studies, and partner logos.</p>
-    <ui-cta-button routerLink="/scan" label="Join the pilot" variant="primary"></ui-cta-button>
+<section class="cta-banner section">
+  <div class="shell">
+    <div class="banner-content">
+      <h2>Ready to fix your website?</h2>
+      <p>Get your free accessibility score in less than 30 seconds.</p>
+      <div class="actions">
+        <ui-cta-button routerLink="/scan" label="Start Free Scan" variant="primary" class="btn-glow"></ui-cta-button>
+      </div>
+    </div>
   </div>
 </section>

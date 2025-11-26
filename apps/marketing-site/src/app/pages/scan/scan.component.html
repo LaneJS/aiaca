@@ -1,51 +1,110 @@
-<section class="scan" aria-labelledby="scan-heading">
-  <p class="eyebrow">Free tool</p>
-  <h1 id="scan-heading">Run a free accessibility scan</h1>
-  <p class="lead">Submit one URL to receive a score and the top issues. No account required.</p>
-
-  <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
-    <label for="url">Website URL</label>
-    <input
-      id="url"
-      name="url"
-      type="url"
-      required
-      [(ngModel)]="url"
-      placeholder="https://example.com"
-      aria-describedby="consent"
-    />
-    <p id="consent" class="consent">By submitting, you confirm you have permission to scan this page.</p>
-    <ui-cta-button type="submit" label="Start scan" variant="primary"></ui-cta-button>
-    <span class="status" *ngIf="submitting" aria-live="polite">Submitting scan…</span>
-    <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
-  </form>
-
-  <section *ngIf="result" class="results" aria-live="polite" aria-label="Scan results">
-    <div class="summary">
-      <p class="eyebrow">Score</p>
-      <p class="score">{{ result.score }}</p>
-      <p class="note">Score is limited for the free scan. Create an account to see the full report.</p>
+<div class="scan-page section-alt">
+  <div class="shell">
+    <div class="scan-header text-center">
+      <span class="eyebrow">Free Analysis</span>
+      <h1>Check your accessibility score</h1>
+      <p class="lead">Enter a URL to see how compliant your site is with WCAG standards.</p>
     </div>
-    <div class="issues">
-      <h2>Top issues</h2>
-      <ul>
-        <li *ngFor="let issue of result.issues">
-          <p class="issue-type">{{ issue.type }} ({{ issue.severity }})</p>
-          <p class="issue-description">{{ issue.description }}</p>
-          <p *ngIf="issue.location" class="issue-location">Location: {{ issue.location }}</p>
-        </li>
-      </ul>
-      <div class="upgrade-box" *ngIf="result.limited">
-        <p class="limited-notice">
-          <strong>Showing {{ result.issues.length }} of {{ result.totalIssues }} issues found.</strong>
+
+    <div class="scan-container">
+      <!-- Search Form -->
+      <form class="scan-form-large" (ngSubmit)="onSubmit()" aria-label="Accessibility scan form">
+        <div class="input-wrapper">
+          <input
+            id="url"
+            name="url"
+            type="url"
+            required
+            [(ngModel)]="url"
+            placeholder="https://yourwebsite.com"
+            aria-describedby="consent"
+            class="url-input"
+            [disabled]="submitting"
+          />
+          <button type="submit" class="btn btn-primary btn-lg" [disabled]="submitting">
+            {{ submitting ? 'Scanning...' : 'Analyze Site' }}
+          </button>
+        </div>
+        <p id="consent" class="form-note">
+          By clicking Analyze, you agree to our Terms of Service.
         </p>
-        <p class="upgrade">Sign up to see all issues, AI-powered fix suggestions, and the auto-fix script.</p>
-        <ui-cta-button routerLink="/signup" label="Get full access" variant="primary"></ui-cta-button>
+        <p class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+      </form>
+
+      <!-- Loading State -->
+      <div class="scan-progress" *ngIf="submitting" aria-live="polite">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" [style.width.%]="scanProgress"></div>
+        </div>
+        <div class="progress-status">
+          <span class="spinner"></span>
+          {{ scanStatus }}
+        </div>
       </div>
-      <div class="upgrade-box" *ngIf="!result.limited">
-        <p class="upgrade">Want AI-powered fix suggestions and the auto-fix script?</p>
-        <ui-cta-button routerLink="/signup" label="Get started" variant="secondary"></ui-cta-button>
+
+      <!-- Results View -->
+      <div *ngIf="result" class="scan-results" aria-live="polite">
+        
+        <!-- Score Card -->
+        <div class="score-card">
+          <h2>Accessibility Score</h2>
+          <div class="score-circle" [attr.data-score]="result.score">
+            <svg viewBox="0 0 36 36" class="circular-chart">
+              <path class="circle-bg"
+                d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+              <path class="circle"
+                [attr.stroke-dasharray]="result.score + ', 100'"
+                d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+            </svg>
+            <div class="score-text">{{ result.score }}</div>
+          </div>
+          <div class="score-verdict">
+            <span *ngIf="result.score >= 90">Excellent! Your site is very accessible.</span>
+            <span *ngIf="result.score < 90 && result.score >= 70">Good, but room for improvement.</span>
+            <span *ngIf="result.score < 70">Action required to avoid risks.</span>
+          </div>
+        </div>
+
+        <!-- Issues List -->
+        <div class="issues-container">
+          <div class="issues-header">
+            <h2>Issues Found <span class="badge">{{ result.totalIssues }}</span></h2>
+          </div>
+          
+          <div class="issues-list">
+            <div class="issue-card" *ngFor="let issue of result.issues">
+              <div class="issue-header">
+                <span class="severity-badge" [class]="issue.severity.toLowerCase()">{{ issue.severity }}</span>
+                <h3>{{ issue.type }}</h3>
+              </div>
+              <p class="issue-desc">{{ issue.description }}</p>
+              <div class="issue-loc" *ngIf="issue.location">
+                <span class="code-snippet">{{ issue.location }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paywall / Upsell Block -->
+          <div class="upsell-block" *ngIf="result.limited">
+            <div class="blur-overlay">
+              <div class="fake-issue"></div>
+              <div class="fake-issue"></div>
+            </div>
+            <div class="upsell-content">
+              <h3>Unlock {{ (result?.totalIssues || 0) - (result?.issues?.length || 0) }} more issues</h3>
+              <p>Create a free account to see the full report and get AI-powered fix code.</p>
+              <ui-cta-button routerLink="/signup" label="View Full Report" variant="primary"></ui-cta-button>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
-  </section>
-</section>
+  </div>
+</div>

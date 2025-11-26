@@ -1,86 +1,311 @@
-.scan {
+.scan-page {
+  min-height: 80vh;
+  padding: 2rem 0 4rem;
+}
+
+.scan-header {
+  margin-bottom: 3rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.scan-container {
   max-width: 900px;
   margin: 0 auto;
 }
 
-.scan-form {
-  display: grid;
+/* Form */
+.scan-form-large {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+}
+
+.input-wrapper {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .input-wrapper { flex-direction: row; }
+}
+
+.url-input {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.2s;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: var(--color-brand-primary);
+}
+
+.form-note {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.error-message {
+  color: #ef4444;
+  margin-top: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Progress Bar */
+.scan-progress {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.progress-bar-track {
+  height: 8px;
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--color-brand-primary);
+  transition: width 0.6s ease;
+}
+
+.progress-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.75rem;
-  margin: 1.5rem 0;
+  color: var(--color-text-muted);
+  font-weight: 500;
 }
 
-label {
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-brand-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Results */
+.scan-results {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  animation: fadeIn 0.5s ease;
+}
+
+@media (min-width: 768px) {
+  .scan-results {
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+/* Score Card */
+.score-card {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  height: fit-content;
+  position: sticky;
+  top: calc(var(--header-height) + 1rem);
+}
+
+.score-card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.score-circle {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 1.5rem;
+}
+
+.circular-chart {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 250px;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #f1f5f9;
+  stroke-width: 2.5;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  animation: progress 1s ease-out forwards;
+  stroke: var(--color-brand-primary); /* Default */
+}
+
+/* Color logic handled in component via [attr.data-score] usually, or just generic class toggle.
+   For now, let's assume basic color. Improvements: Dynamic class based on score.
+*/
+[data-score^="9"] .circle { stroke: #10b981; }
+[data-score^="8"] .circle { stroke: #10b981; }
+[data-score^="7"] .circle { stroke: #f59e0b; }
+[data-score^="6"] .circle { stroke: #f59e0b; }
+[data-score^="5"] .circle { stroke: #ef4444; }
+[data-score^="4"] .circle { stroke: #ef4444; }
+
+@keyframes progress {
+  0% { stroke-dasharray: 0 100; }
+}
+
+.score-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.score-verdict {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+/* Issues */
+.issues-container {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.issues-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.issues-header h2 { margin: 0; font-size: 1.25rem; }
+
+.badge {
+  background: var(--color-bg-alt);
+  color: var(--color-text-main);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+
+.issues-list {
+  padding: 0;
+}
+
+.issue-card {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.issue-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.severity-badge {
+  font-size: 0.7rem;
+  text-transform: uppercase;
   font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
 }
 
-input {
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid #cbd5e1;
-  font-size: 1rem;
-}
+.severity-badge.critical { background: #fee2e2; color: #991b1b; }
+.severity-badge.serious { background: #ffedd5; color: #9a3412; }
+.severity-badge.moderate { background: #fef3c7; color: #92400e; }
+.severity-badge.minor { background: #f1f5f9; color: #475569; }
 
-input:focus {
-  outline: 3px solid #bfdbfe;
-  border-color: #1d4ed8;
-}
-
-.consent {
+.issue-card h3 {
   margin: 0;
-  color: #475569;
-}
-
-.status {
-  color: #0f172a;
+  font-size: 1rem;
   font-weight: 600;
 }
 
-.error {
-  color: #b91c1c;
-  margin: 0;
+.issue-desc {
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
 }
 
-.results {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
+.code-snippet {
+  font-family: monospace;
+  background: var(--color-bg-alt);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--color-text-main);
 }
 
-.summary,
-.issues {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+/* Upsell Block */
+.upsell-block {
+  position: relative;
+  background: #f8fafc;
+  padding: 3rem 2rem;
+  text-align: center;
 }
 
-.score {
-  font-size: 2.25rem;
-  font-weight: 800;
-  margin: 0.25rem 0 0.5rem;
+.blur-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-.issues ul {
-  padding: 0;
-  margin: 0 0 1rem;
-  list-style: none;
-  display: grid;
-  gap: 0.75rem;
+.fake-issue {
+  height: 80px;
+  background: white;
+  margin: 1rem;
+  border-radius: var(--radius-md);
+  filter: blur(4px);
+  opacity: 0.5;
 }
 
-.issue-type {
-  font-weight: 700;
-  margin: 0;
+.upsell-content {
+  position: relative;
+  z-index: 2;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-.issue-description,
-.issue-location,
-.issue-suggestion {
-  margin: 0.1rem 0;
-}
+.upsell-content h3 { margin-bottom: 0.5rem; }
+.upsell-content p { margin-bottom: 1.5rem; color: var(--color-text-muted); }
 
-.upgrade {
-  margin: 0 0 0.5rem;
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

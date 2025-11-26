@@ -1,39 +1,108 @@
-<section class="pricing" aria-labelledby="pricing-page-heading">
-  <p class="eyebrow">Plans</p>
-  <h1 id="pricing-page-heading">Pricing designed for small teams</h1>
-  <p class="lead">Keep the free scan forever or upgrade for monitoring and the auto-fix script.</p>
+<div class="pricing-page section-alt">
+  <section class="shell pricing-header text-center">
+    <div class="eyebrow">Simple Pricing</div>
+    <h1>Start free, grow securely</h1>
+    <p class="lead">No credit card required for scans. Upgrade when you're ready to automate.</p>
+  </section>
 
-  <div class="plan-grid">
-    <article *ngFor="let plan of plans">
-      <h2>{{ plan.name }}</h2>
-      <p class="price">{{ plan.price }}</p>
-      <p>{{ plan.description }}</p>
-      <ul>
-        <li *ngFor="let feature of plan.features">{{ feature }}</li>
-      </ul>
-      <ui-cta-button
-        [routerLink]="plan.routerLink"
-        label="{{ plan.cta }}"
-        variant="primary"
-      ></ui-cta-button>
+  <div class="shell plan-container">
+    <article class="plan-card free">
+      <div class="plan-header">
+        <h2>Free Scan</h2>
+        <div class="price">$0<span class="period">/forever</span></div>
+        <p class="plan-desc">Perfect for checking a single page for critical errors.</p>
+      </div>
+      <div class="plan-features">
+        <ul>
+          <li class="feature-item">
+            <span class="check">✓</span>
+            <span>Single URL Scan</span>
+          </li>
+          <li class="feature-item">
+            <span class="check">✓</span>
+            <span>Top 5 Critical Issues</span>
+          </li>
+          <li class="feature-item">
+            <span class="check">✓</span>
+            <span>Basic AI Explanations</span>
+          </li>
+          <li class="feature-item feature-missing">
+            <span class="cross">✕</span>
+            <span>Auto-fix Script</span>
+          </li>
+          <li class="feature-item feature-missing">
+            <span class="cross">✕</span>
+            <span>Continuous Monitoring</span>
+          </li>
+        </ul>
+      </div>
+      <div class="plan-action">
+        <ui-cta-button routerLink="/scan" label="Run Free Scan" variant="secondary" class="full-width"></ui-cta-button>
+      </div>
+    </article>
+
+    <article class="plan-card pro popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="plan-header">
+        <h2>Starter Protection</h2>
+        <div class="price">$39<span class="period">/month</span></div>
+        <p class="plan-desc">Complete compliance toolkit for small businesses.</p>
+      </div>
+      <div class="plan-features">
+        <ul>
+          <li class="feature-item">
+            <span class="check">✓</span>
+            <span><strong>Unlimited</strong> Scans</span>
+          </li>
+          <li class="feature-item">
+            <span class="check">✓</span>
+            <span><strong>Full</strong> Issue Reports</span>
+          </li>
+          <li class="feature-item">
+            <span class="check">✓</span>
+            <span>Advanced AI Fix Suggestions</span>
+          </li>
+          <li class="feature-item">
+            <span class="check">✓</span>
+            <span><strong>Auto-fix Script</strong> Injection</span>
+          </li>
+          <li class="feature-item">
+            <span class="check">✓</span>
+            <span>Weekly Regression Monitoring</span>
+          </li>
+          <li class="feature-item">
+            <span class="check">✓</span>
+            <span>Compliance Certificate Badge</span>
+          </li>
+        </ul>
+      </div>
+      <div class="plan-action">
+        <ui-cta-button routerLink="/signup" label="Start 7-Day Free Trial" variant="primary" class="full-width"></ui-cta-button>
+      </div>
     </article>
   </div>
 
-  <div class="faq" aria-labelledby="faq-heading">
-    <h2 id="faq-heading">Quick questions</h2>
-    <dl>
-      <div>
-        <dt>Does the free scan include AI suggestions?</dt>
-        <dd>We share a limited set of AI-backed suggestions on the first few issues to help you take action.</dd>
+  <section class="shell faq section">
+    <div class="text-center mb-8">
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h3>Does the free scan include AI suggestions?</h3>
+        <p>We share a limited set of AI-backed suggestions on the first few critical issues to help you understand the value, but full remediation code is available in the Starter plan.</p>
       </div>
-      <div>
-        <dt>Can I cancel anytime?</dt>
-        <dd>Yes. Plans are month-to-month with no hidden fees.</dd>
+      <div class="faq-item">
+        <h3>Can I cancel anytime?</h3>
+        <p>Yes. Our plans are month-to-month. You can cancel directly from your dashboard with one click, no questions asked.</p>
       </div>
-      <div>
-        <dt>Do you handle privacy-sensitive pages?</dt>
-        <dd>We avoid storing forms or logged-in data and document what we collect in the privacy policy.</dd>
+      <div class="faq-item">
+        <h3>How does the auto-fix script work?</h3>
+        <p>You add a single line of JavaScript to your website's header. Our script automatically patches common accessibility issues (like missing labels or focus states) without altering your visual design.</p>
       </div>
-    </dl>
-  </div>
-</section>
+      <div class="faq-item">
+        <h3>Do you handle privacy-sensitive pages?</h3>
+        <p>We scan only what is publicly visible. We do not submit forms or access data behind login screens unless you specifically configure an authenticated scan.</p>
+      </div>
+    </div>
+  </section>
+</div>

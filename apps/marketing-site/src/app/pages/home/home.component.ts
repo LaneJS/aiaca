@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { CTAButtonComponent } from '@aiaca/ui';
 import { SeoService } from '../../services/seo.service';
 
@@ -46,6 +47,7 @@ export class HomeComponent implements OnInit {
   ];
 
   private readonly seo = inject(SeoService);
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.seo.update({
@@ -54,5 +56,13 @@ export class HomeComponent implements OnInit {
         'Run a free accessibility scan, see prioritized issues, and get AI-powered fixes built for small business websites.',
       path: '/',
     });
+  }
+
+  onScan(url: string): void {
+    if (url && url.trim()) {
+      this.router.navigate(['/scan'], { queryParams: { url: url.trim() } });
+    } else {
+      this.router.navigate(['/scan']);
+    }
   }
 }

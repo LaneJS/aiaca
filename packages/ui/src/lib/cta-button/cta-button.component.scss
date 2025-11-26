@@ -2,48 +2,61 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: 999px;
-  font-weight: 700;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
   text-decoration: none;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-size: 1rem;
 }
 
 .cta:focus-visible {
-  outline: 3px solid #bfdbfe;
+  outline: 3px solid var(--color-brand-primary, #4f46e5);
   outline-offset: 2px;
 }
 
 .cta.primary {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: #ffffff;
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.25);
+  background: var(--color-brand-primary, #4f46e5);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.cta.primary:hover {
+  background: var(--color-brand-dark, #312e81);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .cta.secondary {
-  background: #e2e8f0;
-  color: #0f172a;
-  border-color: #cbd5e1;
+  background: white;
+  color: var(--color-text-main, #0f172a);
+  border-color: var(--color-border, #e2e8f0);
+}
+
+.cta.secondary:hover {
+  background: var(--color-bg-alt, #f8fafc);
+  border-color: var(--color-text-muted, #475569);
 }
 
 .cta.ghost {
   background: transparent;
-  color: #1d4ed8;
-  border-color: #bfdbfe;
+  color: var(--color-brand-primary, #4f46e5);
 }
 
-.cta:hover,
-.cta:focus-visible {
-  transform: translateY(-1px);
+.cta.ghost:hover {
+  background: var(--color-bg-alt, #f1f5f9);
 }
 
 .cta[aria-disabled='true'],
 .cta:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  background: #cbd5e1;
+  color: #64748b;
 }

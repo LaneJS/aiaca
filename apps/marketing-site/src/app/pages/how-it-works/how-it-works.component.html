@@ -1,22 +1,90 @@
-<section class="page" aria-labelledby="how-page-heading">
-  <p class="eyebrow">Process</p>
-  <h1 id="how-page-heading">How AACA keeps your site accessible</h1>
-  <p class="lead">
-    We combine automated testing, AI-powered suggestions, and an optional auto-fix script to reduce WCAG violations fast.
-  </p>
+<div class="how-it-works-page section-alt">
+  <section class="shell text-center page-header">
+    <div class="eyebrow">The Process</div>
+    <h1>Compliance on Autopilot</h1>
+    <p class="lead">A complete system to detect, fix, and prevent accessibility issues.</p>
+  </section>
 
-  <div class="step-grid" role="list">
-    <article *ngFor="let step of steps" role="listitem">
-      <h2>{{ step.title }}</h2>
-      <p>{{ step.body }}</p>
-    </article>
+  <div class="shell steps-container">
+    
+    <!-- Step 1 -->
+    <div class="step-row">
+      <div class="step-content">
+        <div class="step-number">01</div>
+        <h2>Automated Detection</h2>
+        <p>Our scanner crawls your site using a headless browser, simulating real user interactions. It checks against 50+ WCAG 2.1 AA success criteria, identifying issues like low contrast, missing labels, and keyboard traps.</p>
+        <ul class="step-list">
+          <li>Checks dynamic content (SPAs)</li>
+          <li>Tests mobile viewports</li>
+          <li>Validates ARIA attributes</li>
+        </ul>
+      </div>
+      <div class="step-visual visual-scan">
+        <div class="visual-card">
+          <div class="scan-line"></div>
+          <div class="dom-nodes">
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node error"></div>
+            <div class="node"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-row reverse">
+      <div class="step-content">
+        <div class="step-number">02</div>
+        <h2>AI-Powered Remediation</h2>
+        <p>Finding bugs is easy; fixing them is hard. Our AI analyzes the context of each error and generates specific code patches. It understands your DOM structure and suggests semantic fixes, not just overlays.</p>
+        <ul class="step-list">
+          <li>Context-aware alt text generation</li>
+          <li>Contrast ratio calculation</li>
+          <li>Semantic HTML structure fixes</li>
+        </ul>
+      </div>
+      <div class="step-visual visual-fix">
+        <div class="visual-card code-bg">
+          <div class="code-line"> &lt;button&gt;Click&lt;/button&gt;</div>
+          <div class="arrow-down">⬇</div>
+          <div class="code-line highlight">&lt;button aria-label="Submit"&gt;Click&lt;/button&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-row">
+      <div class="step-content">
+        <div class="step-number">03</div>
+        <h2>Continuous Monitoring</h2>
+        <p>Websites change. Content editors add images; developers ship new features. Our auto-fix script guards your live site, while scheduled scans alert you to regressions before they impact users.</p>
+        <ul class="step-list">
+          <li>Regression alerts via email</li>
+          <li>Historical score tracking</li>
+          <li>Exportable audit reports</li>
+        </ul>
+      </div>
+      <div class="step-visual visual-monitor">
+        <div class="visual-card">
+          <div class="chart-line">
+            <div class="bar" style="height: 40%"></div>
+            <div class="bar" style="height: 60%"></div>
+            <div class="bar" style="height: 50%"></div>
+            <div class="bar" style="height: 80%"></div>
+            <div class="bar highlight" style="height: 95%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="callout" aria-label="Accessibility commitments">
-    <h2>Accessibility promises baked into the product</h2>
-    <ul>
-      <li *ngFor="let promise of commitments">{{ promise }}</li>
-    </ul>
-    <ui-cta-button routerLink="/scan" label="Try the free scan" variant="primary"></ui-cta-button>
-  </div>
-</section>
+  <section class="shell cta-section text-center">
+    <div class="cta-card">
+      <h2>Ready to get started?</h2>
+      <p>Join hundreds of sites building a more inclusive web.</p>
+      <ui-cta-button routerLink="/scan" label="Run Free Scan" variant="primary"></ui-cta-button>
+    </div>
+  </section>
+</div>

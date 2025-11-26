@@ -1,22 +1,97 @@
-<section class="page" aria-labelledby="how-page-heading">
-  <p class="eyebrow">Process</p>
-  <h1 id="how-page-heading">How AACA keeps your site accessible</h1>
-  <p class="lead">
-    We combine automated testing, AI-powered suggestions, and an optional auto-fix script to reduce WCAG violations fast.
-  </p>
+<section class="how-it-works-page">
+  <header class="page-header">
+    <div class="container text-center">
+      <p class="eyebrow">How it Works</p>
+      <h1>Accessibility engineering, <span class="text-primary">simplified</span>.</h1>
+      <p class="lead">From a URL to a compliant site. Here is the technical breakdown of our process.</p>
+    </div>
+  </header>
 
-  <div class="step-grid" role="list">
-    <article *ngFor="let step of steps" role="listitem">
-      <h2>{{ step.title }}</h2>
-      <p>{{ step.body }}</p>
-    </article>
-  </div>
+  <div class="container">
+    <div class="steps-wrapper">
+      <!-- Step 1 -->
+      <div class="step-section">
+        <div class="step-content">
+          <div class="step-number">01</div>
+          <h2>Deep Scan</h2>
+          <p>We launch a headless browser instance to render your page exactly as a user sees it. We don't just parse HTML; we execute JavaScript, wait for hydration, and analyze the computed DOM.</p>
+          <p>Using industry-standard <strong>axe-core</strong> rules, we identify violations against WCAG 2.1 AA standards.</p>
+        </div>
+        <div class="step-visual terminal-window">
+          <div class="terminal-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="terminal-body">
+            <div class="line"><span class="prompt">$</span> aaca scan https://mysite.com</div>
+            <div class="line info">> Launching headless browser...</div>
+            <div class="line info">> Hydrating DOM...</div>
+            <div class="line info">> Running axe-core audit...</div>
+            <div class="line success">✓ Found 12 violations</div>
+            <div class="line success">✓ 3 Critical, 5 Serious, 4 Minor</div>
+            <div class="line cursor">_</div>
+          </div>
+        </div>
+      </div>
 
-  <div class="callout" aria-label="Accessibility commitments">
-    <h2>Accessibility promises baked into the product</h2>
-    <ul>
-      <li *ngFor="let promise of commitments">{{ promise }}</li>
-    </ul>
-    <ui-cta-button routerLink="/scan" label="Try the free scan" variant="primary"></ui-cta-button>
+      <!-- Step 2 -->
+      <div class="step-section reverse">
+        <div class="step-content">
+          <div class="step-number">02</div>
+          <h2>AI Analysis & Context</h2>
+          <p>Raw error logs are confusing. Our AI engine analyzes the violating DOM nodes in context.</p>
+          <p>It understands that an image inside a button needs different alt text than a decorative background image. It generates <strong>semantic, human-readable</strong> fix suggestions tailored to your content.</p>
+        </div>
+        <div class="step-visual code-window">
+           <div class="code-header">analysis.json</div>
+           <div class="code-body">
+<pre ngNonBindable><code>{
+  "violation": "image-alt",
+  "node": "&lt;img src='logo.png'&gt;",
+  "context": "inside &lt;nav&gt;",
+  "ai_suggestion": {
+    "fix": "Add alt='Company Home'",
+    "reasoning": "Image links to root"
+  }
+}</code></pre>
+           </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-section">
+        <div class="step-content">
+          <div class="step-number">03</div>
+          <h2>Auto-Fix Injection</h2>
+          <p>For common structural issues, you can install our lightweight script.</p>
+          <p>It automatically patches the DOM at runtime—adding missing ARIA labels, fixing focus outlines, and ensuring skip links exist—without you rewriting your codebase.</p>
+        </div>
+        <div class="step-visual script-visual">
+          <div class="script-card">
+            <div class="badge-js">JS</div>
+            <h3>&lt;script src="aaca.js"&gt;</h3>
+            <div class="arrow-down">⬇</div>
+            <div class="dom-patch">
+              <div class="patch-item">
+                <span class="plus">+</span> aria-label="Search"
+              </div>
+              <div class="patch-item">
+                <span class="plus">+</span> tabindex="0"
+              </div>
+              <div class="patch-item">
+                <span class="plus">+</span> alt="User Avatar"
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <h2>See it in action</h2>
+      <p>Run a scan on your own site to see exactly what we find.</p>
+      <ui-cta-button routerLink="/scan" label="Start Free Scan" variant="primary"></ui-cta-button>
+    </div>
   </div>
 </section>

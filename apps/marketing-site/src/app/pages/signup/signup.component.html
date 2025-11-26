@@ -1,99 +1,145 @@
-<section class="signup" aria-labelledby="signup-heading">
-  <p class="eyebrow">Get started</p>
-  <h1 id="signup-heading">Create your account</h1>
-  <p class="lead">Start monitoring your website accessibility and get instant AI-powered fix suggestions.</p>
+<section class="signup-page">
+  <div class="signup-wrapper">
+    <!-- Form Side -->
+    <div class="form-side">
+      <div class="form-header">
+        <a routerLink="/" class="logo-link">
+          <span class="logo-mark">A11y</span> Assistant
+        </a>
+        <h1>Create your account</h1>
+        <p class="text-muted">Start your 30-day risk-free trial.</p>
+      </div>
 
-  <div class="signup-container">
-    <div class="signup-card">
-      <form class="signup-form" (ngSubmit)="onSubmit()" aria-label="Sign up form">
+      <form (ngSubmit)="onSubmit()" class="signup-form">
         <div class="form-group">
-          <label for="name">Name (optional)</label>
+          <label for="name">Full Name</label>
           <input
             id="name"
             name="name"
             type="text"
             [(ngModel)]="name"
-            placeholder="Jane Doe"
+            placeholder="e.g. Alex Smith"
+            class="form-input"
           />
         </div>
 
         <div class="form-group">
-          <label for="email">Email <span class="required">*</span></label>
+          <label for="email">Email Address</label>
           <input
             id="email"
             name="email"
             type="email"
             required
             [(ngModel)]="email"
-            placeholder="you@example.com"
-            [class.error-input]="validationErrors['email']"
+            placeholder="name@company.com"
+            class="form-input"
+            [class.error]="validationErrors['email']"
+            aria-describedby="email-error"
           />
-          <p class="error-text" *ngIf="validationErrors['email']" role="alert">
+          <p id="email-error" class="error-msg" *ngIf="validationErrors['email']">
             {{ validationErrors['email'] }}
           </p>
         </div>
 
-        <div class="form-group">
-          <label for="password">Password <span class="required">*</span></label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            [(ngModel)]="password"
-            placeholder="At least 8 characters"
-            [class.error-input]="validationErrors['password']"
-          />
-          <p class="error-text" *ngIf="validationErrors['password']" role="alert">
-            {{ validationErrors['password'] }}
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              [(ngModel)]="password"
+              placeholder="8+ characters"
+              class="form-input"
+              [class.error]="validationErrors['password']"
+              aria-describedby="password-error"
+            />
+            <p id="password-error" class="error-msg" *ngIf="validationErrors['password']">
+              {{ validationErrors['password'] }}
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm</label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              required
+              [(ngModel)]="confirmPassword"
+              placeholder="Repeat password"
+              class="form-input"
+              [class.error]="validationErrors['confirmPassword']"
+              aria-describedby="confirm-error"
+            />
+            <p id="confirm-error" class="error-msg" *ngIf="validationErrors['confirmPassword']">
+              {{ validationErrors['confirmPassword'] }}
+            </p>
+          </div>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-row">
+            <span>Starter Plan</span>
+            <span class="price">$39/mo</span>
+          </div>
+          <p class="terms">
+            By clicking "Continue", you agree to our 
+            <a routerLink="/legal/terms">Terms</a> and <a routerLink="/legal/privacy">Privacy Policy</a>.
           </p>
         </div>
 
-        <div class="form-group">
-          <label for="confirmPassword">Confirm password <span class="required">*</span></label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            required
-            [(ngModel)]="confirmPassword"
-            placeholder="Re-enter your password"
-            [class.error-input]="validationErrors['confirmPassword']"
-          />
-          <p class="error-text" *ngIf="validationErrors['confirmPassword']" role="alert">
-            {{ validationErrors['confirmPassword'] }}
-          </p>
+        <button type="submit" class="btn-submit" [disabled]="submitting">
+          <span *ngIf="!submitting">Continue to Payment</span>
+          <span *ngIf="submitting" class="spinner"></span>
+        </button>
+
+        <div *ngIf="errorMessage" class="alert-error">
+          {{ errorMessage }}
         </div>
-
-        <div class="pricing-info">
-          <p class="price-highlight">$39/month &mdash; Cancel anytime</p>
-          <p class="terms-text">
-            By signing up, you agree to our
-            <a href="/legal/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
-          </p>
-        </div>
-
-        <ui-cta-button
-          type="submit"
-          label="Continue to checkout"
-          variant="primary"
-          [disabled]="submitting"
-        ></ui-cta-button>
-
-        <span class="status" *ngIf="submitting" aria-live="polite">Creating your account...</span>
-        <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
       </form>
+      
+      <p class="login-link">
+        Already have an account? <a href="#">Log in</a>
+      </p>
     </div>
 
-    <div class="benefits">
-      <h2>What's included</h2>
-      <ul>
-        <li>Unlimited URL scans</li>
-        <li>Full issue reports with AI-powered suggestions</li>
-        <li>Auto-fix script for quick repairs</li>
-        <li>Continuous monitoring and alerts</li>
-        <li>Export reports for compliance</li>
-      </ul>
+    <!-- Content Side -->
+    <div class="content-side">
+      <div class="content-wrapper">
+        <div class="quote-card">
+          <div class="quote-icon">“</div>
+          <p class="quote-text">
+            Before AACA, we were drowning in manual audits. Now, we fix issues as they appear. It's like having an accessibility expert on the team 24/7.
+          </p>
+          <div class="quote-author">
+            <div class="avatar">S</div>
+            <div class="author-info">
+              <span class="name">Sarah Jenkins</span>
+              <span class="role">CTO, TechFlow</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="features-list">
+          <h3>Included in your plan:</h3>
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Unlimited Scans
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Auto-Fix Script
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              24/7 Monitoring
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>

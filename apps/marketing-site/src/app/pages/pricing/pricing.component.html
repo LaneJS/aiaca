@@ -1,39 +1,117 @@
-<section class="pricing" aria-labelledby="pricing-page-heading">
-  <p class="eyebrow">Plans</p>
-  <h1 id="pricing-page-heading">Pricing designed for small teams</h1>
-  <p class="lead">Keep the free scan forever or upgrade for monitoring and the auto-fix script.</p>
-
-  <div class="plan-grid">
-    <article *ngFor="let plan of plans">
-      <h2>{{ plan.name }}</h2>
-      <p class="price">{{ plan.price }}</p>
-      <p>{{ plan.description }}</p>
-      <ul>
-        <li *ngFor="let feature of plan.features">{{ feature }}</li>
-      </ul>
-      <ui-cta-button
-        [routerLink]="plan.routerLink"
-        label="{{ plan.cta }}"
-        variant="primary"
-      ></ui-cta-button>
-    </article>
+<section class="pricing-page">
+  <div class="container header-container">
+    <p class="eyebrow">Pricing</p>
+    <h1>Simple, transparent pricing.</h1>
+    <p class="lead">No hidden fees, no long-term contracts. Start for free, upgrade when you're ready to automate.</p>
   </div>
 
-  <div class="faq" aria-labelledby="faq-heading">
-    <h2 id="faq-heading">Quick questions</h2>
-    <dl>
-      <div>
-        <dt>Does the free scan include AI suggestions?</dt>
-        <dd>We share a limited set of AI-backed suggestions on the first few issues to help you take action.</dd>
+  <div class="container">
+    <div class="plan-grid">
+      <!-- Free Plan -->
+      <div class="plan-card free-plan">
+        <div class="plan-header">
+          <h3>Free Scan</h3>
+          <div class="price-wrapper">
+            <span class="currency">$</span>
+            <span class="amount">0</span>
+            <span class="period">/ forever</span>
+          </div>
+          <p class="plan-desc">Perfect for testing a single page or checking your current status.</p>
+        </div>
+        
+        <div class="plan-features">
+          <p class="features-label">What's included:</p>
+          <ul>
+            <li>
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Single URL Scan</span>
+            </li>
+            <li>
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Accessibility Score</span>
+            </li>
+            <li>
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Top 5 Issues Preview</span>
+            </li>
+            <li>
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Basic AI Explanations</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="plan-action">
+          <ui-cta-button routerLink="/scan" label="Run Free Scan" variant="secondary"></ui-cta-button>
+        </div>
       </div>
-      <div>
-        <dt>Can I cancel anytime?</dt>
-        <dd>Yes. Plans are month-to-month with no hidden fees.</dd>
+
+      <!-- Starter Plan -->
+      <div class="plan-card starter-plan">
+        <div class="badge-popular">Most Popular</div>
+        <div class="plan-header">
+          <h3>Starter</h3>
+          <div class="price-wrapper">
+            <span class="currency">$</span>
+            <span class="amount">39</span>
+            <span class="period">/ month</span>
+          </div>
+          <p class="plan-desc">For small businesses and agencies who need ongoing compliance.</p>
+        </div>
+        
+        <div class="plan-features">
+          <p class="features-label">Everything in Free, plus:</p>
+          <ul>
+            <li>
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Unlimited URLs</span>
+            </li>
+            <li>
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Full Issue Reports</span>
+            </li>
+            <li>
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Auto-Fix Script</strong></span>
+            </li>
+            <li>
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Continuous Monitoring</span>
+            </li>
+             <li>
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>PDF Exports</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="plan-action">
+          <ui-cta-button routerLink="/signup" label="Get Started" variant="primary"></ui-cta-button>
+          <p class="money-back">30-day money-back guarantee</p>
+        </div>
       </div>
-      <div>
-        <dt>Do you handle privacy-sensitive pages?</dt>
-        <dd>We avoid storing forms or logged-in data and document what we collect in the privacy policy.</dd>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h4>Does the free scan include AI suggestions?</h4>
+          <p>Yes, we provide AI-powered fix suggestions for the first few issues so you can see the quality of our guidance.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Can I cancel anytime?</h4>
+          <p>Absolutely. We operate on a month-to-month basis. You can cancel your subscription at any time from your dashboard.</p>
+        </div>
+        <div class="faq-item">
+          <h4>How does the auto-fix script work?</h4>
+          <p>It's a single line of JavaScript. Once added to your site, it automatically patches common issues like missing labels, focus states, and contrast errors.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Do you handle privacy-sensitive pages?</h4>
+          <p>Our scanner focuses on DOM structure and accessibility attributes. We do not store form data or user content.</p>
+        </div>
       </div>
-    </dl>
+    </div>
   </div>
 </section>

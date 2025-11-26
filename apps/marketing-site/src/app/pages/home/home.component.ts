@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { CTAButtonComponent } from '@aiaca/ui';
+import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -8,21 +9,26 @@ import { SeoService } from '../../services/seo.service';
   standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [CommonModule, CTAButtonComponent],
+  imports: [CommonModule, RouterModule, FormsModule],
 })
 export class HomeComponent implements OnInit {
+  scanUrl = '';
+
   readonly steps = [
     {
       title: 'Scan',
       description: 'Run an automated audit with WCAG rules and real-browser context.',
+      icon: 'search'
     },
     {
       title: 'Fix',
       description: 'Prioritize issues with AI guidance and clear, plain-language explanations.',
+      icon: 'tool'
     },
     {
       title: 'Stay compliant',
       description: 'Monitor new pages, ship changes with confidence, and export reports.',
+      icon: 'shield'
     },
   ];
 
@@ -46,6 +52,7 @@ export class HomeComponent implements OnInit {
   ];
 
   private readonly seo = inject(SeoService);
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.seo.update({
@@ -54,5 +61,13 @@ export class HomeComponent implements OnInit {
         'Run a free accessibility scan, see prioritized issues, and get AI-powered fixes built for small business websites.',
       path: '/',
     });
+  }
+
+  onScan(): void {
+    if (this.scanUrl) {
+      this.router.navigate(['/scan'], { queryParams: { url: this.scanUrl } });
+    } else {
+      this.router.navigate(['/scan']);
+    }
   }
 }

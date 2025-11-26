@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CTAButtonComponent } from '@aiaca/ui';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SeoService } from '../../services/seo.service';
 
@@ -10,7 +10,7 @@ import { SeoService } from '../../services/seo.service';
   standalone: true,
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
-  imports: [CommonModule, FormsModule, CTAButtonComponent],
+  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class SignupComponent implements OnInit {
   name = '';

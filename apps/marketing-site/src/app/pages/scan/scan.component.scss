@@ -1,86 +1,662 @@
-.scan {
-  max-width: 900px;
-  margin: 0 auto;
+// ===========================================
+// A11Y ASSISTANT - SCAN PAGE STYLES
+// Core conversion experience
+// ===========================================
+
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.scan-page {
+  @include section;
+  min-height: calc(100vh - 160px);
+
+  &__container {
+    @include container;
+    max-width: 800px;
+  }
 }
+
+// -----------------------------------------
+// HEADER
+// -----------------------------------------
+
+.scan-header {
+  text-align: center;
+  margin-bottom: $spacing-10;
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-2 $spacing-4;
+    background: $color-primary-50;
+    border: 1px solid $color-primary-200;
+    border-radius: $radius-full;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-primary-700;
+    margin-bottom: $spacing-6;
+
+    svg {
+      color: $color-primary;
+    }
+  }
+
+  h1 {
+    @include heading-section;
+    margin-bottom: $spacing-4;
+  }
+
+  .lead {
+    margin: 0 auto;
+    max-width: 560px;
+  }
+}
+
+// -----------------------------------------
+// SCAN CARD
+// -----------------------------------------
+
+.scan-card {
+  background: $color-surface;
+  border: 1px solid $color-neutral-200;
+  border-radius: $radius-2xl;
+  padding: $spacing-8;
+  box-shadow: $shadow-lg;
+  transition: border-color $transition-normal $ease-out;
+
+  &:focus-within {
+    border-color: $color-primary-300;
+  }
+
+  &--scanning {
+    .scan-form {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+
+// -----------------------------------------
+// FORM
+// -----------------------------------------
 
 .scan-form {
+  &__input-group {
+    margin-bottom: $spacing-4;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-2;
+
+    svg {
+      color: $color-primary;
+    }
+  }
+
+  &__input-wrapper {
+    display: flex;
+    gap: $spacing-3;
+
+    @media (max-width: $breakpoint-sm) {
+      flex-direction: column;
+    }
+  }
+
+  &__input {
+    flex: 1;
+    padding: $spacing-4;
+    font-size: $font-size-base;
+    color: $color-text-primary;
+    background: $color-surface;
+    border: 2px solid $color-neutral-200;
+    border-radius: $radius-xl;
+    transition: border-color $transition-fast $ease-out,
+                box-shadow $transition-fast $ease-out;
+
+    &::placeholder {
+      color: $color-text-tertiary;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: $color-neutral-300;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px $color-primary-100;
+    }
+
+    &:disabled {
+      background: $color-neutral-50;
+      cursor: not-allowed;
+    }
+  }
+
+  &__help {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+    margin: $spacing-2 0 0;
+  }
+
+  &__consent {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0;
+
+    svg {
+      flex-shrink: 0;
+      color: $color-primary;
+    }
+  }
+}
+
+// -----------------------------------------
+// SCANNING PROGRESS
+// -----------------------------------------
+
+.scan-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-8 0;
+
+  &__animation {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: $spacing-6;
+  }
+
+  &__ring {
+    width: 100%;
+    height: 100%;
+
+    svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__track {
+    fill: none;
+    stroke: $color-neutral-100;
+    stroke-width: 4;
+  }
+
+  &__bar {
+    fill: none;
+    stroke: $color-primary;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 75;
+    animation: progress-spin 1.5s ease-in-out infinite;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: $color-primary;
+    animation: spin 2s linear infinite;
+  }
+
+  &__text {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-1;
+  }
+
+  &__subtext {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+    margin: 0;
+  }
+}
+
+@keyframes progress-spin {
+  0% {
+    stroke-dashoffset: 283;
+  }
+  50% {
+    stroke-dashoffset: 75;
+  }
+  100% {
+    stroke-dashoffset: 283;
+  }
+}
+
+// -----------------------------------------
+// ERROR MESSAGE
+// -----------------------------------------
+
+.scan-error {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  margin-top: $spacing-4;
+  background: $color-danger-50;
+  border: 1px solid $color-danger-200;
+  border-radius: $radius-xl;
+  color: $color-danger-700;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  p {
+    flex: 1;
+    margin: 0;
+    font-size: $font-size-sm;
+    color: $color-danger-700;
+  }
+
+  &__dismiss {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: $radius-lg;
+    cursor: pointer;
+    color: $color-danger-500;
+    transition: background $transition-fast $ease-out;
+
+    &:hover {
+      background: $color-danger-100;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-danger-300;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// -----------------------------------------
+// RESULTS
+// -----------------------------------------
+
+.scan-results {
+  margin-top: $spacing-10;
   display: grid;
-  gap: 0.75rem;
-  margin: 1.5rem 0;
+  gap: $spacing-6;
+
+  @include lg {
+    grid-template-columns: auto 1fr;
+    gap: $spacing-8;
+  }
 }
 
-label {
-  font-weight: 700;
+// Score Card
+.results-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: $spacing-6;
+  background: $color-surface;
+  border: 1px solid $color-neutral-200;
+  border-radius: $radius-2xl;
+  box-shadow: $shadow-md;
+
+  @include lg {
+    position: sticky;
+    top: 100px;
+    align-self: start;
+    min-width: 200px;
+  }
+
+  &__ring {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin-bottom: $spacing-4;
+
+    svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    &--excellent .results-score__progress {
+      stroke: $color-success;
+    }
+    &--good .results-score__progress {
+      stroke: $color-primary;
+    }
+    &--fair .results-score__progress {
+      stroke: $color-warning;
+    }
+    &--poor .results-score__progress {
+      stroke: $color-danger;
+    }
+  }
+
+  &__track {
+    fill: none;
+    stroke: $color-neutral-100;
+    stroke-width: 10;
+  }
+
+  &__progress {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s $ease-out;
+  }
+
+  &__value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  &__number {
+    display: block;
+    font-family: $font-family-display;
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-extrabold;
+    color: $color-text-primary;
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+  }
+
+  &__info h2 {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing-2;
+  }
+
+  &__desc {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0 0 $spacing-3;
+  }
+
+  &__url {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-1;
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    margin: 0;
+    word-break: break-all;
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
 }
 
-input {
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid #cbd5e1;
-  font-size: 1rem;
+// Issues List
+.results-issues {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-4;
+
+    h2 {
+      font-size: $font-size-xl;
+      margin: 0;
+    }
+  }
+
+  &__count {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+    background: $color-neutral-100;
+    padding: $spacing-1 $spacing-3;
+    border-radius: $radius-full;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-3;
+  }
 }
 
-input:focus {
-  outline: 3px solid #bfdbfe;
-  border-color: #1d4ed8;
+// Issue Card
+.issue-card {
+  background: $color-surface;
+  border: 1px solid $color-neutral-200;
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  transition: border-color $transition-fast $ease-out;
+
+  &:hover {
+    border-color: $color-neutral-300;
+  }
+
+  &--high {
+    border-left: 4px solid $color-danger;
+
+    .issue-card__severity {
+      color: $color-danger-600;
+      background: $color-danger-50;
+    }
+  }
+
+  &--moderate {
+    border-left: 4px solid $color-warning;
+
+    .issue-card__severity {
+      color: $color-accent-700;
+      background: $color-accent-50;
+    }
+  }
+
+  &--low {
+    border-left: 4px solid $color-primary;
+
+    .issue-card__severity {
+      color: $color-primary-700;
+      background: $color-primary-50;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    margin-bottom: $spacing-3;
+    flex-wrap: wrap;
+  }
+
+  &__severity {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    padding: $spacing-1 $spacing-2;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    border-radius: $radius-md;
+  }
+
+  &__type {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  &__description {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0 0 $spacing-2;
+    line-height: $line-height-relaxed;
+  }
+
+  &__location {
+    margin: 0 0 $spacing-2;
+
+    code {
+      font-family: $font-family-mono;
+      font-size: $font-size-xs;
+      background: $color-neutral-100;
+      padding: $spacing-1 $spacing-2;
+      border-radius: $radius-md;
+      color: $color-text-secondary;
+    }
+  }
+
+  &__suggestion {
+    font-size: $font-size-sm;
+    padding: $spacing-3;
+    background: $color-primary-50;
+    border-radius: $radius-lg;
+    color: $color-primary-800;
+
+    strong {
+      color: $color-primary-700;
+    }
+  }
 }
 
-.consent {
-  margin: 0;
-  color: #475569;
+// Upgrade CTA
+.results-upgrade {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  padding: $spacing-6;
+  margin-top: $spacing-4;
+  background: linear-gradient(135deg, $color-primary-50 0%, $color-primary-100 100%);
+  border: 1px solid $color-primary-200;
+  border-radius: $radius-xl;
+
+  @include md {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__content {
+    display: flex;
+    gap: $spacing-4;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    background: $color-primary;
+    color: white;
+    border-radius: $radius-xl;
+  }
+
+  &__text {
+    h3 {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      margin: 0 0 $spacing-1;
+      color: $color-primary-900;
+    }
+
+    p {
+      font-size: $font-size-sm;
+      color: $color-primary-700;
+      margin: 0;
+    }
+  }
 }
 
-.status {
-  color: #0f172a;
-  font-weight: 600;
+.results-next {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-4;
+  padding: $spacing-6;
+  margin-top: $spacing-4;
+  text-align: center;
+  background: $color-neutral-50;
+  border-radius: $radius-xl;
+
+  p {
+    margin: 0;
+    color: $color-text-secondary;
+  }
 }
 
-.error {
-  color: #b91c1c;
-  margin: 0;
-}
+// -----------------------------------------
+// FEATURES (shown when no results)
+// -----------------------------------------
 
-.results {
+.scan-features {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-4;
+  margin-top: $spacing-10;
 }
 
-.summary,
-.issues {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-}
+.scan-feature {
+  text-align: center;
+  padding: $spacing-6;
+  background: $color-surface;
+  border: 1px solid $color-neutral-200;
+  border-radius: $radius-xl;
+  transition: border-color $transition-fast $ease-out,
+              box-shadow $transition-fast $ease-out;
 
-.score {
-  font-size: 2.25rem;
-  font-weight: 800;
-  margin: 0.25rem 0 0.5rem;
-}
+  &:hover {
+    border-color: $color-neutral-300;
+    box-shadow: $shadow-md;
+  }
 
-.issues ul {
-  padding: 0;
-  margin: 0 0 1rem;
-  list-style: none;
-  display: grid;
-  gap: 0.75rem;
-}
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto $spacing-4;
+    background: $color-primary-50;
+    color: $color-primary;
+    border-radius: $radius-xl;
+  }
 
-.issue-type {
-  font-weight: 700;
-  margin: 0;
-}
+  &__title {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    margin: 0 0 $spacing-2;
+  }
 
-.issue-description,
-.issue-location,
-.issue-suggestion {
-  margin: 0.1rem 0;
-}
-
-.upgrade {
-  margin: 0 0 0.5rem;
+  &__text {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0;
+    line-height: $line-height-relaxed;
+  }
 }

@@ -1,51 +1,214 @@
-<section class="scan" aria-labelledby="scan-heading">
-  <p class="eyebrow">Free tool</p>
-  <h1 id="scan-heading">Run a free accessibility scan</h1>
-  <p class="lead">Submit one URL to receive a score and the top issues. No account required.</p>
+<!-- =============================================
+     A11Y ASSISTANT - SCAN PAGE
+     Free accessibility scan tool - Core conversion experience
+     ============================================= -->
 
-  <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
-    <label for="url">Website URL</label>
-    <input
-      id="url"
-      name="url"
-      type="url"
-      required
-      [(ngModel)]="url"
-      placeholder="https://example.com"
-      aria-describedby="consent"
-    />
-    <p id="consent" class="consent">By submitting, you confirm you have permission to scan this page.</p>
-    <ui-cta-button type="submit" label="Start scan" variant="primary"></ui-cta-button>
-    <span class="status" *ngIf="submitting" aria-live="polite">Submitting scan…</span>
-    <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
-  </form>
-
-  <section *ngIf="result" class="results" aria-live="polite" aria-label="Scan results">
-    <div class="summary">
-      <p class="eyebrow">Score</p>
-      <p class="score">{{ result.score }}</p>
-      <p class="note">Score is limited for the free scan. Create an account to see the full report.</p>
+<section class="scan-page" aria-labelledby="scan-heading">
+  <div class="scan-page__container">
+    <!-- Header -->
+    <div class="scan-header">
+      <span class="scan-header__badge">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1L1 5V11L8 15L15 11V5L8 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        Free Tool
+      </span>
+      <h1 id="scan-heading">Scan your site for accessibility issues</h1>
+      <p class="lead">
+        Enter your URL below. In under 60 seconds, you'll see your accessibility score and the top issues affecting your visitors.
+      </p>
     </div>
-    <div class="issues">
-      <h2>Top issues</h2>
-      <ul>
-        <li *ngFor="let issue of result.issues">
-          <p class="issue-type">{{ issue.type }} ({{ issue.severity }})</p>
-          <p class="issue-description">{{ issue.description }}</p>
-          <p *ngIf="issue.location" class="issue-location">Location: {{ issue.location }}</p>
-        </li>
-      </ul>
-      <div class="upgrade-box" *ngIf="result.limited">
-        <p class="limited-notice">
-          <strong>Showing {{ result.issues.length }} of {{ result.totalIssues }} issues found.</strong>
+
+    <!-- Scan Form Card -->
+    <div class="scan-card" [class.scan-card--scanning]="submitting" [class.scan-card--has-results]="result">
+      <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free accessibility scan form">
+        <div class="scan-form__input-group">
+          <label for="url" class="scan-form__label">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M10 2C10 2 6 6 6 10C6 14 10 18 10 18M10 2C10 2 14 6 14 10C14 14 10 18 10 18M2 10H18" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            Website URL
+          </label>
+          <div class="scan-form__input-wrapper">
+            <input
+              id="url"
+              name="url"
+              type="url"
+              required
+              [(ngModel)]="url"
+              placeholder="https://yourwebsite.com"
+              aria-describedby="url-help consent"
+              [disabled]="submitting"
+              class="scan-form__input"
+            />
+            <ui-cta-button
+              type="submit"
+              [label]="submitting ? 'Scanning...' : 'Start Scan'"
+              variant="primary"
+              [disabled]="submitting"
+            ></ui-cta-button>
+          </div>
+          <p id="url-help" class="scan-form__help">
+            Enter the full URL including https://
+          </p>
+        </div>
+
+        <p id="consent" class="scan-form__consent">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M7 1L1.5 3.5V7C1.5 10.0376 3.83771 12.8094 7 13.5C10.1623 12.8094 12.5 10.0376 12.5 7V3.5L7 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M5 7L6.5 8.5L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          By scanning, you confirm you have permission to analyze this website.
         </p>
-        <p class="upgrade">Sign up to see all issues, AI-powered fix suggestions, and the auto-fix script.</p>
-        <ui-cta-button routerLink="/signup" label="Get full access" variant="primary"></ui-cta-button>
+      </form>
+
+      <!-- Scanning Animation -->
+      <div class="scan-progress" *ngIf="submitting" aria-live="polite">
+        <div class="scan-progress__animation">
+          <div class="scan-progress__ring">
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="scan-progress__track" cx="50" cy="50" r="45"/>
+              <circle class="scan-progress__bar" cx="50" cy="50" r="45"/>
+            </svg>
+          </div>
+          <div class="scan-progress__icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <path d="M16 4V8M16 24V28M4 16H8M24 16H28M7.05 7.05L9.88 9.88M22.12 22.12L24.95 24.95M7.05 24.95L9.88 22.12M22.12 9.88L24.95 7.05" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <p class="scan-progress__text">Analyzing your website...</p>
+        <p class="scan-progress__subtext">Running 50+ WCAG accessibility checks</p>
       </div>
-      <div class="upgrade-box" *ngIf="!result.limited">
-        <p class="upgrade">Want AI-powered fix suggestions and the auto-fix script?</p>
-        <ui-cta-button routerLink="/signup" label="Get started" variant="secondary"></ui-cta-button>
+
+      <!-- Error Message -->
+      <div class="scan-error" *ngIf="errorMessage" role="alert">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M10 6V10.5M10 13.5V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <p>{{ errorMessage }}</p>
+        <button type="button" class="scan-error__dismiss" (click)="errorMessage = ''" aria-label="Dismiss error">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
       </div>
     </div>
-  </section>
+
+    <!-- Results Section -->
+    <section *ngIf="result" class="scan-results" aria-label="Scan results" aria-live="polite">
+      <!-- Score Card -->
+      <div class="results-score">
+        <div class="results-score__ring" [class]="getScoreClass()">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="results-score__track" cx="60" cy="60" r="52"/>
+            <circle
+              class="results-score__progress"
+              cx="60" cy="60" r="52"
+              [style.strokeDasharray]="getStrokeDasharray()"
+              [style.strokeDashoffset]="getStrokeDashoffset()"
+            />
+          </svg>
+          <div class="results-score__value">
+            <span class="results-score__number">{{ result.score }}</span>
+            <span class="results-score__label">/ 100</span>
+          </div>
+        </div>
+        <div class="results-score__info">
+          <h2>Accessibility Score</h2>
+          <p class="results-score__desc">{{ getScoreDescription() }}</p>
+          <p class="results-score__url">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 2C8 2 5 5 5 8C5 11 8 14 8 14M8 2C8 2 11 5 11 8C11 11 8 14 8 14M2 8H14" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            {{ result.url }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Issues List -->
+      <div class="results-issues">
+        <div class="results-issues__header">
+          <h2>Issues Found</h2>
+          <span class="results-issues__count" *ngIf="result.limited">
+            Showing {{ result.issues.length }} of {{ result.totalIssues }}
+          </span>
+        </div>
+
+        <ul class="results-issues__list">
+          <li
+            *ngFor="let issue of result.issues; let i = index"
+            class="issue-card"
+            [class]="'issue-card--' + issue.severity"
+          >
+            <div class="issue-card__header">
+              <span class="issue-card__severity">
+                <svg *ngIf="issue.severity === 'high'" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M8 2L14 14H2L8 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                  <path d="M8 6V9M8 11V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <svg *ngIf="issue.severity === 'moderate'" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 5V8.5M8 11V11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <svg *ngIf="issue.severity === 'low'" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 5V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <circle cx="8" cy="11" r="0.5" fill="currentColor"/>
+                </svg>
+                {{ issue.severity | titlecase }}
+              </span>
+              <span class="issue-card__type">{{ issue.type }}</span>
+            </div>
+            <p class="issue-card__description">{{ issue.description }}</p>
+            <p class="issue-card__location" *ngIf="issue.location">
+              <code>{{ issue.location }}</code>
+            </p>
+            <div class="issue-card__suggestion" *ngIf="issue.suggestion">
+              <strong>AI Suggestion:</strong> {{ issue.suggestion }}
+            </div>
+          </li>
+        </ul>
+
+        <!-- Upgrade CTA -->
+        <div class="results-upgrade" *ngIf="result.limited">
+          <div class="results-upgrade__content">
+            <div class="results-upgrade__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M12 22V12M12 12L22 7M12 12L2 7" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="results-upgrade__text">
+              <h3>Unlock the full report</h3>
+              <p>
+                <strong>{{ (result.totalIssues ?? 0) - result.issues.length }} more issues</strong> found.
+                Get AI-powered fix suggestions, the auto-fix script, and continuous monitoring.
+              </p>
+            </div>
+          </div>
+          <ui-cta-button routerLink="/signup" label="Get Full Access" variant="primary"></ui-cta-button>
+        </div>
+
+        <!-- Non-limited CTA -->
+        <div class="results-next" *ngIf="!result.limited">
+          <p>Want AI-powered fix suggestions and the auto-fix script?</p>
+          <ui-cta-button routerLink="/signup" label="Start Your Free Trial" variant="secondary"></ui-cta-button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Highlight (when no results) -->
+    <div class="scan-features" *ngIf="!result && !submitting">
+      <h2 class="sr-only">What the free scan includes</h2>
+      <article class="scan-feature" *ngFor="let feature of scanFeatures">
+        <div class="scan-feature__icon" [innerHTML]="feature.icon" aria-hidden="true"></div>
+        <h3 class="scan-feature__title">{{ feature.title }}</h3>
+        <p class="scan-feature__text">{{ feature.description }}</p>
+      </article>
+    </div>
+  </div>
 </section>

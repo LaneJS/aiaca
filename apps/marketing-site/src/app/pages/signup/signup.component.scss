@@ -1,164 +1,324 @@
-.signup {
-  max-width: 1200px;
-  margin: 0 auto;
+// ===========================================
+// A11Y ASSISTANT - SIGNUP PAGE STYLES
+// Seamless conversion experience
+// ===========================================
+
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.signup-page {
+  @include section;
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+
+  &__container {
+    @include container;
+    width: 100%;
+  }
 }
 
-.signup-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
-  align-items: start;
+// -----------------------------------------
+// LAYOUT
+// -----------------------------------------
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+.signup-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-8;
+  align-items: center;
+
+  @include lg {
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-12;
+  }
+}
+
+// -----------------------------------------
+// VALUE PROPOSITION (Left)
+// -----------------------------------------
+
+.signup-value {
+  @include md {
+    padding-right: $spacing-8;
+  }
+
+  &__content {
+    max-width: 500px;
+  }
+
+  h1 {
+    @include heading-section;
+    margin-bottom: $spacing-4;
+  }
+
+  .lead {
+    font-size: $font-size-lg;
+    color: $color-text-secondary;
+    margin: 0 0 $spacing-8;
+    line-height: $line-height-relaxed;
+  }
+}
+
+.signup-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 $spacing-8;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    padding: $spacing-2 0;
+
+    svg {
+      flex-shrink: 0;
+      color: $color-primary;
+    }
+
+    span {
+      font-size: $font-size-base;
+      color: $color-text-secondary;
+
+      strong {
+        color: $color-text-primary;
+        font-weight: $font-weight-semibold;
+      }
+    }
+  }
+}
+
+.signup-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-4;
+  padding-top: $spacing-6;
+  border-top: 1px solid $color-neutral-200;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+
+    svg {
+      color: $color-primary-600;
+    }
+  }
+}
+
+// -----------------------------------------
+// FORM CARD (Right)
+// -----------------------------------------
+
+.signup-form-wrapper {
+  display: flex;
+  justify-content: center;
+
+  @include lg {
+    justify-content: flex-end;
   }
 }
 
 .signup-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  @include card;
+  width: 100%;
+  max-width: 440px;
+  padding: 0;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-6;
+    background: $color-neutral-50;
+    border-bottom: 1px solid $color-neutral-200;
+
+    h2 {
+      font-family: $font-family-display;
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $color-text-primary;
+      margin: 0;
+    }
+  }
+
+  &__price {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+  }
+
+  &__amount {
+    font-family: $font-family-display;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-extrabold;
+    color: $color-primary;
+  }
+
+  &__period {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+  }
+
+  &__footer {
+    padding: $spacing-4 $spacing-6;
+    text-align: center;
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+    background: $color-neutral-50;
+    border-top: 1px solid $color-neutral-200;
+
+    a {
+      color: $color-primary;
+      text-decoration: none;
+      font-weight: $font-weight-medium;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
+// -----------------------------------------
+// FORM
+// -----------------------------------------
+
 .signup-form {
+  padding: $spacing-6;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: $spacing-5;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
+  gap: $spacing-2;
 
-label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #0f172a;
-}
-
-.required {
-  color: #dc2626;
-}
-
-input {
-  padding: 0.75rem 1rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.2s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #1d4ed8;
-    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+  label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
   }
 
-  &::placeholder {
-    color: #94a3b8;
+  .required {
+    color: $color-danger;
+  }
+
+  .optional {
+    font-weight: $font-weight-normal;
+    color: $color-text-tertiary;
+  }
+
+  input {
+    @include form-input;
   }
 }
 
-.error-input {
-  border-color: #dc2626;
-
-  &:focus {
-    border-color: #dc2626;
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
-  }
-}
-
-.error-text {
+.form-error {
   margin: 0;
-  font-size: 0.85rem;
-  color: #dc2626;
+  font-size: $font-size-sm;
+  color: $color-danger;
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
 }
 
-.pricing-info {
-  background: #f8fafc;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.price-highlight {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1d4ed8;
-  margin: 0 0 0.5rem;
-}
-
-.terms-text {
-  font-size: 0.85rem;
-  color: #64748b;
+.form-terms {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
   margin: 0;
+  line-height: $line-height-relaxed;
 
   a {
-    color: #1d4ed8;
-    text-decoration: underline;
+    color: $color-primary;
+    text-decoration: none;
 
     &:hover {
-      color: #1e40af;
+      text-decoration: underline;
     }
   }
 }
 
-.status {
-  text-align: center;
-  color: #64748b;
-  font-size: 0.9rem;
-  font-style: italic;
-}
-
-.error {
-  background: #fee2e2;
-  color: #991b1b;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #fecaca;
+.form-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
   margin: 0;
-  font-size: 0.9rem;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  .spinner {
+    animation: spin 1s linear infinite;
+    color: $color-primary;
+  }
 }
 
-.benefits {
-  background: #f8fafc;
-  padding: 2rem;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
-
-  h2 {
-    margin-top: 0;
-    color: #0f172a;
-    font-size: 1.5rem;
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
-  ul {
-    padding-left: 1.5rem;
-    margin: 0;
-    list-style: none;
+.form-error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  background: $color-danger-50;
+  border: 1px solid $color-danger-200;
+  border-radius: $radius-lg;
+  font-size: $font-size-sm;
+  color: $color-danger-700;
 
-    li {
-      position: relative;
-      padding-left: 1.5rem;
-      margin-bottom: 0.75rem;
-      color: #334155;
+  svg {
+    flex-shrink: 0;
+    color: $color-danger;
+  }
+}
 
-      &::before {
-        content: '✓';
-        position: absolute;
-        left: 0;
-        color: #22c55e;
-        font-weight: bold;
-      }
+// -----------------------------------------
+// RESPONSIVE ADJUSTMENTS
+// -----------------------------------------
+
+@media (max-width: #{$breakpoint-lg - 1px}) {
+  .signup-value {
+    text-align: center;
+    order: 1;
+
+    &__content {
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: $font-size-2xl;
     }
   }
 
-  @media (max-width: 768px) {
-    order: -1;
+  .signup-benefits {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-2;
+    text-align: left;
+
+    @include sm {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .signup-trust {
+    justify-content: center;
+  }
+
+  .signup-form-wrapper {
+    order: 0;
   }
 }

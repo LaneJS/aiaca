@@ -1,22 +1,68 @@
-<section class="page" aria-labelledby="how-page-heading">
-  <p class="eyebrow">Process</p>
-  <h1 id="how-page-heading">How AACA keeps your site accessible</h1>
-  <p class="lead">
-    We combine automated testing, AI-powered suggestions, and an optional auto-fix script to reduce WCAG violations fast.
-  </p>
+<!-- =============================================
+     A11Y ASSISTANT - HOW IT WORKS PAGE
+     Education and trust building
+     ============================================= -->
 
-  <div class="step-grid" role="list">
-    <article *ngFor="let step of steps" role="listitem">
-      <h2>{{ step.title }}</h2>
-      <p>{{ step.body }}</p>
-    </article>
-  </div>
+<section class="how-page" aria-labelledby="how-page-heading">
+  <div class="how-page__container">
+    <!-- Header -->
+    <div class="how-header">
+      <p class="eyebrow">How It Works</p>
+      <h1 id="how-page-heading">From worried to compliant in minutes</h1>
+      <p class="lead">
+        A11y Assistant combines automated scanning, AI-powered explanations, and one-click fixes to make accessibility achievable for everyone.
+      </p>
+    </div>
 
-  <div class="callout" aria-label="Accessibility commitments">
-    <h2>Accessibility promises baked into the product</h2>
-    <ul>
-      <li *ngFor="let promise of commitments">{{ promise }}</li>
-    </ul>
-    <ui-cta-button routerLink="/scan" label="Try the free scan" variant="primary"></ui-cta-button>
+    <!-- Process Steps -->
+    <div class="process-flow">
+      <article class="step-card" *ngFor="let step of steps; let i = index">
+        <div class="step-card__number" aria-hidden="true">{{ i + 1 }}</div>
+        <div class="step-card__content">
+          <h2 class="step-card__title">{{ step.title }}</h2>
+          <p class="step-card__text">{{ step.body }}</p>
+        </div>
+        <div class="step-card__visual" [innerHTML]="step.visual" aria-hidden="true"></div>
+      </article>
+    </div>
+
+    <!-- What We Check -->
+    <div class="checks-section">
+      <h2 class="checks-section__title">What we check</h2>
+      <p class="checks-section__lead">Our scanner runs 50+ WCAG 2.1 checks across these categories:</p>
+
+      <div class="checks-grid">
+        <div class="check-category" *ngFor="let category of checkCategories">
+          <div class="check-category__icon" [innerHTML]="category.icon" aria-hidden="true"></div>
+          <h3 class="check-category__title">{{ category.title }}</h3>
+          <ul class="check-category__list">
+            <li *ngFor="let item of category.items">{{ item }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commitments -->
+    <div class="commitments">
+      <h2 class="commitments__title">Our accessibility promise</h2>
+      <p class="commitments__lead">We practice what we preach. This site and our product are built with accessibility first.</p>
+
+      <ul class="commitments__list">
+        <li *ngFor="let commitment of commitments">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2L3 7V12C3 16.9706 7.02944 21 12 22C16.9706 21 21 16.9706 21 12V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>{{ commitment }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- CTA -->
+    <div class="how-cta">
+      <h2>Ready to see it in action?</h2>
+      <p>Run a free scan on any URL. No account required, results in under 60 seconds.</p>
+      <ui-cta-button routerLink="/scan" label="Try the free scan" variant="primary"></ui-cta-button>
+    </div>
   </div>
 </section>

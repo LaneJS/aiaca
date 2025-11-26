@@ -1,36 +1,328 @@
-.page {
-  max-width: 900px;
-  margin: 0 auto;
+// ===========================================
+// A11Y ASSISTANT - HOW IT WORKS PAGE STYLES
+// Education and trust building
+// ===========================================
+
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.how-page {
+  @include section;
+
+  &__container {
+    @include container;
+  }
 }
 
-.step-grid {
+// -----------------------------------------
+// HEADER
+// -----------------------------------------
+
+.how-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto $spacing-12;
+
+  h1 {
+    @include heading-section;
+    margin-bottom: $spacing-4;
+  }
+
+  .lead {
+    margin: 0 auto;
+  }
+}
+
+// -----------------------------------------
+// PROCESS FLOW
+// -----------------------------------------
+
+.process-flow {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin: 2rem 0;
+  gap: $spacing-6;
+  margin-bottom: $spacing-16;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @include md {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.step-grid article {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+.step-card {
+  @include card;
+  position: relative;
+  padding: $spacing-8;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+
+  &__number {
+    position: absolute;
+    top: $spacing-4;
+    left: $spacing-4;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $color-primary;
+    color: white;
+    font-family: $font-family-display;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-sm;
+    border-radius: $radius-full;
+  }
+
+  &__content {
+    padding-top: $spacing-6;
+  }
+
+  &__title {
+    font-family: $font-family-display;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-2;
+  }
+
+  &__text {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0;
+    line-height: $line-height-relaxed;
+  }
+
+  &__visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    color: $color-primary;
+    opacity: 0.8;
+    margin-top: auto;
+
+    svg {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  // Hover effect
+  &:hover {
+    border-color: $color-primary-200;
+    transform: translateY(-2px);
+
+    .step-card__visual {
+      opacity: 1;
+    }
+  }
 }
 
-.callout {
-  background: #0f172a;
-  color: #e2e8f0;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+// -----------------------------------------
+// CHECKS SECTION
+// -----------------------------------------
+
+.checks-section {
+  text-align: center;
+  margin-bottom: $spacing-16;
+  padding: $spacing-12 0;
+  background: $color-neutral-50;
+  border-radius: $radius-2xl;
+  margin-left: -$spacing-4;
+  margin-right: -$spacing-4;
+  padding-left: $spacing-4;
+  padding-right: $spacing-4;
+
+  @include md {
+    margin-left: -$spacing-8;
+    margin-right: -$spacing-8;
+    padding-left: $spacing-8;
+    padding-right: $spacing-8;
+  }
+
+  &__title {
+    font-family: $font-family-display;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-2;
+  }
+
+  &__lead {
+    color: $color-text-secondary;
+    margin: 0 0 $spacing-8;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
-.callout ul {
-  margin: 1rem 0;
-  padding-left: 1.25rem;
+.checks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+  max-width: 800px;
+  margin: 0 auto;
+
+  @include md {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-.callout li {
-  margin-bottom: 0.5rem;
+.check-category {
+  background: $color-surface;
+  border: 1px solid $color-neutral-200;
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  text-align: left;
+  transition: all $transition-fast $ease-out;
+
+  &:hover {
+    border-color: $color-primary-200;
+    box-shadow: $shadow-md;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: $color-primary-50;
+    border-radius: $radius-lg;
+    color: $color-primary;
+    margin-bottom: $spacing-3;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__title {
+    font-family: $font-family-display;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-2;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+      padding: $spacing-1 0;
+      position: relative;
+      padding-left: $spacing-3;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 4px;
+        background: $color-primary-300;
+        border-radius: $radius-full;
+      }
+    }
+  }
+}
+
+// -----------------------------------------
+// COMMITMENTS SECTION
+// -----------------------------------------
+
+.commitments {
+  max-width: 700px;
+  margin: 0 auto $spacing-16;
+  text-align: center;
+
+  &__title {
+    font-family: $font-family-display;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-2;
+  }
+
+  &__lead {
+    color: $color-text-secondary;
+    margin: 0 0 $spacing-8;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: $spacing-3;
+      padding: $spacing-3 $spacing-4;
+      background: $color-surface;
+      border: 1px solid $color-neutral-200;
+      border-radius: $radius-lg;
+      margin-bottom: $spacing-3;
+      transition: all $transition-fast $ease-out;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:hover {
+        border-color: $color-primary-200;
+        background: $color-primary-50;
+      }
+
+      svg {
+        flex-shrink: 0;
+        color: $color-primary;
+        margin-top: 2px;
+      }
+
+      span {
+        font-size: $font-size-sm;
+        color: $color-text-secondary;
+        line-height: $line-height-relaxed;
+      }
+    }
+  }
+}
+
+// -----------------------------------------
+// CTA SECTION
+// -----------------------------------------
+
+.how-cta {
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: $spacing-10;
+  background: linear-gradient(135deg, $color-primary-50 0%, $color-primary-100 100%);
+  border-radius: $radius-2xl;
+  border: 1px solid $color-primary-200;
+
+  h2 {
+    font-family: $font-family-display;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-primary-800;
+    margin: 0 0 $spacing-2;
+  }
+
+  p {
+    color: $color-primary-700;
+    margin: 0 0 $spacing-6;
+    font-size: $font-size-sm;
+  }
 }

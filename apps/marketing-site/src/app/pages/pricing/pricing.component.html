@@ -1,39 +1,195 @@
-<section class="pricing" aria-labelledby="pricing-page-heading">
-  <p class="eyebrow">Plans</p>
-  <h1 id="pricing-page-heading">Pricing designed for small teams</h1>
-  <p class="lead">Keep the free scan forever or upgrade for monitoring and the auto-fix script.</p>
+<!-- =============================================
+     A11Y ASSISTANT - PRICING PAGE
+     Conversion decision point
+     ============================================= -->
 
-  <div class="plan-grid">
-    <article *ngFor="let plan of plans">
-      <h2>{{ plan.name }}</h2>
-      <p class="price">{{ plan.price }}</p>
-      <p>{{ plan.description }}</p>
-      <ul>
-        <li *ngFor="let feature of plan.features">{{ feature }}</li>
-      </ul>
-      <ui-cta-button
-        [routerLink]="plan.routerLink"
-        label="{{ plan.cta }}"
-        variant="primary"
-      ></ui-cta-button>
-    </article>
-  </div>
+<section class="pricing-page" aria-labelledby="pricing-page-heading">
+  <div class="pricing-page__container">
+    <!-- Header -->
+    <div class="pricing-header">
+      <p class="eyebrow">Simple Pricing</p>
+      <h1 id="pricing-page-heading">Start free. Scale when ready.</h1>
+      <p class="lead">
+        No hidden fees. No long-term contracts. Cancel anytime.
+      </p>
+    </div>
 
-  <div class="faq" aria-labelledby="faq-heading">
-    <h2 id="faq-heading">Quick questions</h2>
-    <dl>
-      <div>
-        <dt>Does the free scan include AI suggestions?</dt>
-        <dd>We share a limited set of AI-backed suggestions on the first few issues to help you take action.</dd>
+    <!-- Plan Toggle (future: monthly/annual) -->
+
+    <!-- Plan Cards -->
+    <div class="plan-grid">
+      <!-- Free Plan -->
+      <article class="plan-card plan-card--free">
+        <div class="plan-card__header">
+          <span class="plan-card__badge">Always free</span>
+          <h2 class="plan-card__name">Free Scan</h2>
+          <p class="plan-card__price">
+            <span class="plan-card__amount">$0</span>
+          </p>
+          <p class="plan-card__desc">Perfect for a quick accessibility check on any page.</p>
+        </div>
+
+        <ul class="plan-card__features">
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Scan 1 URL</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Top 5 issues revealed</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>AI-powered explanations</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Accessibility score</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>No account required</span>
+          </li>
+        </ul>
+
+        <ui-cta-button routerLink="/scan" label="Run free scan" variant="secondary"></ui-cta-button>
+      </article>
+
+      <!-- Starter Plan (Popular) -->
+      <article class="plan-card plan-card--starter">
+        <div class="plan-card__header">
+          <span class="plan-card__badge">Most Popular</span>
+          <h2 class="plan-card__name">Starter</h2>
+          <p class="plan-card__price">
+            <span class="plan-card__amount">$39</span>
+            <span class="plan-card__period">/month</span>
+          </p>
+          <p class="plan-card__desc">Full compliance toolkit for growing teams and sites.</p>
+        </div>
+
+        <ul class="plan-card__features">
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span><strong>Unlimited</strong> URL scans</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span><strong>Full</strong> issue reports</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>AI-powered fix suggestions</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Auto-fix script</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Continuous monitoring</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Regression alerts</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Export compliance reports</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Priority support</span>
+          </li>
+        </ul>
+
+        <ui-cta-button routerLink="/signup" label="Get started" variant="primary"></ui-cta-button>
+        <p class="plan-card__guarantee">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 1L2 4V8C2 11.3137 4.68629 14 8 15C11.3137 14 14 11.3137 14 8V4L8 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M5.5 8L7 9.5L10.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          30-day money-back guarantee
+        </p>
+      </article>
+    </div>
+
+    <!-- Feature Comparison -->
+    <div class="comparison">
+      <h2 class="comparison__title">Compare plans</h2>
+      <div class="comparison__table-wrapper">
+        <table class="comparison__table" aria-label="Feature comparison between plans">
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              <th scope="col">Free Scan</th>
+              <th scope="col">Starter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of comparisonRows">
+              <td>{{ row.feature }}</td>
+              <td>
+                <span *ngIf="row.free === true" class="check" aria-label="Included">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span *ngIf="row.free === false" class="dash" aria-label="Not included">&mdash;</span>
+                <span *ngIf="row.free !== true && row.free !== false">{{ row.free }}</span>
+              </td>
+              <td>
+                <span *ngIf="row.starter === true" class="check" aria-label="Included">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span *ngIf="row.starter === false" class="dash" aria-label="Not included">&mdash;</span>
+                <span *ngIf="row.starter !== true && row.starter !== false">{{ row.starter }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div>
-        <dt>Can I cancel anytime?</dt>
-        <dd>Yes. Plans are month-to-month with no hidden fees.</dd>
-      </div>
-      <div>
-        <dt>Do you handle privacy-sensitive pages?</dt>
-        <dd>We avoid storing forms or logged-in data and document what we collect in the privacy policy.</dd>
-      </div>
-    </dl>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="faq__title">Frequently asked questions</h2>
+      <dl class="faq__list">
+        <div class="faq__item" *ngFor="let item of faqItems">
+          <dt>{{ item.question }}</dt>
+          <dd>{{ item.answer }}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="pricing-cta">
+      <h2>Still have questions?</h2>
+      <p>Start with a free scan to see A11y Assistant in action. No commitment required.</p>
+      <ui-cta-button routerLink="/scan" label="Run your free scan" variant="primary"></ui-cta-button>
+    </div>
   </div>
 </section>

@@ -1,123 +1,302 @@
-<section class="hero">
+<!-- =============================================
+     A11Y ASSISTANT - HOME PAGE
+     Brand: "Confidence Through Clarity"
+     ============================================= -->
+
+<!-- HERO SECTION - Asymmetric layout with live demo -->
+<section class="hero" aria-labelledby="hero-heading">
   <div class="hero__content">
-    <p class="eyebrow">Accessibility-first marketing site</p>
-    <h1>AI-powered accessibility compliance for small websites.</h1>
-    <p class="lead">
-      Run a free accessibility scan, see the top issues blocking compliance, and ship fixes faster with clear guidance.
+    <span class="hero__badge animate-fade-in-up">
+      <span class="hero__badge-dot" aria-hidden="true"></span>
+      Trusted by 500+ small businesses
+    </span>
+
+    <h1 id="hero-heading" class="hero__title animate-fade-in-up delay-1">
+      Stop worrying about accessibility lawsuits.
+      <span class="hero__title-highlight">Start serving everyone.</span>
+    </h1>
+
+    <p class="hero__lead animate-fade-in-up delay-2">
+      A11y Assistant scans your website, explains issues in plain English, and fixes common problems automatically. Get compliant in minutes, not months.
     </p>
-    <div class="hero__actions">
-      <ui-cta-button routerLink="/scan" variant="primary" label="Run a free accessibility scan"></ui-cta-button>
-      <ui-cta-button routerLink="/how-it-works" variant="secondary" label="See how it works"></ui-cta-button>
+
+    <div class="hero__actions animate-fade-in-up delay-3">
+      <ui-cta-button
+        routerLink="/scan"
+        variant="primary"
+        label="Scan your site free"
+      ></ui-cta-button>
+      <a routerLink="/how-it-works" class="hero__link">
+        See how it works
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
     </div>
-    <p class="supporting">
-      Built for small teams that need WCAG wins without hiring a full accessibility specialist.
+
+    <div class="hero__proof animate-fade-in-up delay-4">
+      <div class="hero__avatars" aria-hidden="true">
+        <span class="hero__avatar">JD</span>
+        <span class="hero__avatar">SK</span>
+        <span class="hero__avatar">MR</span>
+        <span class="hero__avatar hero__avatar--more">+47</span>
+      </div>
+      <p class="hero__proof-text">
+        <strong>50+ sites fixed</strong> this week alone
+      </p>
+    </div>
+  </div>
+
+  <div class="hero__demo animate-fade-in-up delay-2">
+    <div class="demo-card">
+      <div class="demo-card__header">
+        <div class="demo-card__dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="demo-card__url">yoursite.com</span>
+      </div>
+      <div class="demo-card__body">
+        <div class="demo-score">
+          <div class="demo-score__ring" [class]="getScoreClass(demoScore)">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="demo-score__track" cx="60" cy="60" r="52"/>
+              <circle
+                class="demo-score__progress"
+                cx="60" cy="60" r="52"
+                [style.strokeDasharray]="getStrokeDasharray()"
+                [style.strokeDashoffset]="getStrokeDashoffset(demoScore)"
+              />
+            </svg>
+            <span class="demo-score__value">{{ demoScore }}</span>
+          </div>
+          <span class="demo-score__label">Accessibility Score</span>
+        </div>
+
+        <div class="demo-issues">
+          <div class="demo-issue demo-issue--high">
+            <span class="demo-issue__severity">High</span>
+            <span class="demo-issue__text">Missing alt text on 3 images</span>
+          </div>
+          <div class="demo-issue demo-issue--moderate">
+            <span class="demo-issue__severity">Moderate</span>
+            <span class="demo-issue__text">Low color contrast on nav</span>
+          </div>
+          <div class="demo-issue demo-issue--low">
+            <span class="demo-issue__severity">Low</span>
+            <span class="demo-issue__text">Missing form labels</span>
+          </div>
+        </div>
+      </div>
+      <div class="demo-card__cta">
+        <span class="demo-card__cta-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Get AI fix suggestions
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM/URGENCY SECTION -->
+<section class="urgency" aria-labelledby="urgency-heading">
+  <div class="urgency__container">
+    <div class="urgency__header">
+      <p class="eyebrow">Why this matters now</p>
+      <h2 id="urgency-heading">The cost of ignoring accessibility is rising</h2>
+      <p class="lead">
+        ADA lawsuits increased 400% in the last 5 years. One in four internet users has a disability. Is your site ready?
+      </p>
+    </div>
+
+    <div class="urgency__stats">
+      <article class="stat-card animate-fade-in-up" *ngFor="let stat of stats; let i = index" [class]="'delay-' + (i + 1)">
+        <div class="stat-card__icon" [innerHTML]="stat.icon" aria-hidden="true"></div>
+        <p class="stat-card__value">{{ stat.value }}</p>
+        <p class="stat-card__label">{{ stat.label }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE PROPOSITIONS -->
+<section class="value" aria-labelledby="value-heading">
+  <div class="value__container">
+    <div class="value__header">
+      <p class="eyebrow">What you get</p>
+      <h2 id="value-heading">Everything you need to become accessible</h2>
+      <p class="lead">
+        Stop piecing together tools. A11y Assistant handles scanning, explaining, and fixing in one platform.
+      </p>
+    </div>
+
+    <div class="value__grid">
+      <article class="value-card" *ngFor="let feature of features; let i = index">
+        <div class="value-card__icon" [innerHTML]="feature.icon" aria-hidden="true"></div>
+        <h3 class="value-card__title">{{ feature.title }}</h3>
+        <p class="value-card__text">{{ feature.copy }}</p>
+        <span class="value-card__tag" *ngIf="feature.tag">{{ feature.tag }}</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS - Visual Flow -->
+<section class="process" aria-labelledby="process-heading">
+  <div class="process__container">
+    <div class="process__header">
+      <p class="eyebrow">How it works</p>
+      <h2 id="process-heading">From worried to compliant in 3 steps</h2>
+    </div>
+
+    <div class="process__steps" role="list">
+      <article class="process-step" *ngFor="let step of steps; let i = index" role="listitem">
+        <div class="process-step__number" aria-hidden="true">{{ i + 1 }}</div>
+        <div class="process-step__content">
+          <h3 class="process-step__title">{{ step.title }}</h3>
+          <p class="process-step__text">{{ step.description }}</p>
+        </div>
+        <div class="process-step__visual" [innerHTML]="step.visual" aria-hidden="true"></div>
+      </article>
+    </div>
+
+    <div class="process__cta">
+      <ui-cta-button routerLink="/scan" variant="primary" label="Start your free scan"></ui-cta-button>
+      <p class="process__cta-note">No credit card required. Results in under 60 seconds.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING PREVIEW -->
+<section class="pricing-preview" aria-labelledby="pricing-preview-heading">
+  <div class="pricing-preview__container">
+    <div class="pricing-preview__header">
+      <p class="eyebrow">Simple pricing</p>
+      <h2 id="pricing-preview-heading">Start free. Scale when ready.</h2>
+      <p class="lead">
+        The free scan gives you real insights. Upgrade only when you need ongoing monitoring.
+      </p>
+    </div>
+
+    <div class="pricing-preview__cards">
+      <article class="price-card price-card--free">
+        <div class="price-card__badge">Free forever</div>
+        <h3 class="price-card__name">Free Scan</h3>
+        <p class="price-card__price">
+          <span class="price-card__amount">$0</span>
+        </p>
+        <p class="price-card__desc">Perfect for a quick accessibility check</p>
+        <ul class="price-card__features">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            One URL scan
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Top 5 issues revealed
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            AI explanations included
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            No account needed
+          </li>
+        </ul>
+        <ui-cta-button routerLink="/scan" variant="secondary" label="Run free scan"></ui-cta-button>
+      </article>
+
+      <article class="price-card price-card--starter">
+        <div class="price-card__badge">Most popular</div>
+        <h3 class="price-card__name">Starter</h3>
+        <p class="price-card__price">
+          <span class="price-card__amount">$39</span>
+          <span class="price-card__period">/month</span>
+        </p>
+        <p class="price-card__desc">Full compliance toolkit for growing sites</p>
+        <ul class="price-card__features">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Unlimited URL scans
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Full issue reports
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            AI fix suggestions
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Auto-fix script
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Continuous monitoring
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Export compliance reports
+          </li>
+        </ul>
+        <ui-cta-button routerLink="/signup" variant="primary" label="Get started"></ui-cta-button>
+      </article>
+    </div>
+
+    <p class="pricing-preview__note">
+      <a routerLink="/pricing">See full pricing details</a>
     </p>
   </div>
+</section>
 
-  <div class="hero__visual">
-    <img src="assets/images/hero-illustration.png" alt="AI brain connecting to desktop, tablet, and mobile devices" class="img-fluid">
+<!-- SOCIAL PROOF / TRUST -->
+<section class="trust" aria-labelledby="trust-heading">
+  <div class="trust__container">
+    <div class="trust__header">
+      <p class="eyebrow">Trusted by teams like yours</p>
+      <h2 id="trust-heading">Real results from real businesses</h2>
+    </div>
+
+    <div class="trust__testimonials">
+      <blockquote class="testimonial" *ngFor="let testimonial of testimonials">
+        <p class="testimonial__text">"{{ testimonial.quote }}"</p>
+        <footer class="testimonial__footer">
+          <div class="testimonial__avatar" aria-hidden="true">{{ testimonial.initials }}</div>
+          <div class="testimonial__info">
+            <cite class="testimonial__name">{{ testimonial.name }}</cite>
+            <span class="testimonial__role">{{ testimonial.role }}</span>
+          </div>
+        </footer>
+      </blockquote>
+    </div>
+
+    <div class="trust__badges">
+      <div class="trust-badge" *ngFor="let badge of trustBadges">
+        <span class="trust-badge__icon" [innerHTML]="badge.icon" aria-hidden="true"></span>
+        <span class="trust-badge__text">{{ badge.text }}</span>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="problem" aria-labelledby="problem-heading">
-  <div class="section-header">
-    <p class="eyebrow">Why now</p>
-    <h2 id="problem-heading">Accessibility is a legal, moral, and business must-have.</h2>
-    <p class="lead">
-      Avoid demand letters, welcome every visitor, and stay ahead of search ranking changes that reward usable websites.
+<!-- FINAL CTA -->
+<section class="final-cta" aria-labelledby="final-cta-heading">
+  <div class="final-cta__container">
+    <h2 id="final-cta-heading" class="final-cta__title">
+      Ready to make your site accessible to everyone?
+    </h2>
+    <p class="final-cta__text">
+      Join hundreds of businesses serving all their customers with confidence.
     </p>
-  </div>
-  <div class="problem__grid">
-    <article>
-      <div class="icon-wrapper">
-        <img src="assets/images/icon-gravel.png" alt="" aria-hidden="true" width="64" height="64">
-      </div>
-      <h3>Reduce risk</h3>
-      <p>Mitigate ADA and WCAG non-compliance issues before they become costly legal notices.</p>
-    </article>
-    <article>
-      <div class="icon-wrapper">
-        <img src="assets/images/icon-users.png" alt="" aria-hidden="true" width="64" height="64">
-      </div>
-      <h3>Serve everyone</h3>
-      <p>Deliver inclusive experiences with clear headings, alternative text, and keyboard-friendly flows.</p>
-    </article>
-    <article>
-      <div class="icon-wrapper">
-        <img src="assets/images/icon-chart.jpg" alt="" aria-hidden="true" width="64" height="64">
-      </div>
-      <h3>Grow with confidence</h3>
-      <p>Accessible sites keep customers engaged longer and help you win SEO-conscious buyers.</p>
-    </article>
-  </div>
-</section>
-
-<section class="how" aria-labelledby="how-heading">
-  <div class="section-header">
-    <p class="eyebrow">How it works</p>
-    <h2 id="how-heading">Three guided steps to compliance</h2>
-    <p class="lead">We bundle automation, AI suggestions, and a lightweight auto-fix script.</p>
-  </div>
-
-  <div class="how__visual" style="margin-bottom: 2rem; text-align: center;">
-      <img src="assets/images/process-flow.png" alt="Step 1: Scan, Step 2: Fix, Step 3: Stay Compliant" style="max-width: 100%; height: auto;">
-  </div>
-
-  <div class="steps" role="list">
-    <div class="step" *ngFor="let step of steps" role="listitem">
-      <p class="step__badge">{{ step.title }}</p>
-      <p class="step__copy">{{ step.description }}</p>
+    <div class="final-cta__actions">
+      <ui-cta-button routerLink="/scan" variant="primary" label="Scan your site free"></ui-cta-button>
+      <ui-cta-button routerLink="/pricing" variant="ghost" label="View pricing"></ui-cta-button>
     </div>
-  </div>
-</section>
-
-<section class="features" aria-labelledby="features-heading">
-  <div class="section-header">
-    <p class="eyebrow">What you get</p>
-    <h2 id="features-heading">Built-in accessibility expertise</h2>
-    <p class="lead">Everything you need to identify, explain, and fix WCAG issues without extra vendors.</p>
-  </div>
-  <div class="feature-grid">
-    <article *ngFor="let feature of features">
-      <h3>{{ feature.title }}</h3>
-      <p>{{ feature.copy }}</p>
-    </article>
-  </div>
-</section>
-
-<section class="pricing-preview" aria-labelledby="pricing-heading">
-  <div class="section-header">
-    <p class="eyebrow">Pricing</p>
-    <h2 id="pricing-heading">Start free, upgrade when you need more coverage.</h2>
-    <p class="lead">The free scan includes your top issues. Paid plans start at $39/month for ongoing monitoring.</p>
-  </div>
-  <div class="pricing-card">
-    <div>
-      <p class="eyebrow">Free scan</p>
-      <p class="price">$0</p>
-      <p>Top issues for one URL, with AI-backed explanations.</p>
-    </div>
-    <div class="divider" aria-hidden="true"></div>
-    <div>
-      <p class="eyebrow">Starter</p>
-      <p class="price">From $39/mo</p>
-      <p>Full reports, unlimited URLs, monitoring, and the optional auto-fix script.</p>
-    </div>
-    <div class="actions">
-      <ui-cta-button routerLink="/pricing" label="View pricing" variant="primary"></ui-cta-button>
-      <ui-cta-button routerLink="/scan" label="Run a free scan" variant="secondary"></ui-cta-button>
-    </div>
-  </div>
-</section>
-
-<section class="social-proof footer-bg" aria-labelledby="social-proof-heading">
-  <div class="section-header">
-    <p class="eyebrow">Trusted results</p>
-    <h2 id="social-proof-heading">Social proof coming soon</h2>
-    <p class="lead">Testimonials and case studies are in progress. Request access to our pilot cohort.</p>
-  </div>
-  <div class="placeholder">
-    <p>Placeholder for testimonials, case studies, and partner logos.</p>
-    <ui-cta-button routerLink="/scan" label="Join the pilot" variant="primary"></ui-cta-button>
+    <p class="final-cta__note">
+      Free scan includes top 5 issues + AI explanations. No credit card required.
+    </p>
   </div>
 </section>

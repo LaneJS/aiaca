@@ -1,69 +1,462 @@
+// ===========================================
+// A11Y ASSISTANT - GLOBAL STYLES
+// Brand: "Confidence Through Clarity"
+// ===========================================
+
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+// -----------------------------------------
+// FONT IMPORTS
+// -----------------------------------------
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+// -----------------------------------------
+// CSS CUSTOM PROPERTIES (Runtime Theming)
+// -----------------------------------------
+
 :root {
-  --color-primary: #1d4ed8;
-  --color-surface: #ffffff;
-  --color-text: #0f172a;
-  --color-muted: #475569;
-  --radius-lg: 1rem;
-  --shadow-card: 0 12px 30px rgba(15, 23, 42, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: var(--color-text);
-  background: #f8fafc;
+  // Colors
+  --color-primary: #{$color-primary};
+  --color-primary-light: #{$color-primary-100};
+  --color-primary-dark: #{$color-primary-800};
+  --color-accent: #{$color-accent};
+  --color-danger: #{$color-danger};
+  --color-success: #{$color-success};
+  --color-warning: #{$color-warning};
+
+  --color-surface: #{$color-surface};
+  --color-surface-elevated: #{$color-surface-elevated};
+  --color-surface-sunken: #{$color-surface-sunken};
+  --color-surface-dark: #{$color-surface-dark};
+
+  --color-text-primary: #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-tertiary: #{$color-text-tertiary};
+  --color-text-inverse: #{$color-text-inverse};
+
+  --color-border: #{$color-neutral-200};
+  --color-border-strong: #{$color-neutral-300};
+
+  // Typography
+  --font-family-display: #{$font-family-display};
+  --font-family-body: #{$font-family-body};
+  --font-family-mono: #{$font-family-mono};
+
+  // Spacing
+  --section-padding-y: #{$section-padding-y};
+  --section-padding-x: #{$section-padding-x};
+
+  // Radii
+  --radius-lg: #{$radius-lg};
+  --radius-xl: #{$radius-xl};
+  --radius-2xl: #{$radius-2xl};
+  --radius-full: #{$radius-full};
+
+  // Shadows
+  --shadow-card: #{$shadow-lg};
+  --shadow-elevated: #{$shadow-xl};
+
+  // Transitions
+  --transition-fast: #{$transition-fast};
+  --transition-normal: #{$transition-normal};
+}
+
+// -----------------------------------------
+// RESET & BASE
+// -----------------------------------------
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 * {
-  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
-  background: #f8fafc;
+  font-family: $font-family-body;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+  background: $color-surface-sunken;
 }
 
-a {
-  color: var(--color-primary);
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
 }
 
-a:focus-visible {
-  outline: 3px solid #bfdbfe;
-  outline-offset: 2px;
+input,
+button,
+textarea,
+select {
+  font: inherit;
 }
 
+p,
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+// -----------------------------------------
+// TYPOGRAPHY BASE
+// -----------------------------------------
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-display;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
   margin-top: 0;
-  color: var(--color-text);
+  line-height: $line-height-snug;
+}
+
+h1 {
+  font-size: $font-size-hero;
+  font-weight: $font-weight-extrabold;
+  letter-spacing: $letter-spacing-tight;
+  line-height: $line-height-tight;
+}
+
+h2 {
+  font-size: $font-size-section;
+  letter-spacing: $letter-spacing-tight;
+}
+
+h3 {
+  font-size: $font-size-2xl;
+}
+
+h4 {
+  font-size: $font-size-xl;
 }
 
 p {
-  color: var(--color-muted);
+  color: $color-text-secondary;
+  line-height: $line-height-relaxed;
 }
 
+a {
+  color: $color-primary;
+  text-decoration: none;
+  transition: color $transition-fast $ease-out;
+
+  &:hover {
+    color: $color-primary-700;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $color-primary-200;
+    outline-offset: 2px;
+    border-radius: $radius-sm;
+  }
+}
+
+// -----------------------------------------
+// GLOBAL UTILITIES
+// -----------------------------------------
+
+// Label/Eyebrow text
 .eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  color: #2563eb;
-  margin-bottom: 0.35rem;
+  @include label;
+  margin-bottom: $spacing-3;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+
+  &::before {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: $color-primary;
+    border-radius: $radius-full;
+  }
 }
 
+// Lead paragraph
 .lead {
-  font-size: 1.05rem;
+  @include body-large;
+  max-width: 600px;
 }
 
+// Container classes
+.container {
+  @include container;
+}
+
+.container-narrow {
+  @include container-narrow;
+}
+
+// Section spacing
+.section {
+  @include section;
+}
+
+// Shell (legacy support)
 .shell,
-.main-content > section,
-.main-content > app-home-page section {
-  padding-left: 1rem;
-  padding-right: 1rem;
+.main-content > section {
+  padding-left: $section-padding-x;
+  padding-right: $section-padding-x;
 }
 
-@media (min-width: 1024px) {
-  .shell,
-  .main-content > section,
-  .main-content > app-home-page section {
-    padding-left: 0;
-    padding-right: 0;
+// Visually hidden (screen reader only)
+.sr-only {
+  @include visually-hidden;
+}
+
+// -----------------------------------------
+// SEVERITY BADGE COLORS
+// -----------------------------------------
+
+.severity-high {
+  --severity-color: #{$color-danger};
+  --severity-bg: #{$color-danger-50};
+  --severity-border: #{$color-danger-200};
+}
+
+.severity-moderate {
+  --severity-color: #{$color-warning};
+  --severity-bg: #{$color-accent-50};
+  --severity-border: #{$color-accent-200};
+}
+
+.severity-low {
+  --severity-color: #{$color-success};
+  --severity-bg: #{$color-primary-50};
+  --severity-border: #{$color-primary-200};
+}
+
+// -----------------------------------------
+// SCORE METER COMPONENT STYLES
+// -----------------------------------------
+
+.score-meter {
+  position: relative;
+  width: 140px;
+  height: 140px;
+
+  svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+  }
+
+  &__track {
+    fill: none;
+    stroke: $color-neutral-200;
+    stroke-width: 10;
+  }
+
+  &__progress {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s $ease-out;
+  }
+
+  &__value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: $font-family-display;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-extrabold;
+    color: $color-text-primary;
+  }
+
+  &--excellent .score-meter__progress {
+    stroke: $color-success;
+  }
+
+  &--good .score-meter__progress {
+    stroke: $color-primary;
+  }
+
+  &--fair .score-meter__progress {
+    stroke: $color-warning;
+  }
+
+  &--poor .score-meter__progress {
+    stroke: $color-danger;
+  }
+}
+
+// -----------------------------------------
+// ANIMATIONS
+// -----------------------------------------
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Animation utility classes
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s $ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s $ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s $ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+// Staggered animation delays
+@for $i from 1 through 10 {
+  .delay-#{$i} {
+    animation-delay: #{$i * 0.1}s;
+    opacity: 0;
+  }
+}
+
+// -----------------------------------------
+// FOCUS STYLES
+// -----------------------------------------
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid $color-primary-200;
+  outline-offset: 2px;
+}
+
+// -----------------------------------------
+// SELECTION
+// -----------------------------------------
+
+::selection {
+  background: $color-primary-100;
+  color: $color-primary-900;
+}
+
+// -----------------------------------------
+// SCROLLBAR (subtle custom styling)
+// -----------------------------------------
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-neutral-100;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-neutral-300;
+  border-radius: $radius-full;
+
+  &:hover {
+    background: $color-neutral-400;
+  }
+}
+
+// -----------------------------------------
+// REDUCED MOTION
+// -----------------------------------------
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

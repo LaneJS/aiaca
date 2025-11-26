@@ -1,46 +1,47 @@
+// ===========================================
+// APP ROOT STYLES
+// Brand: "Confidence Through Clarity"
+// ===========================================
+
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
 :host {
   display: block;
   min-height: 100vh;
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  background: $color-surface-sunken;
 }
 
 .main-content {
   min-height: 70vh;
-  padding: 0 1rem 4rem;
 }
 
+// Skip Link - Accessibility
 .skip-link {
+  @include visually-hidden;
   position: absolute;
   left: -999px;
   top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
+
+  &:focus {
+    position: fixed;
+    left: $spacing-4;
+    top: $spacing-4;
+    width: auto;
+    height: auto;
+    padding: $spacing-3 $spacing-5;
+    background: $color-primary;
+    color: white;
+    font-weight: $font-weight-semibold;
+    z-index: $z-toast;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-lg;
+    clip: auto;
+    overflow: visible;
+  }
 }
 
-.skip-link:focus {
-  left: 1rem;
-  top: 1rem;
-  width: auto;
-  height: auto;
-  padding: 0.75rem 1rem;
-  background: #0f172a;
-  color: #ffffff;
-  z-index: 1000;
-  border-radius: 0.375rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
+// Base section padding (pages will override as needed)
 section {
-  padding: 3rem 0;
-}
-
-@media (min-width: 1024px) {
-  .main-content {
-    padding: 0 2rem 5rem;
-  }
-
-  section {
-    padding: 4rem 0;
-  }
+  padding: $section-padding-y 0;
 }

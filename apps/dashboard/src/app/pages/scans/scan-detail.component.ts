@@ -124,7 +124,7 @@ export class ScanDetailComponent implements OnInit {
         } else {
           this.exportError = err.error?.message || 'Failed to export report.';
         }
-        this.toasts.push(this.exportError, 'error');
+        this.toasts.push(this.exportError || 'Failed to export report.', 'error');
       }
     });
   }

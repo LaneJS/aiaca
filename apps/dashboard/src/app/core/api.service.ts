@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EmbedConfig, IssueDetail, NotificationSettings, Plan, Price, ScanDetail, ScanSummary, ScanShareLink, SiteSchedule, SiteSummary, Subscription } from './models';
 import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -94,5 +95,17 @@ export class ApiService {
       // API returns PageResponse; extract content if present
       map((res: any) => (Array.isArray(res) ? res : res?.items ?? []))
     );
+  }
+
+  createCheckoutSession(): Observable<{ checkoutUrl: string }> {
+    return this.http.post<{ checkoutUrl: string }>(`${this.baseUrl}/billing/checkout-session`, {});
+  }
+
+  getSubscriptionStatus(): Observable<{ status: string }> {
+    return this.http.get<{ status: string }>(`${this.baseUrl}/users/me/subscription`);
+  }
+
+  createBillingPortalSession(): Observable<{ portalUrl: string }> {
+    return this.http.post<{ portalUrl: string }>(`${this.baseUrl}/billing/portal-session`, {});
   }
 }

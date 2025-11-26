@@ -10,5 +10,19 @@ public class PublicScanDtos {
 
     public record PublicIssue(String type, IssueSeverity severity, String description, String selector) {}
 
-    public record PublicScanResponse(String url, Double score, List<PublicIssue> issues) {}
+    /**
+     * Response for public (free) scans.
+     * @param url The scanned URL
+     * @param score Accessibility score
+     * @param issues List of issues (limited to top 5 for free scans)
+     * @param limited Whether the results are limited (more issues exist)
+     * @param totalIssues Total number of issues found (only set if limited)
+     */
+    public record PublicScanResponse(
+            String url,
+            Double score,
+            List<PublicIssue> issues,
+            boolean limited,
+            Integer totalIssues
+    ) {}
 }

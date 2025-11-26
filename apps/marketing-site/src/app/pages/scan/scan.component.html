@@ -33,11 +33,19 @@
           <p class="issue-type">{{ issue.type }} ({{ issue.severity }})</p>
           <p class="issue-description">{{ issue.description }}</p>
           <p *ngIf="issue.location" class="issue-location">Location: {{ issue.location }}</p>
-          <p *ngIf="issue.suggestion" class="issue-suggestion">Suggested fix: {{ issue.suggestion }}</p>
         </li>
       </ul>
-      <p class="upgrade">Create a free account to see every issue, AI suggestions, and exportable reports.</p>
-      <ui-cta-button routerLink="/pricing" label="See plans" variant="secondary"></ui-cta-button>
+      <div class="upgrade-box" *ngIf="result.limited">
+        <p class="limited-notice">
+          <strong>Showing {{ result.issues.length }} of {{ result.totalIssues }} issues found.</strong>
+        </p>
+        <p class="upgrade">Sign up to see all issues, AI-powered fix suggestions, and the auto-fix script.</p>
+        <ui-cta-button routerLink="/signup" label="Get full access" variant="primary"></ui-cta-button>
+      </div>
+      <div class="upgrade-box" *ngIf="!result.limited">
+        <p class="upgrade">Want AI-powered fix suggestions and the auto-fix script?</p>
+        <ui-cta-button routerLink="/signup" label="Get started" variant="secondary"></ui-cta-button>
+      </div>
     </div>
   </section>
 </section>

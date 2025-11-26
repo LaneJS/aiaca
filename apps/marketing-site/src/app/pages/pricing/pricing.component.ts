@@ -22,7 +22,7 @@ export class PricingComponent implements OnInit {
     },
     {
       name: 'Starter',
-      price: 'From $39/mo',
+      price: '$39/mo',
       description: 'For small teams shipping updates weekly and needing compliance guardrails.',
       features: [
         'Unlimited URLs',
@@ -30,8 +30,8 @@ export class PricingComponent implements OnInit {
         'Auto-fix script access',
         'Monitoring and alerts',
       ],
-      cta: 'Talk to us',
-      href: 'mailto:sales@aaca.test',
+      cta: 'Get Started',
+      routerLink: '/signup',
     },
   ];
 

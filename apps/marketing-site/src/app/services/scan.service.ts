@@ -16,6 +16,10 @@ export interface PublicScanResponse {
   url: string;
   score: number;
   issues: IssueSummary[];
+  /** Whether results are limited (free scan shows only top 5) */
+  limited: boolean;
+  /** Total issues found (only set if limited) */
+  totalIssues?: number;
 }
 
 @Injectable({ providedIn: 'root' })

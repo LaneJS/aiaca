@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { ApiService } from '../../core/api.service';
 import { Plan, Price, Subscription } from '../../core/models';
@@ -18,6 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class AccountComponent implements OnInit {
   protected readonly auth = inject(AuthService);
   private readonly api = inject(ApiService);
+  private readonly route = inject(ActivatedRoute);
 
   protected plans: Plan[] = [];
   protected prices: Record<string, Price[]> = {};
@@ -26,9 +28,16 @@ export class AccountComponent implements OnInit {
   protected error: string | null = null;
   protected selectedPlanId: string | null = null;
   protected selectedPriceId: string | null = null;
+  protected billingRequired = false;
+  protected isReactivating = false;
+  protected subscriptionStatus: string | null = null;
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.billingRequired = params['billing'] === 'required';
+    });
     this.loadBilling();
+    this.loadSubscriptionStatus();
   }
 
   loadBilling(): void {
@@ -50,7 +59,7 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  private loadPrices(planId: string): void {
+  loadPrices(planId: string): void {
     this.api.listPrices(planId).subscribe({
       next: (prices) => {
         this.prices[planId] = prices;
@@ -75,6 +84,59 @@ export class AccountComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  private loadSubscriptionStatus(): void {
+    this.api.getSubscriptionStatus().subscribe({
+      next: (response) => {
+        this.subscriptionStatus = response.status;
+      },
+      error: (err: HttpErrorResponse) => {
+        // Ignore errors for subscription status (402 might be expected)
+        console.warn('Could not load subscription status:', err);
+      }
+    });
+  }
+
+  reactivateSubscription(): void {
+    this.isReactivating = true;
+    this.error = null;
+    this.api.createCheckoutSession().subscribe({
+      next: (response) => {
+        // Redirect to Stripe checkout
+        window.location.href = response.checkoutUrl;
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error = this.friendlyError(err, 'Unable to start checkout session.');
+        this.isReactivating = false;
+      }
+    });
+  }
+
+  openBillingPortal(): void {
+    this.isReactivating = true;
+    this.error = null;
+    this.api.createBillingPortalSession().subscribe({
+      next: (response) => {
+        // Redirect to Stripe billing portal
+        window.location.href = response.portalUrl;
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error = this.friendlyError(err, 'Unable to open billing portal.');
+        this.isReactivating = false;
+      }
+    });
+  }
+
+  get hasActiveSubscription(): boolean {
+    const status = this.auth.user()?.subscriptionStatus || this.subscriptionStatus;
+    return status === 'ACTIVE' || status === 'TRIALING';
+  }
+
+  get displaySubscriptionStatus(): string {
+    const status = this.auth.user()?.subscriptionStatus || this.subscriptionStatus;
+    if (!status || status === 'NONE') return 'No active subscription';
+    return status.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
   }
 
   private friendlyError(err: HttpErrorResponse, fallback: string): string {

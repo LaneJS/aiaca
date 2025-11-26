@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
     const reason = this.auth.consumeLogoutReason() ?? (status === 'expired' ? 'expired' : 'unauthenticated');
     const queryParams: Record<string, string> = { reason };
     if (state.url && state.url !== '/') {
-      queryParams.redirectTo = state.url;
+      queryParams['redirectTo'] = state.url;
     }
 
     return this.router.createUrlTree(['/auth'], { queryParams });

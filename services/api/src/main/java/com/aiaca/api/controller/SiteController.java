@@ -2,6 +2,7 @@ package com.aiaca.api.controller;
 
 import com.aiaca.api.dto.SiteDtos;
 import com.aiaca.api.model.User;
+import com.aiaca.api.security.RequiresSubscription;
 import com.aiaca.api.security.UserPrincipal;
 import com.aiaca.api.service.SiteService;
 import com.aiaca.api.repository.UserRepository;
@@ -32,6 +33,7 @@ public class SiteController {
     }
 
     @PostMapping
+    @RequiresSubscription
     public ResponseEntity<SiteDtos.SiteResponse> createSite(@AuthenticationPrincipal UserPrincipal principal,
                                                             @Valid @RequestBody SiteDtos.CreateSiteRequest request) {
         User owner = userRepository.findById(principal.getId()).orElseThrow();
@@ -40,6 +42,7 @@ public class SiteController {
     }
 
     @GetMapping
+    @RequiresSubscription(allowPastDueReads = true)
     public ResponseEntity<List<SiteDtos.SiteResponse>> listSites(@AuthenticationPrincipal UserPrincipal principal) {
         User owner = userRepository.findById(principal.getId()).orElseThrow();
         List<SiteDtos.SiteResponse> sites = siteService.listSites(owner).stream().map(siteService::toResponse).toList();
@@ -47,6 +50,7 @@ public class SiteController {
     }
 
     @GetMapping("/{id}")
+    @RequiresSubscription(allowPastDueReads = true)
     public ResponseEntity<SiteDtos.SiteResponse> getSite(@AuthenticationPrincipal UserPrincipal principal,
                                                          @PathVariable UUID id) {
         User owner = userRepository.findById(principal.getId()).orElseThrow();
@@ -55,6 +59,7 @@ public class SiteController {
     }
 
     @PatchMapping("/{id}")
+    @RequiresSubscription
     public ResponseEntity<SiteDtos.SiteResponse> updateSite(@AuthenticationPrincipal UserPrincipal principal,
                                                             @PathVariable UUID id,
                                                             @Valid @RequestBody SiteDtos.UpdateSiteRequest request) {
@@ -64,6 +69,7 @@ public class SiteController {
     }
 
     @DeleteMapping("/{id}")
+    @RequiresSubscription
     public ResponseEntity<Void> deleteSite(@AuthenticationPrincipal UserPrincipal principal,
                                           @PathVariable UUID id) {
         User owner = userRepository.findById(principal.getId()).orElseThrow();

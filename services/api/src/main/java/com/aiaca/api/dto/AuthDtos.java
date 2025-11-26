@@ -11,4 +11,8 @@ public class AuthDtos {
     public record LoginRequest(@Email @NotBlank String email, @NotBlank String password) {}
 
     public record AuthResponse(UUID userId, String email, String token) {}
+
+    public record RegisterCheckoutRequest(@Email @NotBlank String email, @NotBlank String password, String name) {}
+
+    public record RegisterCheckoutResponse(UUID userId, String checkoutUrl) {}
 }

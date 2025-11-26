@@ -23,6 +23,14 @@ export class AuthInterceptor implements HttpInterceptor {
           this.auth.logout('expired'); // Clears session and redirects to /auth
         }
 
+        // Handle payment required (subscription inactive)
+        // 402 = Payment Required (subscription needed)
+        // Redirect to account page with billing query parameter
+        if (error.status === 402) {
+          console.warn('[AuthInterceptor] Payment required (402). Redirecting to billing page.');
+          this.router.navigate(['/account'], { queryParams: { billing: 'required' } });
+        }
+
         return throwError(() => error);
       })
     );

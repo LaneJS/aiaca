@@ -5,8 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { ToastService } from '../../core/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
-type AuthMode = 'login' | 'signup' | 'reset-request' | 'reset-confirm';
+type AuthMode = 'login' | 'reset-request' | 'reset-confirm';
 
 @Component({
   selector: 'app-auth',
@@ -29,9 +31,9 @@ export class AuthComponent implements OnInit {
   successMessage = '';
   sessionNotice = '';
   redirectPath: string | null = null;
+  signupUrl = `${environment.marketingSiteUrl}/signup`;
 
   form = this.fb.nonNullable.group({
-    name: ['', []],
     email: ['', [Validators.required, Validators.email]],
     password: ['', []],
     confirmPassword: ['', []],
@@ -79,7 +81,6 @@ export class AuthComponent implements OnInit {
     if (resetForm) {
       const email = this.form.controls.email.value;
       this.form.reset({
-        name: '',
         email: mode === 'reset-request' ? email : '',
         password: '',
         confirmPassword: '',
@@ -98,22 +99,22 @@ export class AuthComponent implements OnInit {
       return;
     }
 
-    if ((this.mode === 'signup' || this.mode === 'reset-confirm') && this.passwordsDoNotMatch()) {
+    if (this.mode === 'reset-confirm' && this.passwordsDoNotMatch()) {
       this.errorMessage = 'Passwords do not match';
       return;
     }
 
     this.isLoading = true;
-    const { name, email, password, resetToken } = this.form.getRawValue();
+    const { email, password, resetToken } = this.form.getRawValue();
 
-    const action =
-      this.mode === 'login'
-        ? this.auth.login(email, password)
-        : this.mode === 'signup'
-          ? this.auth.signup(name, email, password)
-          : this.mode === 'reset-request'
-            ? this.auth.requestPasswordReset(email)
-            : this.auth.confirmPasswordReset(resetToken, password);
+    let action: Observable<void>;
+    if (this.mode === 'login') {
+      action = this.auth.login(email, password).pipe(map(() => void 0));
+    } else if (this.mode === 'reset-request') {
+      action = this.auth.requestPasswordReset(email);
+    } else {
+      action = this.auth.confirmPasswordReset((resetToken || '').trim(), password);
+    }
 
     action.subscribe({
       next: () => {
@@ -129,7 +130,7 @@ export class AuthComponent implements OnInit {
           this.setMode('login');
           return;
         }
-        this.toasts.push(this.mode === 'login' ? 'Successfully logged in' : 'Account created successfully', 'success');
+        this.toasts.push('Successfully logged in', 'success');
         this.router.navigateByUrl(this.redirectPath || '/overview');
       },
       error: (error: HttpErrorResponse) => {
@@ -144,21 +145,20 @@ export class AuthComponent implements OnInit {
   }
 
   private configureValidators(mode: AuthMode): void {
-    const { name, email, password, confirmPassword, resetToken } = this.form.controls;
+    const { email, password, confirmPassword, resetToken } = this.form.controls;
 
-    name.setValidators(mode === 'signup' ? [Validators.required, Validators.minLength(2)] : []);
     email.setValidators(
-      mode === 'login' || mode === 'signup' || mode === 'reset-request'
+      mode === 'login' || mode === 'reset-request'
         ? [Validators.required, Validators.email]
         : [Validators.email],
     );
     password.setValidators(
-      mode === 'login' || mode === 'signup' || mode === 'reset-confirm' ? [Validators.required, Validators.minLength(6)] : [],
+      mode === 'login' || mode === 'reset-confirm' ? [Validators.required, Validators.minLength(6)] : [],
     );
-    confirmPassword.setValidators(mode === 'signup' || mode === 'reset-confirm' ? [Validators.required] : []);
+    confirmPassword.setValidators(mode === 'reset-confirm' ? [Validators.required] : []);
     resetToken.setValidators(mode === 'reset-confirm' ? [Validators.required] : []);
 
-    [name, email, password, confirmPassword, resetToken].forEach((control) => control.updateValueAndValidity({ emitEvent: false }));
+    [email, password, confirmPassword, resetToken].forEach((control) => control.updateValueAndValidity({ emitEvent: false }));
   }
 
   private passwordsDoNotMatch(): boolean {

@@ -55,24 +55,24 @@ export class AuthService {
     this.restoreSession();
   }
 
-  login(email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string }> {
-    return this.http.post<{ userId: string; email: string; name?: string; token: string }>(`${this.baseUrl}/auth/login`, { email, password }).pipe(
+  login(email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string }> {
+    return this.http.post<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string }>(`${this.baseUrl}/auth/login`, { email, password }).pipe(
       tap((res) => {
-        this.persistSession(res.token, this.toUserProfile(res.token, res.userId, res.email, res.name));
+        this.persistSession(res.token, this.toUserProfile(res.token, res.userId, res.email, res.name, res.subscriptionStatus));
       })
     );
   }
 
-  signup(name: string, email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string }> {
+  signup(name: string, email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string }> {
     return this.http
-      .post<{ userId: string; email: string; name?: string; token: string }>(`${this.baseUrl}/auth/register`, {
+      .post<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string }>(`${this.baseUrl}/auth/register`, {
         name,
         email,
         password,
       })
       .pipe(
         tap((res) => {
-          this.persistSession(res.token, this.toUserProfile(res.token, res.userId, res.email, res.name || name));
+          this.persistSession(res.token, this.toUserProfile(res.token, res.userId, res.email, res.name || name, res.subscriptionStatus));
         })
       );
   }
@@ -194,7 +194,7 @@ export class AuthService {
     return new MemoryStorage();
   }
 
-  private toUserProfile(token: string, userId?: string, email?: string, name?: string): UserProfile {
+  private toUserProfile(token: string, userId?: string, email?: string, name?: string, subscriptionStatus?: string): UserProfile {
     const decoded = this.decode(token);
     const derivedEmail = email || decoded.email || '';
     const derivedId = userId || decoded.sub || '';
@@ -202,7 +202,8 @@ export class AuthService {
     return {
       id: derivedId,
       email: derivedEmail,
-      name: derivedName
+      name: derivedName,
+      subscriptionStatus: subscriptionStatus as UserProfile['subscriptionStatus']
     };
   }
 

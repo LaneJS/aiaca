@@ -5,11 +5,9 @@
       {{
         mode === 'login'
           ? 'Welcome back'
-          : mode === 'signup'
-            ? 'Create account'
-            : mode === 'reset-request'
-              ? 'Reset password'
-              : 'Set new password'
+          : mode === 'reset-request'
+            ? 'Reset password'
+            : 'Set new password'
       }}
     </h1>
 
@@ -19,14 +17,9 @@
     <div *ngIf="lockoutMessage" class="alert warn" role="alert" aria-live="assertive">{{ lockoutMessage }}</div>
     <div *ngIf="errorMessage" class="alert error" role="alert" aria-live="assertive">{{ errorMessage }}</div>
 
-    <label class="field" *ngIf="mode === 'signup'">
-      <span>Name</span>
-      <input formControlName="name" type="text" required />
-    </label>
-
     <label class="field" *ngIf="mode !== 'reset-confirm'">
       <span>Email</span>
-      <input formControlName="email" type="email" [attr.required]="mode !== 'reset-confirm' ? true : null" aria-required="true" />
+      <input formControlName="email" type="email" required aria-required="true" />
     </label>
 
     <label class="field" *ngIf="mode === 'reset-confirm'">
@@ -37,10 +30,10 @@
 
     <label class="field" *ngIf="mode !== 'reset-request'">
       <span>Password</span>
-      <input formControlName="password" type="password" [attr.required]="mode !== 'reset-request' ? true : null" aria-required="true" />
+      <input formControlName="password" type="password" required aria-required="true" />
     </label>
 
-    <label class="field" *ngIf="mode === 'signup' || mode === 'reset-confirm'">
+    <label class="field" *ngIf="mode === 'reset-confirm'">
       <span>Confirm password</span>
       <input formControlName="confirmPassword" type="password" required aria-required="true" />
     </label>
@@ -49,21 +42,15 @@
       {{
         mode === 'login'
           ? 'Login'
-          : mode === 'signup'
-            ? 'Sign up'
-            : mode === 'reset-request'
-              ? 'Send reset link'
-              : 'Update password'
+          : mode === 'reset-request'
+            ? 'Send reset link'
+            : 'Update password'
       }}
     </button>
 
     <p class="muted" *ngIf="mode === 'login'">
       Need an account?
-      <button type="button" class="link-button" (click)="setMode('signup')">Sign up</button>
-    </p>
-    <p class="muted" *ngIf="mode === 'signup'">
-      Have an account?
-      <button type="button" class="link-button" (click)="setMode('login')">Login</button>
+      <a [href]="signupUrl" class="link-button">Sign up</a>
     </p>
     <p class="muted" *ngIf="mode === 'login'">
       Forgot password?

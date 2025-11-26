@@ -1,8 +1,11 @@
 package com.aiaca.api.model;
 
 import com.aiaca.api.model.billing.Role;
+import com.aiaca.api.model.billing.enums.SubscriptionStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -55,11 +58,24 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<Site> sites = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "subscription_status", nullable = false, length = 50)
+    private SubscriptionStatus subscriptionStatus = SubscriptionStatus.NONE;
+
+    @Column(name = "stripe_customer_id", unique = true, length = 255)
+    private String stripeCustomerId;
+
+    @Column(name = "account_id")
+    private UUID accountId;
+
     @PrePersist
     public void onCreate() {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.updatedAt = now;
+        if (this.subscriptionStatus == null) {
+            this.subscriptionStatus = SubscriptionStatus.NONE;
+        }
     }
 
     @PreUpdate

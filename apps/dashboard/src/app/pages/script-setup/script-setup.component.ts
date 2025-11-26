@@ -18,7 +18,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class ScriptSetupComponent implements OnInit {
   private readonly api = inject(ApiService);
-  private readonly toasts = inject(ToastService);
+  protected readonly toasts = inject(ToastService);
 
   protected sites: SiteSummary[] = [];
   protected selected?: SiteSummary;

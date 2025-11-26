@@ -1,6 +1,7 @@
 package com.aiaca.api.security;
 
 import com.aiaca.api.model.User;
+import com.aiaca.api.model.billing.enums.SubscriptionStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,14 @@ public class UserPrincipal implements UserDetails {
 
     public String getEmail() {
         return user.getEmail();
+    }
+
+    public SubscriptionStatus getSubscriptionStatus() {
+        return user.getSubscriptionStatus();
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override

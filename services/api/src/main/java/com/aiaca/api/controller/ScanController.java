@@ -3,6 +3,7 @@ package com.aiaca.api.controller;
 import com.aiaca.api.dto.ScanDtos;
 import com.aiaca.api.model.Site;
 import com.aiaca.api.model.User;
+import com.aiaca.api.security.RequiresSubscription;
 import com.aiaca.api.security.UserPrincipal;
 import com.aiaca.api.service.ScanService;
 import com.aiaca.api.service.SiteService;
@@ -41,6 +42,7 @@ public class ScanController {
     }
 
     @PostMapping("/sites/{siteId}/scans")
+    @RequiresSubscription
     public ResponseEntity<ScanDtos.ScanDetail> createScan(@AuthenticationPrincipal UserPrincipal principal,
                                                           @PathVariable UUID siteId,
                                                           @Valid @RequestBody ScanDtos.CreateScanRequest request) {
@@ -52,6 +54,7 @@ public class ScanController {
     }
 
     @GetMapping("/scans")
+    @RequiresSubscription(allowPastDueReads = true)
     public ResponseEntity<List<ScanDtos.ScanSummary>> listAllScans(@AuthenticationPrincipal UserPrincipal principal) {
         User owner = userRepository.findById(principal.getId()).orElseThrow();
         List<ScanDtos.ScanSummary> scans = scanService.listByUser(owner).stream().map(scanService::toSummary).toList();
@@ -59,6 +62,7 @@ public class ScanController {
     }
 
     @GetMapping("/sites/{siteId}/scans")
+    @RequiresSubscription(allowPastDueReads = true)
     public ResponseEntity<List<ScanDtos.ScanSummary>> listScans(@AuthenticationPrincipal UserPrincipal principal,
                                                                 @PathVariable UUID siteId) {
         User owner = userRepository.findById(principal.getId()).orElseThrow();
@@ -68,6 +72,7 @@ public class ScanController {
     }
 
     @GetMapping("/scans/{id}")
+    @RequiresSubscription(allowPastDueReads = true)
     public ResponseEntity<ScanDtos.ScanDetail> getScan(@AuthenticationPrincipal UserPrincipal principal,
                                                        @PathVariable UUID id) {
         User owner = userRepository.findById(principal.getId()).orElseThrow();
@@ -79,6 +84,7 @@ public class ScanController {
     }
 
     @GetMapping("/scans/{id}/export")
+    @RequiresSubscription
     public ResponseEntity<byte[]> exportScan(@AuthenticationPrincipal UserPrincipal principal,
                                              @PathVariable UUID id,
                                              @RequestParam(name = "format", defaultValue = "pdf") String format) {
@@ -100,6 +106,7 @@ public class ScanController {
     }
 
     @PostMapping("/scans/{id}/share")
+    @RequiresSubscription
     public ResponseEntity<ScanDtos.ShareLinkResponse> createShareLink(@AuthenticationPrincipal UserPrincipal principal,
                                                                       @PathVariable UUID id) {
         User owner = userRepository.findById(principal.getId()).orElseThrow();
@@ -113,6 +120,7 @@ public class ScanController {
     }
 
     @PatchMapping("/scans/{scanId}/issues/{issueId}")
+    @RequiresSubscription
     public ResponseEntity<ScanDtos.IssueDetail> updateIssueStatus(@AuthenticationPrincipal UserPrincipal principal,
                                                                   @PathVariable UUID scanId,
                                                                   @PathVariable UUID issueId,

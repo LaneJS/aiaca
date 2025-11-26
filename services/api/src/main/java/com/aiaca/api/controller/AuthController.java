@@ -3,7 +3,9 @@ package com.aiaca.api.controller;
 import com.aiaca.api.dto.AuthDtos;
 import com.aiaca.api.service.AuthService;
 import com.aiaca.api.security.JwtService;
+import com.aiaca.api.service.billing.StripeCheckoutService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,15 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
     private final JwtService jwtService;
+    private final StripeCheckoutService stripeCheckoutService;
+    private final String successUrl;
+    private final String cancelUrl;
 
-    public AuthController(AuthService authService, JwtService jwtService) {
+    public AuthController(AuthService authService, JwtService jwtService, StripeCheckoutService stripeCheckoutService,
+                          @Value("${billing.stripe.success-url}") String successUrl,
+                          @Value("${billing.stripe.cancel-url}") String cancelUrl) {
         this.authService = authService;
         this.jwtService = jwtService;
+        this.stripeCheckoutService = stripeCheckoutService;
+        this.successUrl = successUrl;
+        this.cancelUrl = cancelUrl;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthDtos.AuthResponse> register(@Valid @RequestBody AuthDtos.RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<?> register(@Valid @RequestBody AuthDtos.RegisterRequest request) {
+        // Free registration is disabled - users must go through paid signup flow
+        return ResponseEntity.status(403).body(java.util.Map.of(
+            "code", "registration_disabled",
+            "message", "Registration requires a paid subscription. Please sign up at /signup to continue."
+        ));
     }
 
     @PostMapping("/login")
@@ -40,5 +54,22 @@ public class AuthController {
             authService.logout(token);
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/register-checkout")
+    public ResponseEntity<AuthDtos.RegisterCheckoutResponse> registerCheckout(
+            @Valid @RequestBody AuthDtos.RegisterCheckoutRequest request) {
+        com.aiaca.api.model.User user = authService.createUserWithoutLogin(
+                request.email(),
+                request.password(),
+                request.name()
+        );
+        String checkoutUrl = stripeCheckoutService.createCheckoutSession(
+                request.email(),
+                request.name(),
+                successUrl,
+                cancelUrl
+        );
+        return ResponseEntity.ok(new AuthDtos.RegisterCheckoutResponse(user.getId(), checkoutUrl));
     }
 }

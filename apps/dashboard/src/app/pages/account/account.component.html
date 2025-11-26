@@ -10,6 +10,32 @@
   <div class="profile">
     <p><strong>Name:</strong> {{ auth.user()?.name }}</p>
     <p><strong>Email:</strong> {{ auth.user()?.email }}</p>
+    <p><strong>Subscription Status:</strong> {{ displaySubscriptionStatus }}</p>
+  </div>
+
+  <div *ngIf="billingRequired" class="alert warning">
+    <p><strong>Subscription Required</strong></p>
+    <p>Your subscription is not active. Please reactivate to continue using the service.</p>
+  </div>
+
+  <div *ngIf="!hasActiveSubscription && !isLoading" class="subscription-actions">
+    <button
+      class="primary"
+      type="button"
+      (click)="reactivateSubscription()"
+      [disabled]="isReactivating">
+      {{ isReactivating ? 'Redirecting...' : 'Reactivate Subscription' }}
+    </button>
+  </div>
+
+  <div *ngIf="hasActiveSubscription && !isLoading" class="subscription-actions">
+    <button
+      class="secondary"
+      type="button"
+      (click)="openBillingPortal()"
+      [disabled]="isReactivating">
+      {{ isReactivating ? 'Redirecting...' : 'Manage Billing' }}
+    </button>
   </div>
 
   <ng-container *ngIf="isLoading">

@@ -1,6 +1,7 @@
 package com.aiaca.api.model.billing.enums;
 
 public enum SubscriptionStatus {
+    NONE,
     INCOMPLETE,
     INCOMPLETE_EXPIRED,
     TRIALING,
@@ -8,5 +9,6 @@ public enum SubscriptionStatus {
     PAST_DUE,
     CANCELED,
     UNPAID,
-    PAUSED
+    PAUSED,
+    EXPIRED
 }

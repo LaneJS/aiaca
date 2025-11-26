@@ -74,4 +74,19 @@ public class AuthService {
             log.info("Ignoring logout for invalid token: {}", ex.getMessage());
         }
     }
+
+    public User createUserWithoutLogin(String email, String password, String name) {
+        if (userRepository.existsByEmail(email)) {
+            throw new BadRequestException("Email already registered");
+        }
+        User user = new User();
+        user.setEmail(email);
+        user.setPasswordHash(passwordEncoder.encode(password));
+        if (name != null && !name.isBlank()) {
+            user.setFullName(name);
+        }
+        userRepository.save(user);
+        log.info("User created without login: {}", user.getEmail());
+        return user;
+    }
 }

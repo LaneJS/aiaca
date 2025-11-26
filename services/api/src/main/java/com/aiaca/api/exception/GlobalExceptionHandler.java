@@ -40,6 +40,13 @@ public class GlobalExceptionHandler {
                 .body(error("upstream_error", ex.getMessage()));
     }
 
+    @ExceptionHandler(PaymentRequiredException.class)
+    public ResponseEntity<Map<String, Object>> handlePaymentRequired(PaymentRequiredException ex) {
+        Map<String, Object> body = error("payment_required", ex.getMessage());
+        body.put("currentStatus", ex.getCurrentStatus().toString());
+        return ResponseEntity.status(402).body(body);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, Object> body = error("validation_failed", "Request validation failed");

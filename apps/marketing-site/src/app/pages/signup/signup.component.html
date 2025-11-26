@@ -1,0 +1,99 @@
+<section class="signup" aria-labelledby="signup-heading">
+  <p class="eyebrow">Get started</p>
+  <h1 id="signup-heading">Create your account</h1>
+  <p class="lead">Start monitoring your website accessibility and get instant AI-powered fix suggestions.</p>
+
+  <div class="signup-container">
+    <div class="signup-card">
+      <form class="signup-form" (ngSubmit)="onSubmit()" aria-label="Sign up form">
+        <div class="form-group">
+          <label for="name">Name (optional)</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            [(ngModel)]="name"
+            placeholder="Jane Doe"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email <span class="required">*</span></label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            [(ngModel)]="email"
+            placeholder="you@example.com"
+            [class.error-input]="validationErrors['email']"
+          />
+          <p class="error-text" *ngIf="validationErrors['email']" role="alert">
+            {{ validationErrors['email'] }}
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password <span class="required">*</span></label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            [(ngModel)]="password"
+            placeholder="At least 8 characters"
+            [class.error-input]="validationErrors['password']"
+          />
+          <p class="error-text" *ngIf="validationErrors['password']" role="alert">
+            {{ validationErrors['password'] }}
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm password <span class="required">*</span></label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            required
+            [(ngModel)]="confirmPassword"
+            placeholder="Re-enter your password"
+            [class.error-input]="validationErrors['confirmPassword']"
+          />
+          <p class="error-text" *ngIf="validationErrors['confirmPassword']" role="alert">
+            {{ validationErrors['confirmPassword'] }}
+          </p>
+        </div>
+
+        <div class="pricing-info">
+          <p class="price-highlight">$39/month &mdash; Cancel anytime</p>
+          <p class="terms-text">
+            By signing up, you agree to our
+            <a href="/legal/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
+          </p>
+        </div>
+
+        <ui-cta-button
+          type="submit"
+          label="Continue to checkout"
+          variant="primary"
+          [disabled]="submitting"
+        ></ui-cta-button>
+
+        <span class="status" *ngIf="submitting" aria-live="polite">Creating your account...</span>
+        <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+      </form>
+    </div>
+
+    <div class="benefits">
+      <h2>What's included</h2>
+      <ul>
+        <li>Unlimited URL scans</li>
+        <li>Full issue reports with AI-powered suggestions</li>
+        <li>Auto-fix script for quick repairs</li>
+        <li>Continuous monitoring and alerts</li>
+        <li>Export reports for compliance</li>
+      </ul>
+    </div>
+  </div>
+</section>

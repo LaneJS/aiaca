@@ -26,6 +26,8 @@ public class PublicScanController {
         this.urlSanitizer = urlSanitizer;
     }
 
+    private static final int FREE_SCAN_MAX_ISSUES = 5;
+
     @PostMapping("/scans")
     public ResponseEntity<PublicScanDtos.PublicScanResponse> createPublicScan(@Valid @RequestBody PublicScanDtos.PublicScanRequest request,
                                                                               HttpServletRequest httpRequest) {
@@ -33,10 +35,23 @@ public class PublicScanController {
         rateLimiter.assertWithinLimit(key);
         String sanitizedUrl = urlSanitizer.sanitize(request.url());
         ScanDtos.ScanDetail result = scanService.createPublicScan(sanitizedUrl);
-        var issues = result.issues().stream()
+
+        // Free scan: limit to top 5 issues, no suggestions included
+        int totalIssues = result.issues().size();
+        var limitedIssues = result.issues().stream()
+                .limit(FREE_SCAN_MAX_ISSUES)
+                // Note: Public issues don't include suggestions - that's a paid feature
                 .map(issue -> new PublicScanDtos.PublicIssue(issue.type(), issue.severity(), issue.description(), issue.selector()))
                 .toList();
-        PublicScanDtos.PublicScanResponse response = new PublicScanDtos.PublicScanResponse(sanitizedUrl, result.score(), issues);
+
+        boolean isLimited = totalIssues > FREE_SCAN_MAX_ISSUES;
+        PublicScanDtos.PublicScanResponse response = new PublicScanDtos.PublicScanResponse(
+                sanitizedUrl,
+                result.score(),
+                limitedIssues,
+                isLimited,
+                isLimited ? totalIssues : null
+        );
         return ResponseEntity.ok(response);
     }
 }

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CTAButtonComponent } from '@aiaca/ui';
 import { SeoService } from '../../services/seo.service';
 
@@ -8,7 +9,7 @@ import { SeoService } from '../../services/seo.service';
   standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [CommonModule, CTAButtonComponent],
+  imports: [CommonModule, RouterLink, CTAButtonComponent],
 })
 export class HomeComponent implements OnInit {
   readonly steps = [

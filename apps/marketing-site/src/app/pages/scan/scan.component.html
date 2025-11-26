@@ -1,51 +1,247 @@
-<section class="scan" aria-labelledby="scan-heading">
-  <p class="eyebrow">Free tool</p>
-  <h1 id="scan-heading">Run a free accessibility scan</h1>
-  <p class="lead">Submit one URL to receive a score and the top issues. No account required.</p>
-
-  <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
-    <label for="url">Website URL</label>
-    <input
-      id="url"
-      name="url"
-      type="url"
-      required
-      [(ngModel)]="url"
-      placeholder="https://example.com"
-      aria-describedby="consent"
-    />
-    <p id="consent" class="consent">By submitting, you confirm you have permission to scan this page.</p>
-    <ui-cta-button type="submit" label="Start scan" variant="primary"></ui-cta-button>
-    <span class="status" *ngIf="submitting" aria-live="polite">Submitting scan…</span>
-    <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
-  </form>
-
-  <section *ngIf="result" class="results" aria-live="polite" aria-label="Scan results">
-    <div class="summary">
-      <p class="eyebrow">Score</p>
-      <p class="score">{{ result.score }}</p>
-      <p class="note">Score is limited for the free scan. Create an account to see the full report.</p>
-    </div>
-    <div class="issues">
-      <h2>Top issues</h2>
-      <ul>
-        <li *ngFor="let issue of result.issues">
-          <p class="issue-type">{{ issue.type }} ({{ issue.severity }})</p>
-          <p class="issue-description">{{ issue.description }}</p>
-          <p *ngIf="issue.location" class="issue-location">Location: {{ issue.location }}</p>
-        </li>
-      </ul>
-      <div class="upgrade-box" *ngIf="result.limited">
-        <p class="limited-notice">
-          <strong>Showing {{ result.issues.length }} of {{ result.totalIssues }} issues found.</strong>
-        </p>
-        <p class="upgrade">Sign up to see all issues, AI-powered fix suggestions, and the auto-fix script.</p>
-        <ui-cta-button routerLink="/signup" label="Get full access" variant="primary"></ui-cta-button>
-      </div>
-      <div class="upgrade-box" *ngIf="!result.limited">
-        <p class="upgrade">Want AI-powered fix suggestions and the auto-fix script?</p>
-        <ui-cta-button routerLink="/signup" label="Get started" variant="secondary"></ui-cta-button>
+<section class="scan-page" aria-labelledby="scan-heading">
+  <div class="container">
+    <!-- Hero Section -->
+    <div class="scan-hero">
+      <div class="scan-hero__content">
+        <p class="eyebrow">Free accessibility scan</p>
+        <h1 id="scan-heading">See your accessibility issues in seconds</h1>
+        <p class="lead">Enter any URL below. We'll scan it for WCAG issues and show you the top problems — free, no signup required.</p>
       </div>
     </div>
-  </section>
+
+    <!-- Scan Form Card -->
+    <div class="scan-card">
+      <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free accessibility scan form">
+        <div class="form-content">
+          <div class="input-group">
+            <label for="url" class="visually-hidden">Website URL</label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+              </span>
+              <input
+                id="url"
+                name="url"
+                type="url"
+                required
+                [(ngModel)]="url"
+                placeholder="https://yourwebsite.com"
+                aria-describedby="consent-text"
+                [class.has-error]="errorMessage"
+                [disabled]="submitting"
+              />
+              <ui-cta-button
+                type="submit"
+                [label]="submitting ? 'Scanning...' : 'Start scan'"
+                variant="primary"
+                [disabled]="submitting"
+              ></ui-cta-button>
+            </div>
+          </div>
+          <p id="consent-text" class="consent">By scanning, you confirm you have permission to test this page.</p>
+        </div>
+
+        <!-- Loading State -->
+        <div class="scan-progress" *ngIf="submitting" role="status" aria-live="polite">
+          <div class="progress-animation">
+            <div class="progress-bar">
+              <div class="progress-fill"></div>
+            </div>
+            <div class="progress-text">
+              <span class="progress-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </span>
+              <span>Analyzing accessibility issues...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-message" *ngIf="errorMessage" role="alert">
+          <span class="error-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+          </span>
+          <span>{{ errorMessage }}</span>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Section -->
+    <section *ngIf="result" class="results" aria-label="Scan results" aria-live="polite">
+      <!-- Score Overview -->
+      <div class="results-header">
+        <div class="score-card">
+          <div class="score-visual" [class]="getScoreClass(result.score)">
+            <svg class="score-ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="score-ring__background" cx="60" cy="60" r="52" />
+              <circle
+                class="score-ring__progress"
+                cx="60"
+                cy="60"
+                r="52"
+                [style.strokeDasharray]="getScoreDashArray(result.score)"
+              />
+            </svg>
+            <div class="score-value">
+              <span class="score-number">{{ result.score }}</span>
+              <span class="score-label">Score</span>
+            </div>
+          </div>
+          <div class="score-details">
+            <h2>Accessibility Score</h2>
+            <p class="scanned-url">{{ result.url }}</p>
+            <div class="score-rating" [class]="getScoreClass(result.score)">
+              <span class="rating-badge">{{ getScoreLabel(result.score) }}</span>
+              <span class="rating-desc">{{ getScoreDescription(result.score) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issues List -->
+      <div class="issues-section">
+        <div class="issues-header">
+          <h2>
+            <span class="issue-count">{{ result.issues.length }}</span>
+            Issues Found
+            <span class="issue-note" *ngIf="result.limited">(showing top {{ result.issues.length }} of {{ result.totalIssues }})</span>
+          </h2>
+        </div>
+
+        <ul class="issues-list" role="list">
+          <li *ngFor="let issue of result.issues; let i = index" class="issue-item" role="listitem">
+            <div class="issue-severity" [class]="'severity-' + issue.severity">
+              <span class="severity-badge">{{ issue.severity }}</span>
+            </div>
+            <div class="issue-content">
+              <h3 class="issue-type">{{ issue.type }}</h3>
+              <p class="issue-description">{{ issue.description }}</p>
+              <p *ngIf="issue.location" class="issue-location">
+                <span class="location-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                </span>
+                <code>{{ issue.location }}</code>
+              </p>
+              <div *ngIf="issue.suggestion" class="issue-suggestion">
+                <span class="suggestion-label">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                  AI Suggestion
+                </span>
+                <p>{{ issue.suggestion }}</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Upgrade CTA -->
+      <div class="upgrade-section" *ngIf="result.limited">
+        <div class="upgrade-card">
+          <div class="upgrade-content">
+            <h3>Want the full picture?</h3>
+            <p>You're seeing {{ result.issues.length }} of {{ result.totalIssues }} total issues. Upgrade to get:</p>
+            <ul class="upgrade-features">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>All {{ result.totalIssues }} issues with detailed fixes</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>AI-powered code suggestions</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Auto-fix script for quick wins</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Continuous monitoring & alerts</span>
+              </li>
+            </ul>
+          </div>
+          <div class="upgrade-action">
+            <div class="price-tag">
+              <span class="price-amount">$39</span>
+              <span class="price-period">/month</span>
+            </div>
+            <ui-cta-button routerLink="/signup" label="Get full access" variant="primary"></ui-cta-button>
+            <p class="price-note">Cancel anytime. No contracts.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Non-limited CTA -->
+      <div class="next-steps" *ngIf="!result.limited">
+        <div class="next-steps-card">
+          <h3>Ready to fix these issues?</h3>
+          <p>Get AI-powered suggestions and the auto-fix script to resolve issues faster.</p>
+          <ui-cta-button routerLink="/signup" label="Start fixing now" variant="primary"></ui-cta-button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust Signals -->
+    <div class="trust-section" *ngIf="!result">
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div class="trust-content">
+            <h3>Private & Secure</h3>
+            <p>We never store your page content. Scan results are deleted after 24 hours.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="trust-content">
+            <h3>Results in Seconds</h3>
+            <p>Our scanner analyzes your page in under 60 seconds using industry-standard WCAG rules.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <div class="trust-content">
+            <h3>Plain English</h3>
+            <p>No jargon. Every issue comes with a clear explanation and actionable fix.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

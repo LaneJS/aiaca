@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CTAButtonComponent } from '@aiaca/ui';
 import { ScanService, PublicScanResponse } from '../../services/scan.service';
 import { SeoService } from '../../services/seo.service';
@@ -10,7 +11,7 @@ import { SeoService } from '../../services/seo.service';
   standalone: true,
   templateUrl: './scan.component.html',
   styleUrls: ['./scan.component.scss'],
-  imports: [CommonModule, FormsModule, CTAButtonComponent],
+  imports: [CommonModule, FormsModule, RouterLink, CTAButtonComponent],
 })
 export class ScanComponent implements OnInit {
   url = '';
@@ -51,5 +52,29 @@ export class ScanComponent implements OnInit {
         this.submitting = false;
       },
     });
+  }
+
+  getScoreClass(score: number): string {
+    if (score >= 80) return 'score-good';
+    if (score >= 50) return 'score-moderate';
+    return 'score-poor';
+  }
+
+  getScoreLabel(score: number): string {
+    if (score >= 80) return 'Good';
+    if (score >= 50) return 'Needs Work';
+    return 'Critical';
+  }
+
+  getScoreDescription(score: number): string {
+    if (score >= 80) return 'Your site meets most accessibility standards';
+    if (score >= 50) return 'Several issues need attention';
+    return 'Significant accessibility barriers found';
+  }
+
+  getScoreDashArray(score: number): string {
+    const circumference = 2 * Math.PI * 52;
+    const progress = (score / 100) * circumference;
+    return `${progress} ${circumference}`;
   }
 }

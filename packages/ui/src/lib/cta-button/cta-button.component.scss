@@ -2,48 +2,169 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: 999px;
-  font-weight: 700;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.75rem;
+  font-family: var(--font-display, 'Outfit', system-ui, sans-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
   text-decoration: none;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: all 200ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.cta:hover::before {
+  opacity: 1;
 }
 
 .cta:focus-visible {
-  outline: 3px solid #bfdbfe;
+  outline: 3px solid #ccfbf1;
   outline-offset: 2px;
 }
 
+/* Primary - Teal gradient with glow */
 .cta.primary {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
   color: #ffffff;
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.25);
+  box-shadow:
+    0 4px 14px rgba(13, 148, 136, 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.cta.primary:hover,
+.cta.primary:focus-visible {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 25px rgba(13, 148, 136, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cta.primary:active {
+  transform: translateY(0);
+  box-shadow:
+    0 2px 8px rgba(13, 148, 136, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Secondary - Subtle surface with border */
 .cta.secondary {
-  background: #e2e8f0;
-  color: #0f172a;
-  border-color: #cbd5e1;
+  background: #ffffff;
+  color: #0f766e;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+.cta.secondary:hover,
+.cta.secondary:focus-visible {
+  background: #f0fdfa;
+  border-color: #0d9488;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.cta.secondary:active {
+  transform: translateY(0);
+  background: #ccfbf1;
+}
+
+/* Ghost - Transparent with visible border */
 .cta.ghost {
   background: transparent;
-  color: #1d4ed8;
-  border-color: #bfdbfe;
+  color: #0d9488;
+  border-color: #99f6e4;
 }
 
-.cta:hover,
-.cta:focus-visible {
+.cta.ghost:hover,
+.cta.ghost:focus-visible {
+  background: rgba(13, 148, 136, 0.08);
+  border-color: #0d9488;
   transform: translateY(-1px);
 }
 
+.cta.ghost:active {
+  transform: translateY(0);
+  background: rgba(13, 148, 136, 0.12);
+}
+
+/* Accent - Orange/Coral for urgency */
+.cta.accent {
+  background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+  color: #ffffff;
+  box-shadow:
+    0 4px 14px rgba(249, 115, 22, 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cta.accent:hover,
+.cta.accent:focus-visible {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 25px rgba(249, 115, 22, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark - For use on light backgrounds when you want contrast */
+.cta.dark {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+}
+
+.cta.dark:hover,
+.cta.dark:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.3);
+}
+
+/* Inverse - For use on dark backgrounds */
+.cta.inverse {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.cta.inverse:hover,
+.cta.inverse:focus-visible {
+  transform: translateY(-2px);
+  background: #f8fafc;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Disabled states */
 .cta[aria-disabled='true'],
 .cta:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.cta[aria-disabled='true']::before,
+.cta:disabled::before {
+  display: none;
+}
+
+/* Size variants */
+.cta.small {
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+}
+
+.cta.large {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 0.875rem;
 }

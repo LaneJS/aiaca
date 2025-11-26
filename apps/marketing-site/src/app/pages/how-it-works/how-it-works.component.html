@@ -1,22 +1,189 @@
-<section class="page" aria-labelledby="how-page-heading">
-  <p class="eyebrow">Process</p>
-  <h1 id="how-page-heading">How AACA keeps your site accessible</h1>
-  <p class="lead">
-    We combine automated testing, AI-powered suggestions, and an optional auto-fix script to reduce WCAG violations fast.
-  </p>
+<!-- ==========================================================================
+     HOW IT WORKS PAGE - Process visualization with bold, accessible design
+     ========================================================================== -->
 
-  <div class="step-grid" role="list">
-    <article *ngFor="let step of steps" role="listitem">
-      <h2>{{ step.title }}</h2>
-      <p>{{ step.body }}</p>
-    </article>
-  </div>
-
-  <div class="callout" aria-label="Accessibility commitments">
-    <h2>Accessibility promises baked into the product</h2>
-    <ul>
-      <li *ngFor="let promise of commitments">{{ promise }}</li>
-    </ul>
-    <ui-cta-button routerLink="/scan" label="Try the free scan" variant="primary"></ui-cta-button>
+<!-- Hero Section -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="container">
+    <div class="hero__content">
+      <p class="eyebrow">Our Process</p>
+      <h1 id="hero-heading">
+        How AACA keeps your site <span class="text-gradient">accessible</span>
+      </h1>
+      <p class="hero__lead">
+        We combine automated testing, AI-powered suggestions, and an optional
+        auto-fix script to reduce WCAG violations fast. No guesswork, no
+        complexity—just clear steps to compliance.
+      </p>
+    </div>
   </div>
 </section>
+
+<!-- Process Steps Section -->
+<section class="process" aria-labelledby="process-heading">
+  <div class="container">
+    <h2 id="process-heading" class="sr-only">
+      Four-step accessibility process
+    </h2>
+
+    <div class="timeline" role="list" aria-label="Process timeline">
+      <article
+        *ngFor="let step of steps; let i = index"
+        class="step"
+        [class.step--odd]="i % 2 !== 0"
+        role="listitem"
+      >
+        <div class="step__number" aria-hidden="true">
+          {{ i + 1 }}
+        </div>
+
+        <div class="step__connector" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M5 12h14m-7-7l7 7-7 7" />
+          </svg>
+        </div>
+
+        <div class="step__content">
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.body }}</p>
+        </div>
+
+        <div class="step__visual" aria-hidden="true">
+          <div class="visual-icon" [class]="'visual-icon--' + (i + 1)">
+            <!-- Scan icon -->
+            <svg
+              *ngIf="i === 0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+
+            <!-- Review icon -->
+            <svg
+              *ngIf="i === 1"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+              />
+            </svg>
+
+            <!-- Fix icon -->
+            <svg
+              *ngIf="i === 2"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+
+            <!-- Monitor icon -->
+            <svg
+              *ngIf="i === 3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Commitments Section (Dark) -->
+<section class="commitments" aria-labelledby="commitments-heading">
+  <div class="container">
+    <div class="commitments__layout">
+      <div class="commitments__content">
+        <p class="eyebrow eyebrow--light">Our Promise</p>
+        <h2 id="commitments-heading">
+          Accessibility isn't just what we build—it's how we build
+        </h2>
+        <p class="lead">
+          Every feature in AACA follows the same accessibility standards we help
+          you achieve. We practice what we preach, because accessible design
+          benefits everyone.
+        </p>
+      </div>
+
+      <ul class="commitments__list" aria-label="Our accessibility commitments">
+        <li *ngFor="let promise of commitments">
+          <span class="commitment-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          <span>{{ promise }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section" aria-labelledby="cta-heading">
+  <div class="container">
+    <div class="cta-content">
+      <h2 id="cta-heading">Ready to see it in action?</h2>
+      <p class="lead">
+        Run a free scan of any URL and get instant results. No credit card
+        required, no commitment—just clear insights into your site's
+        accessibility.
+      </p>
+      <div class="cta-actions">
+        <ui-cta-button
+          routerLink="/scan"
+          label="Try the free scan"
+          variant="primary"
+          size="large"
+        ></ui-cta-button>
+        <ui-cta-button
+          routerLink="/pricing"
+          label="View pricing"
+          variant="ghost"
+          size="large"
+        ></ui-cta-button>
+      </div>
+      <p class="cta-proof">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+          />
+        </svg>
+        <strong>100% secure</strong> — We never store your site data or personal
+        information
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Screen reader only utility -->
+<span class="sr-only">End of how it works page</span>

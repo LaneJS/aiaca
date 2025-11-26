@@ -1,123 +1,339 @@
+/* ==========================================================================
+   Site Header - Bold, modern navigation
+   ========================================================================== */
+
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 100;
   width: 100%;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+  transition: all var(--transition-base);
 }
 
-.shell {
+/* --------------------------------------------------------------------------
+   CONTAINER
+   -------------------------------------------------------------------------- */
+.header-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 0;
   max-width: 1200px;
   margin: 0 auto;
+  padding: var(--space-4) var(--space-4);
+
+  @media (min-width: 768px) {
+    padding: var(--space-4) var(--space-6);
+  }
+
+  @media (min-width: 1024px) {
+    padding: var(--space-4) var(--space-8);
+  }
 }
 
+/* --------------------------------------------------------------------------
+   LOGO
+   -------------------------------------------------------------------------- */
 .logo {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-3);
   text-decoration: none;
-  font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text);
+  transition: opacity var(--transition-fast);
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+  }
 }
 
 .logo-mark {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: #ffffff;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg);
+  color: #fff;
+  box-shadow: var(--shadow-glow-primary);
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .logo-text {
-  font-size: 1.125rem;
-  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
 }
 
+.logo-name {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.logo-tagline {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   NAVIGATION
+   -------------------------------------------------------------------------- */
 .nav {
   display: none;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--space-8);
+
+  @media (min-width: 901px) {
+    display: flex;
+  }
 }
 
-.nav ul {
-  list-style: none;
+.nav-list {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: var(--space-1);
+  list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.nav a {
-  color: #0f172a;
-  text-decoration: none;
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
   font-weight: 600;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+
+  &:hover {
+    color: var(--color-text);
+    background: var(--color-surface-subtle);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  &--active {
+    color: var(--color-primary-dark);
+    background: var(--color-primary-pale);
+  }
 }
 
-.nav a.active,
-.nav a:focus,
-.nav a:hover {
-  color: #1d4ed8;
+/* --------------------------------------------------------------------------
+   NAV CTA
+   -------------------------------------------------------------------------- */
+.nav-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
 }
 
-.nav .cta {
-  margin-left: 1rem;
+.login-link {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+
+  &:hover {
+    color: var(--color-text);
+    background: var(--color-surface-subtle);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 }
 
+/* --------------------------------------------------------------------------
+   MOBILE MENU TOGGLE
+   -------------------------------------------------------------------------- */
 .menu-toggle {
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    border-color: var(--color-border-dark);
+    background: var(--color-surface-subtle);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 901px) {
+    display: none;
+  }
 }
 
 .menu-icon {
-  display: block;
-  width: 1.5rem;
-  height: 0.125rem;
-  background: #0f172a;
-  box-shadow: 0 0.35rem 0 0 #0f172a, 0 -0.35rem 0 0 #0f172a;
+  position: relative;
+  width: 20px;
+  height: 14px;
+
+  span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-text);
+    border-radius: 2px;
+    transition: all var(--transition-fast);
+
+    &:nth-child(1) {
+      top: 0;
+    }
+
+    &:nth-child(2) {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    &:nth-child(3) {
+      bottom: 0;
+    }
+  }
+
+  &--open span {
+    &:nth-child(1) {
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    &:nth-child(2) {
+      opacity: 0;
+    }
+
+    &:nth-child(3) {
+      bottom: 50%;
+      transform: translateY(50%) rotate(-45deg);
+    }
+  }
 }
 
+/* --------------------------------------------------------------------------
+   MOBILE NAVIGATION
+   -------------------------------------------------------------------------- */
 @media (max-width: 900px) {
   .nav {
     position: absolute;
     top: 100%;
     left: 0;
-    width: 100%;
-    background: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
+    right: 0;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-6);
     flex-direction: column;
     align-items: stretch;
-    padding: 1rem;
+    gap: var(--space-6);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all var(--transition-base);
+
+    &--open {
+      display: flex;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
   }
 
-  .nav ul {
+  .nav-list {
     flex-direction: column;
-    gap: 0.75rem;
+    align-items: stretch;
+    gap: var(--space-2);
   }
 
-  .nav.nav-open {
-    display: flex;
+  .nav-link {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-base);
+    border-radius: var(--radius-lg);
+
+    &:hover,
+    &--active {
+      background: var(--color-surface-subtle);
+    }
+  }
+
+  .nav-cta {
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .login-link {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-3);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  ui-cta-button {
+    width: 100%;
   }
 }
 
-@media (min-width: 901px) {
-  .menu-toggle {
-    display: none;
+/* --------------------------------------------------------------------------
+   ACCESSIBILITY
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .site-header,
+  .nav,
+  .nav-link,
+  .menu-icon span {
+    transition: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .site-header {
+    border-bottom-width: 2px;
   }
 
-  .nav {
-    display: flex;
+  .menu-toggle {
+    border-width: 3px;
   }
 }

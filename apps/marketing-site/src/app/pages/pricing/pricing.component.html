@@ -1,39 +1,314 @@
-<section class="pricing" aria-labelledby="pricing-page-heading">
-  <p class="eyebrow">Plans</p>
-  <h1 id="pricing-page-heading">Pricing designed for small teams</h1>
-  <p class="lead">Keep the free scan forever or upgrade for monitoring and the auto-fix script.</p>
-
-  <div class="plan-grid">
-    <article *ngFor="let plan of plans">
-      <h2>{{ plan.name }}</h2>
-      <p class="price">{{ plan.price }}</p>
-      <p>{{ plan.description }}</p>
-      <ul>
-        <li *ngFor="let feature of plan.features">{{ feature }}</li>
-      </ul>
-      <ui-cta-button
-        [routerLink]="plan.routerLink"
-        label="{{ plan.cta }}"
-        variant="primary"
-      ></ui-cta-button>
-    </article>
+<section class="pricing-hero" aria-labelledby="pricing-page-heading">
+  <div class="pricing-container">
+    <p class="eyebrow">Transparent Pricing</p>
+    <h1 id="pricing-page-heading">
+      Start free.<br />
+      <span class="text-gradient">Upgrade when ready.</span>
+    </h1>
+    <p class="lead">No credit card required. Cancel anytime. Built for small teams who ship fast.</p>
   </div>
+</section>
 
-  <div class="faq" aria-labelledby="faq-heading">
-    <h2 id="faq-heading">Quick questions</h2>
-    <dl>
-      <div>
-        <dt>Does the free scan include AI suggestions?</dt>
-        <dd>We share a limited set of AI-backed suggestions on the first few issues to help you take action.</dd>
+<section class="pricing-cards" aria-label="Pricing plans">
+  <div class="pricing-container">
+    <div class="plan-grid">
+      <!-- Free Scan Plan -->
+      <article
+        class="plan-card plan-card--free"
+        aria-labelledby="plan-free-heading"
+      >
+        <div class="plan-badge">Perfect to Start</div>
+
+        <div class="plan-header">
+          <h2 id="plan-free-heading" class="plan-name">Free Scan</h2>
+          <div class="plan-price">
+            <span class="price-amount">$0</span>
+            <span class="price-period">forever</span>
+          </div>
+          <p class="plan-description">
+            Top issues for one URL and AI-backed guidance to get unstuck.
+          </p>
+        </div>
+
+        <ul class="plan-features" aria-label="Free Scan features">
+          <li class="feature-item">
+            <svg class="feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.1"/>
+              <path d="M14 7L8.5 12.5L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Accessibility score</span>
+          </li>
+          <li class="feature-item">
+            <svg class="feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.1"/>
+              <path d="M14 7L8.5 12.5L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Top 5 critical issues</span>
+          </li>
+          <li class="feature-item">
+            <svg class="feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.1"/>
+              <path d="M14 7L8.5 12.5L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Plain-language explanations</span>
+          </li>
+          <li class="feature-item">
+            <svg class="feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.1"/>
+              <path d="M14 7L8.5 12.5L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Limited AI suggestions</span>
+          </li>
+        </ul>
+
+        <ui-cta-button
+          [routerLink]="'/scan'"
+          label="Run a free scan"
+          variant="secondary"
+          class="plan-cta"
+          aria-label="Run a free accessibility scan"
+        ></ui-cta-button>
+      </article>
+
+      <!-- Starter Plan -->
+      <article
+        class="plan-card plan-card--starter"
+        aria-labelledby="plan-starter-heading"
+      >
+        <div class="plan-badge plan-badge--featured">Most Popular</div>
+
+        <div class="plan-header">
+          <h2 id="plan-starter-heading" class="plan-name">Starter</h2>
+          <div class="plan-price">
+            <span class="price-amount">$39</span>
+            <span class="price-period">/month</span>
+          </div>
+          <p class="plan-description">
+            For small teams shipping updates weekly and needing compliance guardrails.
+          </p>
+        </div>
+
+        <ul class="plan-features" aria-label="Starter plan features">
+          <li class="feature-item">
+            <svg class="feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.1"/>
+              <path d="M14 7L8.5 12.5L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span><strong>Unlimited URLs</strong></span>
+          </li>
+          <li class="feature-item">
+            <svg class="feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.1"/>
+              <path d="M14 7L8.5 12.5L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Full issue list + AI suggestions</span>
+          </li>
+          <li class="feature-item">
+            <svg class="feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.1"/>
+              <path d="M14 7L8.5 12.5L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Auto-fix script access</span>
+          </li>
+          <li class="feature-item">
+            <svg class="feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.1"/>
+              <path d="M14 7L8.5 12.5L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Monitoring and alerts</span>
+          </li>
+          <li class="feature-item">
+            <svg class="feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.1"/>
+              <path d="M14 7L8.5 12.5L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Priority email support</span>
+          </li>
+        </ul>
+
+        <ui-cta-button
+          [routerLink]="'/signup'"
+          label="Get Started"
+          variant="primary"
+          class="plan-cta"
+          aria-label="Sign up for Starter plan"
+        ></ui-cta-button>
+      </article>
+    </div>
+
+    <!-- Feature Comparison Table -->
+    <div class="comparison-section">
+      <h2 class="comparison-heading">Feature Comparison</h2>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table" aria-label="Detailed feature comparison between Free Scan and Starter plans">
+          <thead>
+            <tr>
+              <th scope="col" class="feature-col">Feature</th>
+              <th scope="col" class="plan-col">Free Scan</th>
+              <th scope="col" class="plan-col plan-col--featured">Starter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">URLs per month</th>
+              <td>1</td>
+              <td><strong>Unlimited</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">Issues shown</th>
+              <td>Top 5</td>
+              <td><strong>All issues</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">AI-powered suggestions</th>
+              <td>Limited</td>
+              <td><strong>Full access</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">Auto-fix scripts</th>
+              <td><span class="table-no" aria-label="Not included">—</span></td>
+              <td><span class="table-yes" aria-label="Included">✓</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Continuous monitoring</th>
+              <td><span class="table-no" aria-label="Not included">—</span></td>
+              <td><span class="table-yes" aria-label="Included">✓</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Email alerts</th>
+              <td><span class="table-no" aria-label="Not included">—</span></td>
+              <td><span class="table-yes" aria-label="Included">✓</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Support</th>
+              <td>Community</td>
+              <td><strong>Priority email</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div>
-        <dt>Can I cancel anytime?</dt>
-        <dd>Yes. Plans are month-to-month with no hidden fees.</dd>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section" aria-labelledby="faq-heading">
+  <div class="pricing-container">
+    <div class="faq-header">
+      <p class="eyebrow">Questions</p>
+      <h2 id="faq-heading">Everything you need to know</h2>
+    </div>
+
+    <dl class="faq-list">
+      <div class="faq-item">
+        <dt class="faq-question">
+          <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16v.01M12 12c0-1.5 2-1.5 2-3 0-1.1-.9-2-2-2s-2 .9-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Does the free scan include AI suggestions?
+        </dt>
+        <dd class="faq-answer">
+          Yes! We share a limited set of AI-backed suggestions on the first few issues to help you take action.
+          Upgrade to Starter for unlimited AI suggestions across all detected issues.
+        </dd>
       </div>
-      <div>
-        <dt>Do you handle privacy-sensitive pages?</dt>
-        <dd>We avoid storing forms or logged-in data and document what we collect in the privacy policy.</dd>
+
+      <div class="faq-item">
+        <dt class="faq-question">
+          <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16v.01M12 12c0-1.5 2-1.5 2-3 0-1.1-.9-2-2-2s-2 .9-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Can I cancel anytime?
+        </dt>
+        <dd class="faq-answer">
+          Absolutely. Plans are month-to-month with no hidden fees, contracts, or cancellation penalties.
+          Cancel with one click from your dashboard.
+        </dd>
+      </div>
+
+      <div class="faq-item">
+        <dt class="faq-question">
+          <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16v.01M12 12c0-1.5 2-1.5 2-3 0-1.1-.9-2-2-2s-2 .9-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Do you handle privacy-sensitive pages?
+        </dt>
+        <dd class="faq-answer">
+          We avoid storing forms or logged-in data and document what we collect in the privacy policy.
+          Your users' data stays private, and we only analyze the rendered HTML for accessibility compliance.
+        </dd>
+      </div>
+
+      <div class="faq-item">
+        <dt class="faq-question">
+          <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16v.01M12 12c0-1.5 2-1.5 2-3 0-1.1-.9-2-2-2s-2 .9-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          What happens after I run out of free scans?
+        </dt>
+        <dd class="faq-answer">
+          The free scan is reusable on the same URL. If you want to scan additional pages or access advanced features
+          like monitoring and auto-fix scripts, upgrade to Starter at any time.
+        </dd>
+      </div>
+
+      <div class="faq-item">
+        <dt class="faq-question">
+          <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16v.01M12 12c0-1.5 2-1.5 2-3 0-1.1-.9-2-2-2s-2 .9-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          How do the auto-fix scripts work?
+        </dt>
+        <dd class="faq-answer">
+          Our auto-fix scripts identify common accessibility issues and provide automated code fixes you can apply
+          directly to your codebase. This saves hours of manual remediation work for standard WCAG violations.
+        </dd>
+      </div>
+
+      <div class="faq-item">
+        <dt class="faq-question">
+          <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16v.01M12 12c0-1.5 2-1.5 2-3 0-1.1-.9-2-2-2s-2 .9-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Is there a discount for annual billing?
+        </dt>
+        <dd class="faq-answer">
+          Not yet, but we're working on annual plans with savings. Sign up for our newsletter to be notified
+          when they're available.
+        </dd>
       </div>
     </dl>
+  </div>
+</section>
+
+<!-- Bottom CTA -->
+<section class="bottom-cta" aria-labelledby="cta-heading">
+  <div class="pricing-container">
+    <div class="cta-content">
+      <h2 id="cta-heading">Ready to make your site accessible?</h2>
+      <p class="cta-description">
+        Start with a free scan. No credit card required. See results in 30 seconds.
+      </p>
+      <div class="cta-actions">
+        <ui-cta-button
+          [routerLink]="'/scan'"
+          label="Run free scan"
+          variant="primary"
+          aria-label="Run a free accessibility scan now"
+        ></ui-cta-button>
+        <ui-cta-button
+          [routerLink]="'/signup'"
+          label="Start Starter plan"
+          variant="secondary"
+          aria-label="Sign up for the Starter plan"
+        ></ui-cta-button>
+      </div>
+    </div>
   </div>
 </section>

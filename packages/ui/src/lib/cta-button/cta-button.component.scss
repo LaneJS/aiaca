@@ -18,21 +18,22 @@
 }
 
 .cta.primary {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #ff7a45 0%, #ff4d5a 100%);
   color: #ffffff;
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 18px 40px rgba(255, 110, 61, 0.3);
 }
 
 .cta.secondary {
-  background: #e2e8f0;
-  color: #0f172a;
-  border-color: #cbd5e1;
+  background: #0c1c33;
+  color: #f7f7fb;
+  border-color: #0c1c33;
+  box-shadow: 0 16px 30px rgba(12, 28, 51, 0.22);
 }
 
 .cta.ghost {
   background: transparent;
-  color: #1d4ed8;
-  border-color: #bfdbfe;
+  color: #0c1224;
+  border-color: rgba(12, 18, 36, 0.25);
 }
 
 .cta:hover,

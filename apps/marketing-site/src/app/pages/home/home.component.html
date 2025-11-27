@@ -1,123 +1,176 @@
-<section class="hero">
-  <div class="hero__content">
-    <p class="eyebrow">Accessibility-first marketing site</p>
-    <h1>AI-powered accessibility compliance for small websites.</h1>
-    <p class="lead">
-      Run a free accessibility scan, see the top issues blocking compliance, and ship fixes faster with clear guidance.
-    </p>
-    <div class="hero__actions">
-      <ui-cta-button routerLink="/scan" variant="primary" label="Run a free accessibility scan"></ui-cta-button>
-      <ui-cta-button routerLink="/how-it-works" variant="secondary" label="See how it works"></ui-cta-button>
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="page-shell hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow">Accessibility that shows its work</p>
+      <h1 id="hero-heading">Ship ADA-safe pages with AI that explains every fix.</h1>
+      <p class="lead">
+        AACA scans live pages, flags what’s risky, and pairs each issue with a human-readable explanation and fix.
+        Add the optional auto-fix script to close gaps instantly.
+      </p>
+      <div class="hero__pills" role="list">
+        <span class="pill" role="listitem">WCAG 2.2 AA coverage</span>
+        <span class="pill pill--mint" role="listitem">Plain-language reports</span>
+        <span class="pill pill--ghost" role="listitem">Lightweight, no tracking</span>
+      </div>
+      <div class="hero__actions">
+        <ui-cta-button routerLink="/scan" variant="primary" label="Run a free scan"></ui-cta-button>
+        <ui-cta-button routerLink="/pricing" variant="secondary" label="See pricing"></ui-cta-button>
+      </div>
+      <p class="hero__note">No credit card. First scan returns in under a minute.</p>
+      <div class="hero__assurance">
+        <span class="dot"></span>
+        Legal-safe crawling, keyboard-friendly UI, exportable reports.
+      </div>
     </div>
-    <p class="supporting">
-      Built for small teams that need WCAG wins without hiring a full accessibility specialist.
-    </p>
-  </div>
 
-  <div class="hero__visual">
-    <img src="assets/images/hero-illustration.png" alt="AI brain connecting to desktop, tablet, and mobile devices" class="img-fluid">
+    <div class="hero__panel" aria-label="Preview of scan and fixes">
+      <div class="panel__header">
+        <div>
+          <p class="eyebrow">Live preview</p>
+          <p class="panel__title">Example scan • smallbiz.site</p>
+        </div>
+        <div class="score-pill" aria-label="Accessibility score 68 out of 100">
+          <span class="score-number">68</span>
+          <span class="score-copy">Pre-fix score</span>
+        </div>
+      </div>
+      <div class="panel__issues" role="list">
+        <article class="panel__issue" *ngFor="let issue of issueSpotlight" role="listitem">
+          <div class="issue__top">
+            <p class="issue__name">{{ issue.name }}</p>
+            <span class="issue__status">{{ issue.status }}</span>
+          </div>
+          <p class="issue__impact">{{ issue.impact }}</p>
+          <p class="issue__fix">{{ issue.fix }}</p>
+        </article>
+      </div>
+      <div class="panel__footer">
+        <p class="panel__note">Add the auto-fix snippet to resolve 2 of these instantly.</p>
+        <a class="panel__link" routerLink="/how-it-works">See monitoring view</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="problem" aria-labelledby="problem-heading">
-  <div class="section-header">
-    <p class="eyebrow">Why now</p>
-    <h2 id="problem-heading">Accessibility is a legal, moral, and business must-have.</h2>
-    <p class="lead">
-      Avoid demand letters, welcome every visitor, and stay ahead of search ranking changes that reward usable websites.
-    </p>
-  </div>
-  <div class="problem__grid">
-    <article>
-      <div class="icon-wrapper">
-        <img src="assets/images/icon-gravel.png" alt="" aria-hidden="true" width="64" height="64">
+<section class="story" aria-labelledby="story-heading">
+  <div class="page-shell story__grid">
+    <div>
+      <p class="eyebrow">Why teams switch to AACA</p>
+      <h2 id="story-heading">Stop losing sleep over demand letters.</h2>
+      <p class="lead">
+        We pair automated WCAG checks with explanations you can forward to stakeholders. Every issue cites the user
+        impact, severity, and a suggested fix.
+      </p>
+      <div class="before-after" aria-label="Before and after example">
+        <div>
+          <p class="label">Before</p>
+          <pre><code>&lt;img src="/hero.jpg"&gt;
+&lt;button&gt;&lt;/button&gt;</code></pre>
+        </div>
+        <div>
+          <p class="label">After</p>
+          <pre><code>&lt;img src="/hero.jpg" alt="Owner welcoming guests at storefront"&gt;
+&lt;button aria-label="Open menu"&gt;&lt;/button&gt;</code></pre>
+        </div>
       </div>
-      <h3>Reduce risk</h3>
-      <p>Mitigate ADA and WCAG non-compliance issues before they become costly legal notices.</p>
-    </article>
-    <article>
-      <div class="icon-wrapper">
-        <img src="assets/images/icon-users.png" alt="" aria-hidden="true" width="64" height="64">
+    </div>
+    <div class="stats" aria-label="Highlights">
+      <div class="stat" *ngFor="let stat of stats">
+        <p class="stat__value">{{ stat.value }}</p>
+        <p class="stat__label">{{ stat.label }}</p>
       </div>
-      <h3>Serve everyone</h3>
-      <p>Deliver inclusive experiences with clear headings, alternative text, and keyboard-friendly flows.</p>
-    </article>
-    <article>
-      <div class="icon-wrapper">
-        <img src="assets/images/icon-chart.jpg" alt="" aria-hidden="true" width="64" height="64">
+      <div class="stat stat--dark">
+        <p class="stat__value">Legal-safe defaults</p>
+        <p class="stat__label">We avoid form fields and login flows by default scans.</p>
       </div>
-      <h3>Grow with confidence</h3>
-      <p>Accessible sites keep customers engaged longer and help you win SEO-conscious buyers.</p>
-    </article>
+    </div>
   </div>
 </section>
 
 <section class="how" aria-labelledby="how-heading">
-  <div class="section-header">
-    <p class="eyebrow">How it works</p>
-    <h2 id="how-heading">Three guided steps to compliance</h2>
-    <p class="lead">We bundle automation, AI suggestions, and a lightweight auto-fix script.</p>
-  </div>
+  <div class="page-shell">
+    <div class="section-title">
+      <p class="eyebrow">How it works</p>
+      <h2 id="how-heading">Guided steps with proof for every recommendation</h2>
+      <p class="lead">Automation, AI explanations, and a gentle auto-fix layer that respects your design.</p>
+    </div>
 
-  <div class="how__visual" style="margin-bottom: 2rem; text-align: center;">
-      <img src="assets/images/process-flow.png" alt="Step 1: Scan, Step 2: Fix, Step 3: Stay Compliant" style="max-width: 100%; height: auto;">
-  </div>
-
-  <div class="steps" role="list">
-    <div class="step" *ngFor="let step of steps" role="listitem">
-      <p class="step__badge">{{ step.title }}</p>
-      <p class="step__copy">{{ step.description }}</p>
+    <div class="steps" role="list">
+      <div class="step" *ngFor="let step of steps; index as i" role="listitem">
+        <p class="step__badge">{{ i + 1 }}. {{ step.title }}</p>
+        <p class="step__copy">{{ step.description }}</p>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="features" aria-labelledby="features-heading">
-  <div class="section-header">
-    <p class="eyebrow">What you get</p>
-    <h2 id="features-heading">Built-in accessibility expertise</h2>
-    <p class="lead">Everything you need to identify, explain, and fix WCAG issues without extra vendors.</p>
-  </div>
-  <div class="feature-grid">
-    <article *ngFor="let feature of features">
-      <h3>{{ feature.title }}</h3>
-      <p>{{ feature.copy }}</p>
-    </article>
+  <div class="page-shell">
+    <div class="section-title">
+      <p class="eyebrow">What you get</p>
+      <h2 id="features-heading">Built-in accessibility expertise, ready on day one.</h2>
+      <p class="lead">We keep the technical receipts so you can keep the business moving.</p>
+    </div>
+    <div class="feature-grid">
+      <article *ngFor="let feature of features">
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.copy }}</p>
+      </article>
+    </div>
   </div>
 </section>
 
 <section class="pricing-preview" aria-labelledby="pricing-heading">
-  <div class="section-header">
-    <p class="eyebrow">Pricing</p>
-    <h2 id="pricing-heading">Start free, upgrade when you need more coverage.</h2>
-    <p class="lead">The free scan includes your top issues. Paid plans start at $39/month for ongoing monitoring.</p>
-  </div>
-  <div class="pricing-card">
-    <div>
-      <p class="eyebrow">Free scan</p>
-      <p class="price">$0</p>
-      <p>Top issues for one URL, with AI-backed explanations.</p>
+  <div class="page-shell">
+    <div class="section-title">
+      <p class="eyebrow">Pricing</p>
+      <h2 id="pricing-heading">Start free. Upgrade when you need ongoing coverage.</h2>
+      <p class="lead">The free scan reveals your top issues. Starter unlocks unlimited scans, monitoring, and the auto-fix script.</p>
     </div>
-    <div class="divider" aria-hidden="true"></div>
-    <div>
-      <p class="eyebrow">Starter</p>
-      <p class="price">From $39/mo</p>
-      <p>Full reports, unlimited URLs, monitoring, and the optional auto-fix script.</p>
-    </div>
-    <div class="actions">
-      <ui-cta-button routerLink="/pricing" label="View pricing" variant="primary"></ui-cta-button>
-      <ui-cta-button routerLink="/scan" label="Run a free scan" variant="secondary"></ui-cta-button>
+    <div class="pricing-card">
+      <div>
+        <p class="eyebrow">Free scan</p>
+        <p class="price">$0</p>
+        <p>Top issues for one URL, with AI-backed explanations.</p>
+      </div>
+      <div class="divider" aria-hidden="true"></div>
+      <div>
+        <p class="eyebrow">Starter</p>
+        <p class="price">From $39/mo</p>
+        <p>Full reports, unlimited URLs, monitoring, and the optional auto-fix script.</p>
+      </div>
+      <div class="actions">
+        <ui-cta-button routerLink="/pricing" label="View pricing" variant="primary"></ui-cta-button>
+        <ui-cta-button routerLink="/scan" label="Run a free scan" variant="secondary"></ui-cta-button>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="social-proof footer-bg" aria-labelledby="social-proof-heading">
-  <div class="section-header">
-    <p class="eyebrow">Trusted results</p>
-    <h2 id="social-proof-heading">Social proof coming soon</h2>
-    <p class="lead">Testimonials and case studies are in progress. Request access to our pilot cohort.</p>
-  </div>
-  <div class="placeholder">
-    <p>Placeholder for testimonials, case studies, and partner logos.</p>
-    <ui-cta-button routerLink="/scan" label="Join the pilot" variant="primary"></ui-cta-button>
+<section class="social-proof" aria-labelledby="social-proof-heading">
+  <div class="page-shell">
+    <div class="section-title">
+      <p class="eyebrow">Trust & safety</p>
+      <h2 id="social-proof-heading">We dogfood our own accessibility rules.</h2>
+      <p class="lead">Keyboard-first navigation, focus states, and a no-surprises privacy posture.</p>
+    </div>
+    <div class="trust-grid">
+      <div>
+        <p class="trust-label">Security</p>
+        <p class="trust-copy">No form data stored. Strict URL allowlists. Backed by monitoring alerts.</p>
+      </div>
+      <div>
+        <p class="trust-label">Accessibility</p>
+        <p class="trust-copy">Skip links, semantic landmarks, and contrast checks are default.</p>
+      </div>
+      <div>
+        <p class="trust-label">Support</p>
+        <p class="trust-copy">Ask us to review your report with you—human help included.</p>
+      </div>
+    </div>
+    <div class="trust-cta">
+      <ui-cta-button routerLink="/scan" label="Join the pilot" variant="primary"></ui-cta-button>
+      <a class="panel__link" routerLink="/resources">View accessibility guides</a>
+    </div>
   </div>
 </section>

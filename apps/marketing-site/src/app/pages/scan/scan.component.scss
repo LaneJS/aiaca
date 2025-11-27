@@ -1,28 +1,68 @@
 .scan {
-  max-width: 900px;
-  margin: 0 auto;
+  padding: 3rem 0 2rem;
+}
+
+.scan__intro {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.scan__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.scan__chips span {
+  background: #0c1c33;
+  color: #f7f7fb;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.meta {
+  margin: 0.5rem 0 0;
+  color: var(--color-ink-muted);
+  font-weight: 600;
 }
 
 .scan-form {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding: 1.5rem;
   display: grid;
   gap: 0.75rem;
   margin: 1.5rem 0;
+  box-shadow: var(--shadow-card);
 }
 
 label {
-  font-weight: 700;
+  font-weight: 800;
 }
 
 input {
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
   border: 1px solid #cbd5e1;
   font-size: 1rem;
+  font-family: inherit;
 }
 
 input:focus {
-  outline: 3px solid #bfdbfe;
-  border-color: #1d4ed8;
+  outline: 3px solid rgba(255, 110, 61, 0.25);
+  border-color: var(--color-primary);
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .consent {
@@ -32,7 +72,7 @@ input:focus {
 
 .status {
   color: #0f172a;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .error {
@@ -42,7 +82,7 @@ input:focus {
 
 .results {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
   margin-top: 1.5rem;
 }
@@ -50,7 +90,7 @@ input:focus {
 .summary,
 .issues {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 1rem;
   padding: 1.25rem;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
@@ -60,6 +100,11 @@ input:focus {
   font-size: 2.25rem;
   font-weight: 800;
   margin: 0.25rem 0 0.5rem;
+}
+
+.note {
+  margin: 0;
+  color: var(--color-ink-muted);
 }
 
 .issues ul {
@@ -83,4 +128,26 @@ input:focus {
 
 .upgrade {
   margin: 0 0 0.5rem;
+}
+
+.upgrade-box {
+  background: #0c1c33;
+  color: #f7f7fb;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.limited-notice {
+  margin: 0 0 0.35rem;
+}
+
+@media (max-width: 768px) {
+  .scan__intro {
+    grid-template-columns: 1fr;
+  }
+
+  .scan__chips {
+    justify-content: flex-start;
+  }
 }

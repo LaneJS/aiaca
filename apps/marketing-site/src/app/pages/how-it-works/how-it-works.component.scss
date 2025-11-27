@@ -1,29 +1,47 @@
 .page {
-  max-width: 900px;
-  margin: 0 auto;
+  padding: 3.5rem 0;
 }
 
-.step-grid {
+.timeline {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
   margin: 2rem 0;
 }
 
-.step-grid article {
+.timeline__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: start;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
   padding: 1.25rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-card);
+}
+
+.timeline__marker {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: #0c1224;
+  background: linear-gradient(135deg, rgba(255, 110, 61, 0.2), rgba(78, 168, 255, 0.18));
+  border: 1px solid var(--color-border);
 }
 
 .callout {
-  background: #0f172a;
-  color: #e2e8f0;
+  background: #0c1c33;
+  color: #f7f7fb;
   padding: 1.5rem;
   border-radius: 1rem;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+  display: grid;
+  grid-template-columns: 1fr 0.8fr;
+  gap: 1rem;
+  align-items: center;
 }
 
 .callout ul {
@@ -33,4 +51,20 @@
 
 .callout li {
   margin-bottom: 0.5rem;
+}
+
+.callout__cta {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.note {
+  margin: 0;
+  color: #d9e4f5;
+}
+
+@media (max-width: 768px) {
+  .callout {
+    grid-template-columns: 1fr;
+  }
 }

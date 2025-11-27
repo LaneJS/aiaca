@@ -1,51 +1,66 @@
 <section class="scan" aria-labelledby="scan-heading">
-  <p class="eyebrow">Free tool</p>
-  <h1 id="scan-heading">Run a free accessibility scan</h1>
-  <p class="lead">Submit one URL to receive a score and the top issues. No account required.</p>
-
-  <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
-    <label for="url">Website URL</label>
-    <input
-      id="url"
-      name="url"
-      type="url"
-      required
-      [(ngModel)]="url"
-      placeholder="https://example.com"
-      aria-describedby="consent"
-    />
-    <p id="consent" class="consent">By submitting, you confirm you have permission to scan this page.</p>
-    <ui-cta-button type="submit" label="Start scan" variant="primary"></ui-cta-button>
-    <span class="status" *ngIf="submitting" aria-live="polite">Submitting scan…</span>
-    <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
-  </form>
-
-  <section *ngIf="result" class="results" aria-live="polite" aria-label="Scan results">
-    <div class="summary">
-      <p class="eyebrow">Score</p>
-      <p class="score">{{ result.score }}</p>
-      <p class="note">Score is limited for the free scan. Create an account to see the full report.</p>
-    </div>
-    <div class="issues">
-      <h2>Top issues</h2>
-      <ul>
-        <li *ngFor="let issue of result.issues">
-          <p class="issue-type">{{ issue.type }} ({{ issue.severity }})</p>
-          <p class="issue-description">{{ issue.description }}</p>
-          <p *ngIf="issue.location" class="issue-location">Location: {{ issue.location }}</p>
-        </li>
-      </ul>
-      <div class="upgrade-box" *ngIf="result.limited">
-        <p class="limited-notice">
-          <strong>Showing {{ result.issues.length }} of {{ result.totalIssues }} issues found.</strong>
-        </p>
-        <p class="upgrade">Sign up to see all issues, AI-powered fix suggestions, and the auto-fix script.</p>
-        <ui-cta-button routerLink="/signup" label="Get full access" variant="primary"></ui-cta-button>
+  <div class="page-shell">
+    <div class="scan__intro">
+      <div>
+        <p class="eyebrow">Free tool</p>
+        <h1 id="scan-heading">Check your homepage risk in 60 seconds.</h1>
+        <p class="lead">We crawl the page, score accessibility, and show the top issues with plain-language fixes.</p>
+        <p class="meta">No account required. We avoid forms and authenticated content by default.</p>
       </div>
-      <div class="upgrade-box" *ngIf="!result.limited">
-        <p class="upgrade">Want AI-powered fix suggestions and the auto-fix script?</p>
-        <ui-cta-button routerLink="/signup" label="Get started" variant="secondary"></ui-cta-button>
+      <div class="scan__chips" aria-label="Checks included">
+        <span>Alt text coverage</span>
+        <span>Contrast & focus</span>
+        <span>ARIA + landmarks</span>
+        <span>Keyboard traps</span>
       </div>
     </div>
-  </section>
+
+    <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
+      <label for="url">Website URL</label>
+      <input
+        id="url"
+        name="url"
+        type="url"
+        required
+        [(ngModel)]="url"
+        placeholder="https://example.com"
+        aria-describedby="consent"
+      />
+      <p id="consent" class="consent">By submitting, you confirm you have permission to scan this page.</p>
+      <div class="form-actions">
+        <ui-cta-button type="submit" label="Start scan" variant="primary"></ui-cta-button>
+        <span class="status" *ngIf="submitting" aria-live="polite">Submitting scan…</span>
+      </div>
+      <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+    </form>
+
+    <section *ngIf="result" class="results" aria-live="polite" aria-label="Scan results">
+      <div class="summary">
+        <p class="eyebrow">Score</p>
+        <p class="score">{{ result.score }}</p>
+        <p class="note">Score is limited for the free scan. Create an account to see the full report.</p>
+      </div>
+      <div class="issues">
+        <h2>Top issues</h2>
+        <ul>
+          <li *ngFor="let issue of result.issues">
+            <p class="issue-type">{{ issue.type }} ({{ issue.severity }})</p>
+            <p class="issue-description">{{ issue.description }}</p>
+            <p *ngIf="issue.location" class="issue-location">Location: {{ issue.location }}</p>
+          </li>
+        </ul>
+        <div class="upgrade-box" *ngIf="result.limited">
+          <p class="limited-notice">
+            <strong>Showing {{ result.issues.length }} of {{ result.totalIssues }} issues found.</strong>
+          </p>
+          <p class="upgrade">Sign up to see all issues, AI-powered fix suggestions, and the auto-fix script.</p>
+          <ui-cta-button routerLink="/signup" label="Get full access" variant="primary"></ui-cta-button>
+        </div>
+        <div class="upgrade-box" *ngIf="!result.limited">
+          <p class="upgrade">Want AI-powered fix suggestions and the auto-fix script?</p>
+          <ui-cta-button routerLink="/signup" label="Get started" variant="secondary"></ui-cta-button>
+        </div>
+      </div>
+    </section>
+  </div>
 </section>

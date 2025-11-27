@@ -1,8 +1,14 @@
 <header class="site-header">
   <div class="shell">
-    <a class="logo" routerLink="/" (click)="closeMenu()">
-      <span class="logo-mark" aria-hidden="true">A</span>
-      <span class="logo-text">A11y Assistant</span>
+    <a class="logo" routerLink="/" (click)="closeMenu()" aria-label="A11y Assistant home">
+      <span class="logo-mark" aria-hidden="true">
+        <span class="beam"></span>
+        <span class="dot"></span>
+      </span>
+      <span class="logo-text">
+        <span class="word">A11y Assistant</span>
+        <span class="sub">ADA-grade compliance</span>
+      </span>
     </a>
 
     <button
@@ -22,7 +28,9 @@
         </li>
       </ul>
       <div class="cta">
+        <span class="badge" aria-hidden="true">Free forever</span>
         <ui-cta-button routerLink="/scan" label="Run a free scan" variant="primary"></ui-cta-button>
+        <a class="ghost-link" routerLink="/signup" (click)="closeMenu()">Sign up</a>
       </div>
     </nav>
   </div>

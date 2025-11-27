@@ -1,36 +1,57 @@
 <footer class="site-footer" aria-label="Footer">
-  <div class="shell">
-    <div class="brand">
-      <div class="logo-mark" aria-hidden="true">A</div>
+  <div class="page-shell">
+    <div class="footer-cta">
       <div>
-        <p class="title">A11y Assistant</p>
-        <p class="tagline">A11yAssistant.com</p>
+        <p class="eyebrow">Stay ahead</p>
+        <h2>Keep your experience compliant, even after launch.</h2>
+        <p class="copy">We send one, friendly accessibility digest per month. No noise.</p>
+      </div>
+      <div class="cta-wrap">
+        <a class="cta-link" routerLink="/scan">Run a free scan</a>
+        <a class="cta-secondary" routerLink="/signup">Start Starter plan</a>
       </div>
     </div>
-    <div class="footer-links">
-      <div>
-        <h3>Product</h3>
-        <ul>
-          <li><a routerLink="/how-it-works">How it works</a></li>
-          <li><a routerLink="/pricing">Pricing</a></li>
-          <li><a routerLink="/resources">Resources</a></li>
-        </ul>
+
+    <div class="footer-grid">
+      <div class="brand">
+        <div class="logo-mark" aria-hidden="true">
+          <span class="beam"></span>
+          <span class="dot"></span>
+        </div>
+        <div>
+          <p class="title">A11y Assistant</p>
+          <p class="tagline">Compliance without the courtroom anxiety.</p>
+          <p class="tagline">support@a11yassistant.com</p>
+        </div>
       </div>
-      <div>
-        <h3>Company</h3>
-        <ul>
-          <li><a routerLink="/scan">Free scan</a></li>
-          <li><a href="mailto:support@a11yassistant.com">Contact</a></li>
-          <li><a routerLink="/legal/privacy">Privacy</a></li>
-          <li><a routerLink="/legal/terms">Terms</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Stay in touch</h3>
-        <p class="copy">We share accessibility tips and updates once a month.</p>
-        <p class="copy">support@a11yassistant.com</p>
+      <div class="links">
+        <div>
+          <h3>Product</h3>
+          <ul>
+            <li><a routerLink="/how-it-works">How it works</a></li>
+            <li><a routerLink="/pricing">Pricing</a></li>
+            <li><a routerLink="/resources">Resources</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Company</h3>
+          <ul>
+            <li><a routerLink="/scan">Free scan</a></li>
+            <li><a href="mailto:support@a11yassistant.com">Contact</a></li>
+            <li><a routerLink="/legal/privacy">Privacy</a></li>
+            <li><a routerLink="/legal/terms">Terms</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Trust</h3>
+          <ul>
+            <li>WCAG 2.2 AA coverage</li>
+            <li>Data-light by default</li>
+            <li>Keyboard-first QA</li>
+          </ul>
+        </div>
       </div>
     </div>
+    <div class="meta">© {{ year }} A11yAssistant.com. Built accessibility-first.</div>
   </div>
-  <div class="meta">© {{ year }} A11yAssistant.com. Built accessibility-first.</div>
 </footer>

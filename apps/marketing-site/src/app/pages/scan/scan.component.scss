@@ -1,86 +1,537 @@
-.scan {
+// ============================================
+// Scan Page Styles
+// Core product experience
+// ============================================
+
+.scan-page {
+  min-height: 100vh;
+}
+
+// Hero Section
+.scan-hero {
+  background: linear-gradient(135deg, #ecfdf5 0%, #fafaf9 100%);
+  padding: 3rem 1rem 0;
+  text-align: center;
+
+  @media (min-width: 1024px) {
+    padding: 4rem 2rem 0;
+  }
+}
+
+.scan-hero__content {
+  max-width: 600px;
+  margin: 0 auto;
+
+  h1 {
+    margin-bottom: 0.75rem;
+  }
+
+  .lead {
+    margin-bottom: 0;
+  }
+}
+
+// Main Container
+.scan-container {
   max-width: 900px;
   margin: 0 auto;
+  padding: 0 1rem 3rem;
+  transform: translateY(-2rem);
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem 4rem;
+  }
+}
+
+// Scan Card
+.scan-card {
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    padding: 2.5rem;
+  }
 }
 
 .scan-form {
-  display: grid;
-  gap: 0.75rem;
-  margin: 1.5rem 0;
+  .form-group {
+    margin-bottom: 0;
+  }
 }
 
 label {
-  font-weight: 700;
+  display: block;
+  margin-bottom: 0.75rem;
 }
 
-input {
-  padding: 0.75rem 1rem;
+.label-text {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: #1c1917;
+  margin-bottom: 0.25rem;
+}
+
+.label-hint {
+  font-size: 0.8125rem;
+  color: #78716c;
+}
+
+.input-wrapper {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a8a29e;
+  pointer-events: none;
+}
+
+input[type="url"] {
+  flex: 1;
+  position: relative;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  border: 2px solid #e7e5e4;
   border-radius: 0.75rem;
-  border: 1px solid #cbd5e1;
   font-size: 1rem;
+  font-family: inherit;
+  transition: all 150ms ease;
+  background: #fafaf9;
+
+  &:focus {
+    outline: none;
+    border-color: #059669;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+  }
+
+  &::placeholder {
+    color: #a8a29e;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
-input:focus {
-  outline: 3px solid #bfdbfe;
-  border-color: #1d4ed8;
+// Make input wrapper relative for icon positioning
+.input-wrapper {
+  position: relative;
+
+  input[type="url"] {
+    width: 100%;
+  }
+
+  @media (min-width: 641px) {
+    input[type="url"] {
+      padding-left: 3rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .input-icon {
+      display: none;
+    }
+
+    input[type="url"] {
+      padding-left: 1rem;
+    }
+  }
 }
 
 .consent {
-  margin: 0;
-  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  color: #78716c;
+
+  svg {
+    flex-shrink: 0;
+    color: #a8a29e;
+  }
 }
 
-.status {
-  color: #0f172a;
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 1rem;
+  padding: 0.875rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  color: #dc2626;
+  font-size: 0.9375rem;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+// Scanning State
+.scanning-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.scanning-animation {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.5rem;
+}
+
+.scanning-ring {
+  position: absolute;
+  inset: 0;
+  border: 3px solid #ecfdf5;
+  border-top-color: #059669;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.scanning-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #059669;
+}
+
+.scanning-text {
+  font-size: 1.125rem;
   font-weight: 600;
+  color: #1c1917;
+  margin: 0 0 0.25rem;
 }
 
-.error {
-  color: #b91c1c;
+.scanning-subtext {
+  font-size: 0.875rem;
+  color: #78716c;
   margin: 0;
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Results Section
 .results {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 
-.summary,
-.issues {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+.results-header {
+  margin-bottom: 1.5rem;
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+}
+
+.results-url {
+  font-size: 0.875rem;
+  color: #78716c;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.results-grid {
+  display: grid;
+  gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+// Score Card
+.score-card {
+  background: #fafaf9;
+  border: 1px solid #e7e5e4;
   border-radius: 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  padding: 1.5rem;
+  text-align: center;
+
+  @media (min-width: 768px) {
+    position: sticky;
+    top: 5rem;
+    align-self: start;
+  }
 }
 
-.score {
-  font-size: 2.25rem;
+.score-visual {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 1rem;
+}
+
+.score-ring {
+  width: 100%;
+  height: 100%;
+}
+
+.score-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
   font-weight: 800;
-  margin: 0.25rem 0 0.5rem;
 }
 
-.issues ul {
-  padding: 0;
-  margin: 0 0 1rem;
+.score-info h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.score-description {
+  font-size: 0.875rem;
+  color: #57534e;
+  line-height: 1.5;
+}
+
+// Issues Card
+.issues-card {
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.issues-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e7e5e4;
+
+  h3 {
+    font-size: 1.125rem;
+    margin: 0;
+  }
+}
+
+.issues-count {
+  font-size: 0.875rem;
+  color: #78716c;
+  background: #f5f5f4;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.issues-list {
   list-style: none;
-  display: grid;
-  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+}
+
+.issue-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f5f5f4;
+  transition: background 150ms ease;
+
+  &:hover {
+    background: #fafaf9;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.issue-severity {
+  flex-shrink: 0;
+}
+
+.severity-badge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0.25rem;
+}
+
+.severity-high .severity-badge {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.severity-moderate .severity-badge {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.severity-low .severity-badge {
+  background: #f0f9ff;
+  color: #0ea5e9;
+}
+
+.issue-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .issue-type {
-  font-weight: 700;
+  font-weight: 600;
+  color: #1c1917;
+  margin: 0 0 0.25rem;
+}
+
+.issue-description {
+  color: #57534e;
+  font-size: 0.9375rem;
+  line-height: 1.5;
   margin: 0;
 }
 
-.issue-description,
-.issue-location,
-.issue-suggestion {
-  margin: 0.1rem 0;
+.issue-location {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: #78716c;
+  font-family: monospace;
+  word-break: break-all;
+
+  svg {
+    flex-shrink: 0;
+  }
 }
 
-.upgrade {
-  margin: 0 0 0.5rem;
+// Upgrade Prompt
+.upgrade-prompt {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #ecfdf5 0%, #fff7ed 100%);
+  border-top: 1px solid #d1fae5;
+}
+
+.upgrade-content {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.upgrade-icon {
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  display: grid;
+  place-items: center;
+  color: #059669;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.upgrade-headline {
+  font-weight: 700;
+  color: #1c1917;
+  margin: 0 0 0.25rem;
+}
+
+.upgrade-description {
+  font-size: 0.875rem;
+  color: #57534e;
+  margin: 0;
+}
+
+.next-steps {
+  padding: 1.5rem;
+  text-align: center;
+  border-top: 1px solid #e7e5e4;
+
+  p {
+    margin-bottom: 1rem;
+    color: #57534e;
+  }
+}
+
+// Benefits Section
+.scan-benefits {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem 4rem;
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem 5rem;
+  }
+}
+
+.benefits-grid {
+  display: grid;
+  gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.benefit-item {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.benefit-icon {
+  width: 56px;
+  height: 56px;
+  background: #ecfdf5;
+  border-radius: 1rem;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 1rem;
+  color: #059669;
+}
+
+.benefit-item h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.benefit-item p {
+  color: #57534e;
+  line-height: 1.5;
+  margin: 0;
+}
+
+// Utility
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

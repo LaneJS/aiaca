@@ -1,48 +1,248 @@
-.pricing {
-  max-width: 1000px;
-  margin: 0 auto;
+// ============================================
+// Pricing Page Styles
+// ============================================
+
+.pricing-page {
+  min-height: 100vh;
 }
 
+// Hero
+.pricing-hero {
+  text-align: center;
+  padding: 4rem 1rem 3rem;
+  background: linear-gradient(135deg, #ecfdf5 0%, #fafaf9 100%);
+
+  @media (min-width: 1024px) {
+    padding: 5rem 2rem 4rem;
+  }
+
+  h1 {
+    margin-bottom: 1rem;
+  }
+
+  .lead {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+// Main Container
+.pricing-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem 4rem;
+  transform: translateY(-1.5rem);
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem 5rem;
+  }
+}
+
+// Plan Grid
 .plan-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin: 2rem 0;
+  gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
 }
 
-.plan-grid article {
+// Plan Card
+.plan-card {
+  position: relative;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  border: 2px solid #e7e5e4;
+  border-radius: 1.25rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 200ms ease;
+
+  &:hover {
+    border-color: #d1fae5;
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  &.featured {
+    border-color: #059669;
+    box-shadow: 0 0 0 1px #059669, 0 20px 40px -10px rgba(5, 150, 105, 0.2);
+
+    &:hover {
+      box-shadow: 0 0 0 1px #059669, 0 25px 50px -10px rgba(5, 150, 105, 0.25);
+    }
+  }
 }
 
-.price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0.25rem 0 0.5rem;
+.plan-badge {
+  position: absolute;
+  top: -0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  padding: 0.375rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
-ul {
-  padding-left: 1.25rem;
+.plan-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e7e5e4;
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
 }
 
-.faq {
-  margin-top: 3rem;
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
 }
 
-dl div {
-  margin-bottom: 1rem;
-  background: #f8fafc;
+.price-value {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1c1917;
+  line-height: 1;
+}
+
+.price-period {
+  font-size: 1rem;
+  color: #78716c;
+}
+
+.plan-desc {
+  color: #57534e;
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  flex: 1;
+  display: grid;
+  gap: 0.875rem;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: #57534e;
+
+    svg {
+      flex-shrink: 0;
+      color: #059669;
+      margin-top: 0.125rem;
+    }
+  }
+}
+
+// Guarantee
+.guarantee {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-top: 2rem;
   padding: 1rem;
+  background: #ecfdf5;
   border-radius: 0.75rem;
+  font-size: 0.9375rem;
+  color: #047857;
+
+  svg {
+    flex-shrink: 0;
+    color: #059669;
+  }
 }
 
-dt {
-  font-weight: 700;
+// FAQ Section
+.faq-section {
+  background: #fafaf9;
+  padding: 4rem 1rem;
+
+  @media (min-width: 1024px) {
+    padding: 5rem 2rem;
+  }
 }
 
-dd {
-  margin: 0.25rem 0 0;
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+}
+
+.faq-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.faq-item {
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 200ms ease;
+
+  &:hover {
+    border-color: #d1fae5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  dt {
+    font-weight: 600;
+    font-size: 1.0625rem;
+    color: #1c1917;
+    margin-bottom: 0.5rem;
+  }
+
+  dd {
+    color: #57534e;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+// CTA Section
+.cta-section {
+  background: linear-gradient(180deg, #0c0a09 0%, #1c1917 100%);
+  padding: 4rem 1rem;
+
+  @media (min-width: 1024px) {
+    padding: 5rem 2rem;
+  }
+}
+
+.cta-container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+
+  h2 {
+    color: #fafaf9;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #a8a29e;
+    margin-bottom: 1.5rem;
+  }
 }

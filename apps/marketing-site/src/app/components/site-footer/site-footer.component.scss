@@ -1,52 +1,67 @@
 .site-footer {
-  background: #0f172a;
-  color: #e2e8f0;
-  padding: 3rem 1.25rem 2rem;
-  margin-top: 4rem;
+  background: linear-gradient(180deg, #0c0a09 0%, #1c1917 100%);
+  color: #e7e5e4;
+  padding: 4rem 1.5rem 2rem;
+  margin-top: 0;
 }
 
 .shell {
-  max-width: 1200px;
-  margin: 0 auto 1.5rem;
+  max-width: var(--max-width-xl, 1280px);
+  margin: 0 auto 2rem;
   display: grid;
-  gap: 2rem;
+  gap: 3rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+  }
 }
 
 .brand {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
 }
 
 .logo-mark {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: #1d4ed8;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
   display: grid;
   place-items: center;
   font-weight: 800;
+  font-size: 1.25rem;
+  flex-shrink: 0;
 }
 
 .title {
   font-weight: 700;
+  font-size: 1.125rem;
   margin: 0;
+  color: #fafaf9;
 }
 
 .tagline {
-  margin: 0;
-  color: #cbd5e1;
+  margin: 0.25rem 0 0;
+  color: #a8a29e;
+  font-size: 0.875rem;
 }
 
 .footer-links {
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 }
 
 h3 {
-  margin-bottom: 0.75rem;
-  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 1rem;
+  color: #78716c;
 }
 
 ul {
@@ -54,26 +69,58 @@ ul {
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.625rem;
 }
 
 a {
-  color: #e2e8f0;
+  color: #d6d3d1;
   text-decoration: none;
-}
+  font-size: 0.9375rem;
+  transition: color 150ms ease;
 
-a:hover,
-a:focus {
-  color: #bfdbfe;
+  &:hover,
+  &:focus {
+    color: #10b981;
+  }
 }
 
 .copy {
-  margin: 0.25rem 0;
+  margin: 0;
+  color: #a8a29e;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .meta {
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  padding-top: 1rem;
-  text-align: center;
-  color: #cbd5e1;
+  max-width: var(--max-width-xl, 1280px);
+  margin: 0 auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  color: #78716c;
+  font-size: 0.875rem;
+}
+
+.meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(5, 150, 105, 0.1);
+  color: #10b981;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.meta-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #10b981;
+  border-radius: 50%;
 }

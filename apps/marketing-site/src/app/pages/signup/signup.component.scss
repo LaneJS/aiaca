@@ -1,26 +1,64 @@
-.signup {
-  max-width: 1200px;
-  margin: 0 auto;
-}
+// ============================================
+// Signup Page Styles
+// ============================================
 
-.signup-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
-  align-items: start;
+.signup-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ecfdf5 0%, #fafaf9 100%);
+  padding: 3rem 1rem;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+  @media (min-width: 1024px) {
+    padding: 4rem 2rem;
   }
 }
 
-.signup-card {
+.signup-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+
+  h1 {
+    margin-bottom: 0.75rem;
+  }
+
+  .lead {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+.signup-grid {
+  display: grid;
+  gap: 2rem;
+  align-items: start;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (max-width: 767px) {
+    .benefits-card {
+      order: -1;
+    }
+  }
+}
+
+// Form Card
+.signup-form-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
+  border: 1px solid #e7e5e4;
+  border-radius: 1.25rem;
   padding: 2rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    padding: 2.5rem;
+  }
 }
 
 .signup-form {
@@ -37,30 +75,37 @@
 
 label {
   font-weight: 600;
-  font-size: 0.9rem;
-  color: #0f172a;
+  font-size: 0.9375rem;
+  color: #1c1917;
 }
 
 .required {
   color: #dc2626;
 }
 
+.optional {
+  color: #78716c;
+  font-weight: 400;
+}
+
 input {
-  padding: 0.75rem 1rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e7e5e4;
+  border-radius: 0.625rem;
   font-size: 1rem;
   font-family: inherit;
-  transition: border-color 0.2s ease;
+  transition: all 150ms ease;
+  background: #fafaf9;
 
   &:focus {
     outline: none;
-    border-color: #1d4ed8;
-    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+    border-color: #059669;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
   }
 
   &::placeholder {
-    color: #94a3b8;
+    color: #a8a29e;
   }
 }
 
@@ -69,96 +114,195 @@ input {
 
   &:focus {
     border-color: #dc2626;
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
   }
 }
 
 .error-text {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.8125rem;
   color: #dc2626;
 }
 
-.pricing-info {
-  background: #f8fafc;
-  padding: 1rem;
-  border-radius: 0.5rem;
+// Pricing Highlight
+.pricing-highlight {
+  background: #ecfdf5;
+  border: 1px solid #d1fae5;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.price-tag {
+  display: flex;
+  align-items: baseline;
+  gap: 0.125rem;
+}
+
+.price-amount {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+.price-period {
+  font-size: 1rem;
+  color: #047857;
+}
+
+.price-note {
+  font-size: 0.8125rem;
+  color: #047857;
+  margin: 0;
+}
+
+// Form Footer
+.form-footer {
   margin-top: 0.5rem;
 }
 
-.price-highlight {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1d4ed8;
-  margin: 0 0 0.5rem;
-}
-
 .terms-text {
-  font-size: 0.85rem;
-  color: #64748b;
+  font-size: 0.8125rem;
+  color: #78716c;
+  text-align: center;
   margin: 0;
 
   a {
-    color: #1d4ed8;
+    color: #059669;
     text-decoration: underline;
 
     &:hover {
-      color: #1e40af;
+      color: #047857;
     }
   }
 }
 
-.status {
-  text-align: center;
-  color: #64748b;
-  font-size: 0.9rem;
-  font-style: italic;
-}
-
-.error {
-  background: #fee2e2;
-  color: #991b1b;
-  padding: 0.75rem 1rem;
+// Status & Error Messages
+.status-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 1rem;
+  background: #f5f5f4;
   border-radius: 0.5rem;
-  border: 1px solid #fecaca;
-  margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
+  color: #57534e;
 }
 
-.benefits {
-  background: #f8fafc;
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e7e5e4;
+  border-top-color: #059669;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  color: #dc2626;
+  font-size: 0.9375rem;
+  margin: 0;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+// Benefits Card
+.benefits-card {
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 1.25rem;
   padding: 2rem;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
+
+  @media (min-width: 768px) {
+    padding: 2.5rem;
+    position: sticky;
+    top: 6rem;
+  }
 
   h2 {
-    margin-top: 0;
-    color: #0f172a;
-    font-size: 1.5rem;
+    font-size: 1.375rem;
+    margin-bottom: 1.5rem;
   }
+}
 
-  ul {
-    padding-left: 1.5rem;
-    margin: 0;
-    list-style: none;
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  display: grid;
+  gap: 1rem;
 
-    li {
-      position: relative;
-      padding-left: 1.5rem;
-      margin-bottom: 0.75rem;
-      color: #334155;
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #57534e;
 
-      &::before {
-        content: '✓';
-        position: absolute;
-        left: 0;
-        color: #22c55e;
-        font-weight: bold;
-      }
+    svg {
+      flex-shrink: 0;
+      color: #059669;
     }
   }
+}
 
-  @media (max-width: 768px) {
-    order: -1;
+// Trust Badges
+.trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e7e5e4;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: #78716c;
+
+  svg {
+    color: #059669;
+  }
+}
+
+// Login Link
+.login-link {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9375rem;
+  color: #78716c;
+
+  a {
+    color: #059669;
+    font-weight: 600;
+
+    &:hover {
+      color: #047857;
+    }
   }
 }

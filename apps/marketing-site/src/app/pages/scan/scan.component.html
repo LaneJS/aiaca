@@ -1,50 +1,189 @@
-<section class="scan" aria-labelledby="scan-heading">
-  <p class="eyebrow">Free tool</p>
-  <h1 id="scan-heading">Run a free accessibility scan</h1>
-  <p class="lead">Submit one URL to receive a score and the top issues. No account required.</p>
-
-  <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
-    <label for="url">Website URL</label>
-    <input
-      id="url"
-      name="url"
-      type="url"
-      required
-      [(ngModel)]="url"
-      placeholder="https://example.com"
-      aria-describedby="consent"
-    />
-    <p id="consent" class="consent">By submitting, you confirm you have permission to scan this page.</p>
-    <ui-cta-button type="submit" label="Start scan" variant="primary"></ui-cta-button>
-    <span class="status" *ngIf="submitting" aria-live="polite">Submitting scan…</span>
-    <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
-  </form>
-
-  <section *ngIf="result" class="results" aria-live="polite" aria-label="Scan results">
-    <div class="summary">
-      <p class="eyebrow">Score</p>
-      <p class="score">{{ result.score }}</p>
-      <p class="note">Score is limited for the free scan. Create an account to see the full report.</p>
+<section class="scan-page" aria-labelledby="scan-heading">
+  <div class="scan-hero">
+    <div class="scan-hero__content">
+      <p class="eyebrow">Free Tool</p>
+      <h1 id="scan-heading">Check your site's accessibility</h1>
+      <p class="lead">Enter any URL and get instant insights. No account required.</p>
     </div>
-    <div class="issues">
-      <h2>Top issues</h2>
-      <ul>
-        <li *ngFor="let issue of result.issues">
-          <p class="issue-type">{{ issue.type }} ({{ issue.severity }})</p>
-          <p class="issue-description">{{ issue.description }}</p>
-          <p *ngIf="issue.location" class="issue-location">Location: {{ issue.location }}</p>
-        </li>
-      </ul>
-      <div class="upgrade-box" *ngIf="result.limited">
-        <p class="limited-notice">
-          <strong>Showing {{ result.issues.length }} of {{ result.totalIssues }} issues found.</strong>
+  </div>
+
+  <div class="scan-container">
+    <div class="scan-card">
+      <form class="scan-form" (ngSubmit)="onSubmit()" aria-label="Free scan form">
+        <div class="form-group">
+          <label for="url">
+            <span class="label-text">Website URL</span>
+            <span class="label-hint">Enter the full URL including https://</span>
+          </label>
+          <div class="input-wrapper">
+            <div class="input-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3.6 9H20.4M3.6 15H20.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 3C14.3 5.6 15.6 8.7 15.6 12C15.6 15.3 14.3 18.4 12 21C9.7 18.4 8.4 15.3 8.4 12C8.4 8.7 9.7 5.6 12 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <input
+              id="url"
+              name="url"
+              type="url"
+              required
+              [(ngModel)]="url"
+              placeholder="https://example.com"
+              aria-describedby="consent"
+              [disabled]="submitting"
+            />
+            <ui-cta-button
+              type="submit"
+              [label]="submitting ? 'Scanning...' : 'Scan now'"
+              variant="primary"
+              [disabled]="submitting"
+            ></ui-cta-button>
+          </div>
+          <p id="consent" class="consent">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 16V12M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            By scanning, you confirm you have permission to analyze this page.
+          </p>
+        </div>
+
+        <p class="error-message" *ngIf="errorMessage" role="alert">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 9V11M12 15H12.01M5.07 19H18.93C20.6 19 21.68 17.18 20.83 15.76L13.9 3.76C13.05 2.34 10.95 2.34 10.1 3.76L3.17 15.76C2.32 17.18 3.4 19 5.07 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {{ errorMessage }}
         </p>
-        <p class="upgrade">Sign up to see all issues, AI-powered fix suggestions, and the auto-fix script.</p>
-        <ui-cta-button routerLink="/signup" label="Get full access" variant="primary"></ui-cta-button>
+      </form>
+
+      <div class="scanning-state" *ngIf="submitting" aria-live="polite">
+        <div class="scanning-animation">
+          <div class="scanning-ring"></div>
+          <div class="scanning-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <p class="scanning-text">Analyzing accessibility issues...</p>
+        <p class="scanning-subtext">This usually takes 10-30 seconds</p>
       </div>
-      <div class="upgrade-box" *ngIf="!result.limited">
-        <p class="upgrade">Want AI-powered fix suggestions and the auto-fix script?</p>
-        <ui-cta-button routerLink="/signup" label="Get started" variant="secondary"></ui-cta-button>
+    </div>
+
+    <!-- Results Section -->
+    <section *ngIf="result" class="results" aria-live="polite" aria-label="Scan results">
+      <div class="results-header">
+        <h2>Scan Results</h2>
+        <p class="results-url">{{ url }}</p>
+      </div>
+
+      <div class="results-grid">
+        <div class="score-card">
+          <div class="score-visual">
+            <svg viewBox="0 0 100 100" class="score-ring">
+              <circle cx="50" cy="50" r="45" stroke="#e7e5e4" stroke-width="8" fill="none"/>
+              <circle
+                cx="50" cy="50" r="45"
+                [attr.stroke]="getScoreColor()"
+                stroke-width="8"
+                fill="none"
+                [attr.stroke-dasharray]="getScoreDashArray()"
+                stroke-dashoffset="0"
+                stroke-linecap="round"
+                transform="rotate(-90 50 50)"
+              />
+            </svg>
+            <span class="score-number" [style.color]="getScoreColor()">{{ result.score }}</span>
+          </div>
+          <div class="score-info">
+            <h3>Accessibility Score</h3>
+            <p class="score-description">{{ getScoreDescription() }}</p>
+          </div>
+        </div>
+
+        <div class="issues-card">
+          <div class="issues-header">
+            <h3>Issues Found</h3>
+            <span class="issues-count">{{ result.issues.length }} {{ result.limited ? 'of ' + result.totalIssues : '' }}</span>
+          </div>
+
+          <ul class="issues-list">
+            <li *ngFor="let issue of result.issues" class="issue-item" [class]="'severity-' + issue.severity">
+              <div class="issue-severity">
+                <span class="severity-badge">{{ issue.severity }}</span>
+              </div>
+              <div class="issue-content">
+                <p class="issue-type">{{ issue.type }}</p>
+                <p class="issue-description">{{ issue.description }}</p>
+                <p *ngIf="issue.location" class="issue-location">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M10 13L4 7L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20 21V13C20 11.9391 19.5786 10.9217 18.8284 10.1716C18.0783 9.42143 17.0609 9 16 9H4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {{ issue.location }}
+                </p>
+              </div>
+            </li>
+          </ul>
+
+          <div class="upgrade-prompt" *ngIf="result.limited">
+            <div class="upgrade-content">
+              <div class="upgrade-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 15V3M12 3L7 8M12 3L17 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 15V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="upgrade-text">
+                <p class="upgrade-headline">See all {{ result.totalIssues }} issues</p>
+                <p class="upgrade-description">Get AI-powered fix suggestions and auto-fix script access</p>
+              </div>
+            </div>
+            <ui-cta-button routerLink="/signup" label="Unlock full report" variant="primary"></ui-cta-button>
+          </div>
+
+          <div class="next-steps" *ngIf="!result.limited">
+            <p>Want AI-powered fix suggestions and the auto-fix script?</p>
+            <ui-cta-button routerLink="/signup" label="Get started" variant="secondary"></ui-cta-button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Benefits Section -->
+  <section class="scan-benefits" *ngIf="!result" aria-labelledby="benefits-heading">
+    <h2 id="benefits-heading" class="sr-only">What you'll get</h2>
+    <div class="benefits-grid">
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Instant Results</h3>
+        <p>Get your accessibility score and top issues in under 60 seconds</p>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 16V12M12 8H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Plain-Language Explanations</h3>
+        <p>Understand exactly what's wrong and why it matters</p>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M2 12H22M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <h3>WCAG 2.1 Coverage</h3>
+        <p>Comprehensive scanning against accessibility guidelines</p>
       </div>
     </div>
   </section>

@@ -1,99 +1,176 @@
-<section class="signup" aria-labelledby="signup-heading">
-  <p class="eyebrow">Get started</p>
-  <h1 id="signup-heading">Create your account</h1>
-  <p class="lead">Start monitoring your website accessibility and get instant AI-powered fix suggestions.</p>
-
+<section class="signup-page" aria-labelledby="signup-heading">
   <div class="signup-container">
-    <div class="signup-card">
-      <form class="signup-form" (ngSubmit)="onSubmit()" aria-label="Sign up form">
-        <div class="form-group">
-          <label for="name">Name (optional)</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            [(ngModel)]="name"
-            placeholder="Jane Doe"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email <span class="required">*</span></label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            [(ngModel)]="email"
-            placeholder="you@example.com"
-            [class.error-input]="validationErrors['email']"
-          />
-          <p class="error-text" *ngIf="validationErrors['email']" role="alert">
-            {{ validationErrors['email'] }}
-          </p>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password <span class="required">*</span></label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            [(ngModel)]="password"
-            placeholder="At least 8 characters"
-            [class.error-input]="validationErrors['password']"
-          />
-          <p class="error-text" *ngIf="validationErrors['password']" role="alert">
-            {{ validationErrors['password'] }}
-          </p>
-        </div>
-
-        <div class="form-group">
-          <label for="confirmPassword">Confirm password <span class="required">*</span></label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            required
-            [(ngModel)]="confirmPassword"
-            placeholder="Re-enter your password"
-            [class.error-input]="validationErrors['confirmPassword']"
-          />
-          <p class="error-text" *ngIf="validationErrors['confirmPassword']" role="alert">
-            {{ validationErrors['confirmPassword'] }}
-          </p>
-        </div>
-
-        <div class="pricing-info">
-          <p class="price-highlight">$39/month &mdash; Cancel anytime</p>
-          <p class="terms-text">
-            By signing up, you agree to our
-            <a href="/legal/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
-          </p>
-        </div>
-
-        <ui-cta-button
-          type="submit"
-          label="Continue to checkout"
-          variant="primary"
-          [disabled]="submitting"
-        ></ui-cta-button>
-
-        <span class="status" *ngIf="submitting" aria-live="polite">Creating your account...</span>
-        <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
-      </form>
+    <div class="signup-header">
+      <p class="eyebrow">Get Started</p>
+      <h1 id="signup-heading">Create your account</h1>
+      <p class="lead">Start monitoring your website's accessibility today.</p>
     </div>
 
-    <div class="benefits">
-      <h2>What's included</h2>
-      <ul>
-        <li>Unlimited URL scans</li>
-        <li>Full issue reports with AI-powered suggestions</li>
-        <li>Auto-fix script for quick repairs</li>
-        <li>Continuous monitoring and alerts</li>
-        <li>Export reports for compliance</li>
-      </ul>
+    <div class="signup-grid">
+      <div class="signup-form-card">
+        <form class="signup-form" (ngSubmit)="onSubmit()" aria-label="Sign up form">
+          <div class="form-group">
+            <label for="name">Name <span class="optional">(optional)</span></label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              [(ngModel)]="name"
+              placeholder="Jane Doe"
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email <span class="required">*</span></label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              [(ngModel)]="email"
+              placeholder="you@example.com"
+              [class.error-input]="validationErrors['email']"
+              autocomplete="email"
+            />
+            <p class="error-text" *ngIf="validationErrors['email']" role="alert">
+              {{ validationErrors['email'] }}
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password <span class="required">*</span></label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              [(ngModel)]="password"
+              placeholder="At least 8 characters"
+              [class.error-input]="validationErrors['password']"
+              autocomplete="new-password"
+            />
+            <p class="error-text" *ngIf="validationErrors['password']" role="alert">
+              {{ validationErrors['password'] }}
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm password <span class="required">*</span></label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              required
+              [(ngModel)]="confirmPassword"
+              placeholder="Re-enter your password"
+              [class.error-input]="validationErrors['confirmPassword']"
+              autocomplete="new-password"
+            />
+            <p class="error-text" *ngIf="validationErrors['confirmPassword']" role="alert">
+              {{ validationErrors['confirmPassword'] }}
+            </p>
+          </div>
+
+          <div class="pricing-highlight">
+            <div class="price-tag">
+              <span class="price-amount">$39</span>
+              <span class="price-period">/month</span>
+            </div>
+            <p class="price-note">Cancel anytime. 14-day money-back guarantee.</p>
+          </div>
+
+          <ui-cta-button
+            type="submit"
+            label="Continue to checkout"
+            variant="primary"
+            [disabled]="submitting"
+          ></ui-cta-button>
+
+          <div class="form-footer">
+            <p class="terms-text">
+              By signing up, you agree to our
+              <a href="/legal/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+              and
+              <a href="/legal/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+            </p>
+          </div>
+
+          <div class="status-message" *ngIf="submitting" aria-live="polite">
+            <div class="loading-spinner"></div>
+            <span>Creating your account...</span>
+          </div>
+
+          <p class="error-message" *ngIf="errorMessage" role="alert">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 9V11M12 15H12.01M5.07 19H18.93C20.6 19 21.68 17.18 20.83 15.76L13.9 3.76C13.05 2.34 10.95 2.34 10.1 3.76L3.17 15.76C2.32 17.18 3.4 19 5.07 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ errorMessage }}
+          </p>
+        </form>
+      </div>
+
+      <div class="benefits-card">
+        <h2>Everything you need</h2>
+        <ul class="benefits-list">
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 10L9.16667 11.6667L12.5 8.33333M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Unlimited URL scans</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 10L9.16667 11.6667L12.5 8.33333M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Full accessibility reports</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 10L9.16667 11.6667L12.5 8.33333M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>AI-powered fix suggestions</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 10L9.16667 11.6667L12.5 8.33333M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Auto-fix script access</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 10L9.16667 11.6667L12.5 8.33333M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Continuous monitoring</span>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 10L9.16667 11.6667L12.5 8.33333M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Compliance report exports</span>
+          </li>
+        </ul>
+
+        <div class="trust-badges">
+          <div class="badge">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>WCAG 2.1 coverage</span>
+          </div>
+          <div class="badge">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 22S20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Secure checkout</span>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <p class="login-link">
+      Already have an account? <a href="/login">Sign in</a>
+    </p>
   </div>
 </section>

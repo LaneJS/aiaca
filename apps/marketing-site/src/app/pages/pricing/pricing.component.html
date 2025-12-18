@@ -1,39 +1,83 @@
-<section class="pricing" aria-labelledby="pricing-page-heading">
-  <p class="eyebrow">Plans</p>
-  <h1 id="pricing-page-heading">Pricing designed for small teams</h1>
-  <p class="lead">Keep the free scan forever or upgrade for monitoring and the auto-fix script.</p>
-
-  <div class="plan-grid">
-    <article *ngFor="let plan of plans">
-      <h2>{{ plan.name }}</h2>
-      <p class="price">{{ plan.price }}</p>
-      <p>{{ plan.description }}</p>
-      <ul>
-        <li *ngFor="let feature of plan.features">{{ feature }}</li>
-      </ul>
-      <ui-cta-button
-        [routerLink]="plan.routerLink"
-        label="{{ plan.cta }}"
-        variant="primary"
-      ></ui-cta-button>
-    </article>
+<section class="pricing-page" aria-labelledby="pricing-page-heading">
+  <div class="pricing-hero">
+    <p class="eyebrow">Pricing</p>
+    <h1 id="pricing-page-heading">Simple, transparent pricing</h1>
+    <p class="lead">Start with a free scan. Upgrade when you need continuous monitoring and AI-powered fixes.</p>
   </div>
 
-  <div class="faq" aria-labelledby="faq-heading">
-    <h2 id="faq-heading">Quick questions</h2>
-    <dl>
-      <div>
-        <dt>Does the free scan include AI suggestions?</dt>
-        <dd>We share a limited set of AI-backed suggestions on the first few issues to help you take action.</dd>
-      </div>
-      <div>
-        <dt>Can I cancel anytime?</dt>
-        <dd>Yes. Plans are month-to-month with no hidden fees.</dd>
-      </div>
-      <div>
-        <dt>Do you handle privacy-sensitive pages?</dt>
-        <dd>We avoid storing forms or logged-in data and document what we collect in the privacy policy.</dd>
-      </div>
-    </dl>
+  <div class="pricing-container">
+    <div class="plan-grid">
+      <article class="plan-card" *ngFor="let plan of plans; let i = index" [class.featured]="i === 1">
+        <div class="plan-badge" *ngIf="i === 1">Recommended</div>
+        <div class="plan-header">
+          <h2>{{ plan.name }}</h2>
+          <div class="plan-price">
+            <span class="price-value">{{ plan.price }}</span>
+            <span class="price-period" *ngIf="i === 1">/month</span>
+          </div>
+          <p class="plan-desc">{{ plan.description }}</p>
+        </div>
+
+        <ul class="plan-features">
+          <li *ngFor="let feature of plan.features">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 10L9.16667 11.6667L12.5 8.33333M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>{{ feature }}</span>
+          </li>
+        </ul>
+
+        <ui-cta-button
+          [routerLink]="plan.routerLink"
+          [label]="plan.cta"
+          [variant]="i === 1 ? 'primary' : 'secondary'"
+        ></ui-cta-button>
+      </article>
+    </div>
+
+    <div class="guarantee">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+        <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>14-day money-back guarantee. Cancel anytime. No hidden fees.</span>
+    </div>
   </div>
+
+  <section class="faq-section" aria-labelledby="faq-heading">
+    <div class="faq-container">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+
+      <dl class="faq-list">
+        <div class="faq-item">
+          <dt>Does the free scan include AI suggestions?</dt>
+          <dd>Yes! We provide AI-powered explanations for your top 5 issues, helping you understand exactly what to fix and why it matters.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Can I cancel my subscription anytime?</dt>
+          <dd>Absolutely. Plans are month-to-month with no long-term contracts. Cancel anytime from your dashboard, no questions asked.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>What's included in the auto-fix script?</dt>
+          <dd>A lightweight JavaScript snippet that automatically adds skip links, improves focus states, and applies safe accessibility enhancements without changing your codebase.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Do you handle privacy-sensitive pages?</dt>
+          <dd>We only scan publicly accessible content. We never store form data or access authenticated pages. See our privacy policy for full details.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Is there a discount for annual billing?</dt>
+          <dd>Not yet, but we're working on it! Subscribe to our newsletter to be the first to know about new pricing options.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="cta-section dark-section" aria-label="Get started">
+    <div class="cta-container">
+      <h2>Ready to make your site accessible?</h2>
+      <p>Start with a free scan. See your accessibility score in under 60 seconds.</p>
+      <ui-cta-button routerLink="/scan" label="Run free scan" variant="primary"></ui-cta-button>
+    </div>
+  </section>
 </section>

@@ -154,15 +154,16 @@
     style.id = 'aaca-embed-contrast-style';
     style.textContent = `
       body.aaca-autofix-contrast #demo-site-container .low-contrast {
-        color: #0f172a !important;
+        color: #1c1917 !important;
+        background: transparent !important;
         font-weight: 600;
       }
 
       body.aaca-autofix-contrast #demo-site-container .ghost-link,
       body.aaca-autofix-contrast #demo-site-container .ghost-button {
-        color: #065f46 !important;
-        border-color: #065f46 !important;
-        background: #d1fae5 !important;
+        color: #047857 !important;
+        border-color: #059669 !important;
+        background: #ecfdf5 !important;
       }
     `;
 

@@ -30,11 +30,13 @@ export class App implements OnInit, OnDestroy {
   protected isFixing = false;
   protected keyboardDemoActive = false;
   protected copyLabel = 'Copy';
+  protected counterPulse = false;
 
   private fixTimeoutId: number | null = null;
   private keyboardIntervalId: number | null = null;
   private keyboardTimeoutId: number | null = null;
   private copyTimeoutId: number | null = null;
+  private counterTimeoutId: number | null = null;
 
   private readonly prefersReducedMotion =
     typeof window !== 'undefined' &&
@@ -173,6 +175,9 @@ export class App implements OnInit, OnDestroy {
   private handleFixApplied(event: CustomEvent) {
     const detail = event.detail || {};
     this.ngZone.run(() => {
+      if (this.fixTotal > 0 && this.fixCount >= this.fixTotal) {
+        return;
+      }
       this.fixCount += 1;
       let message = detail.message || 'Applied fix';
       if (detail.value) {
@@ -185,6 +190,7 @@ export class App implements OnInit, OnDestroy {
         this.fixLogs.pop();
       }
       this.updateFixProgress();
+      this.triggerCounterPulse();
       this.cdr.detectChanges();
     });
   }
@@ -193,10 +199,12 @@ export class App implements OnInit, OnDestroy {
     const detail = event.detail || {};
     this.ngZone.run(() => {
       this.fixTotal = Number(detail.total) || 0;
-      this.updateFixProgress();
-      if (this.fixTotal && this.fixCount >= this.fixTotal) {
-        this.fixSummary = `${this.fixTotal} fixes applied in 0.3s`;
+      if (this.fixCount === 0 && this.fixTotal > 0) {
+        this.fixCount = this.fixTotal;
+        this.fixLogs = this.buildFixLogs(detail.counts || {});
+        this.triggerCounterPulse();
       }
+      this.updateFixProgress();
       this.cdr.detectChanges();
     });
   }
@@ -219,7 +227,59 @@ export class App implements OnInit, OnDestroy {
   private updateFixProgress(): void {
     if (this.fixTotal > 0) {
       this.fixProgress = Math.min((this.fixCount / this.fixTotal) * 100, 100);
+      if (this.fixCount >= this.fixTotal) {
+        this.fixSummary = `${this.fixTotal} fixes applied in 0.3s`;
+      }
+      return;
     }
+    this.fixProgress = 0;
+  }
+
+  private buildFixLogs(counts: Record<string, number>): string[] {
+    const altCount = Number(counts['altText']) || 0;
+    const labelCount = Number(counts['labels']) || 0;
+    const skipCount = Number(counts['skipLink']) || 0;
+    const focusCount = Number(counts['focus']) || 0;
+    const contrastCount = Number(counts['contrast']) || 0;
+    const logs: string[] = [];
+
+    if (altCount) {
+      logs.push(`Added alt text to ${altCount} ${altCount === 1 ? 'image' : 'images'}`);
+    }
+    if (labelCount) {
+      logs.push(`Labeled ${labelCount} form ${labelCount === 1 ? 'control' : 'controls'}`);
+    }
+    if (contrastCount) {
+      logs.push('Enhanced contrast in key areas');
+    }
+    if (skipCount) {
+      logs.push('Injected skip navigation');
+    }
+    if (focusCount) {
+      logs.push('Applied focus indicators');
+    }
+
+    return logs;
+  }
+
+  private triggerCounterPulse(): void {
+    if (this.prefersReducedMotion) {
+      return;
+    }
+
+    this.counterPulse = false;
+    if (this.counterTimeoutId) {
+      window.clearTimeout(this.counterTimeoutId);
+    }
+
+    this.counterTimeoutId = window.setTimeout(() => {
+      this.counterPulse = true;
+      this.cdr.detectChanges();
+      this.counterTimeoutId = window.setTimeout(() => {
+        this.counterPulse = false;
+        this.cdr.detectChanges();
+      }, 650);
+    }, 0);
   }
 
   private triggerFixingAnimation(): void {
@@ -254,6 +314,10 @@ export class App implements OnInit, OnDestroy {
     if (this.copyTimeoutId) {
       window.clearTimeout(this.copyTimeoutId);
       this.copyTimeoutId = null;
+    }
+    if (this.counterTimeoutId) {
+      window.clearTimeout(this.counterTimeoutId);
+      this.counterTimeoutId = null;
     }
   }
 }

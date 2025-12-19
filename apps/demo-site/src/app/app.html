@@ -45,12 +45,12 @@
         </div>
 
         <!-- Overlay Badges -->
-        <div class="warning-badge alt-warning">⚠️ No alt text</div>
-        <div class="warning-badge label-warning">⚠️ Missing label</div>
-        <div class="warning-badge contrast-warning">⚠️ Low contrast</div>
-        <div class="fix-check alt-check">✓ Alt text added</div>
-        <div class="fix-check label-check">✓ Labels injected</div>
-        <div class="fix-check contrast-check">✓ Contrast fixed</div>
+        <div class="warning-badge alt-warning" *ngIf="!autofixEnabled">⚠️ No alt text</div>
+        <div class="warning-badge label-warning" *ngIf="!autofixEnabled">⚠️ Missing label</div>
+        <div class="warning-badge contrast-warning" *ngIf="!autofixEnabled">⚠️ Low contrast</div>
+        <div class="fix-check alt-check" *ngIf="autofixEnabled">✓ Alt text added</div>
+        <div class="fix-check label-check" *ngIf="autofixEnabled">✓ Labels injected</div>
+        <div class="fix-check contrast-check" *ngIf="autofixEnabled">✓ Contrast fixed</div>
 
         <header
           class="mini-header a11y-target"
@@ -77,8 +77,8 @@
                 class="hero-img"
                 data-ai-alt="Fresh croissants and pastries on display in a bakery case"
               />
-              <span class="img-warning" aria-hidden="true">⚠️ No alt</span>
-              <span class="img-check" aria-hidden="true">✓</span>
+              <span class="img-warning" aria-hidden="true" *ngIf="!autofixEnabled">⚠️ No alt</span>
+              <span class="img-check" aria-hidden="true" *ngIf="autofixEnabled">✓</span>
             </figure>
 
             <div
@@ -107,7 +107,7 @@
                 class="input-field"
                 data-ai-label="Email address for newsletter"
               />
-              <span class="field-warning" aria-hidden="true">⚠️</span>
+              <span class="field-warning" aria-hidden="true" *ngIf="!autofixEnabled">⚠️</span>
             </div>
             <div class="form-group" data-field-label="Full name">
               <input
@@ -116,7 +116,7 @@
                 class="input-field"
                 data-ai-label="Your full name"
               />
-              <span class="field-warning" aria-hidden="true">⚠️</span>
+              <span class="field-warning" aria-hidden="true" *ngIf="!autofixEnabled">⚠️</span>
             </div>
             <button class="subscribe-btn ghost-button" type="button">Subscribe</button>
           </section>
@@ -160,7 +160,7 @@
       </div>
 
       <div class="fix-summary" [class.active]="autofixEnabled">
-        <div class="summary-value">{{ fixCount || fixTotal }}</div>
+        <div class="summary-value" [class.pulse]="counterPulse">{{ fixCount || fixTotal }}</div>
         <div class="summary-label">issues fixed instantly</div>
         <div class="summary-meta" *ngIf="autofixEnabled && fixSummary">{{ fixSummary }}</div>
       </div>

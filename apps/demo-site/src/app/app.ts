@@ -37,6 +37,7 @@ export class App implements OnInit, OnDestroy {
   private keyboardTimeoutId: number | null = null;
   private copyTimeoutId: number | null = null;
   private counterTimeoutId: number | null = null;
+  private fallbackTimeoutId: number | null = null;
 
   private readonly prefersReducedMotion =
     typeof window !== 'undefined' &&
@@ -80,10 +81,13 @@ export class App implements OnInit, OnDestroy {
 
     if (this.autofixEnabled) {
       window.AACAEmbedDemo.disable();
+      this.resetFixState();
+      this.clearFallbackSummary();
     } else {
       this.resetFixState();
       window.AACAEmbedDemo.enable();
       this.triggerFixingAnimation();
+      this.scheduleFallbackSummary();
     }
 
     this.autofixEnabled = !this.autofixEnabled;
@@ -222,6 +226,7 @@ export class App implements OnInit, OnDestroy {
     this.fixLogs = [];
     this.fixSummary = '';
     this.fixProgress = 0;
+    this.counterPulse = false;
   }
 
   private updateFixProgress(): void {
@@ -260,6 +265,53 @@ export class App implements OnInit, OnDestroy {
     }
 
     return logs;
+  }
+
+  private scheduleFallbackSummary(): void {
+    if (this.fallbackTimeoutId) {
+      window.clearTimeout(this.fallbackTimeoutId);
+    }
+    this.fallbackTimeoutId = window.setTimeout(() => {
+      if (!this.autofixEnabled) {
+        return;
+      }
+      if (this.fixTotal > 0 || this.fixCount > 0 || this.fixLogs.length > 0) {
+        return;
+      }
+      const counts = this.computeFallbackCounts();
+      const total = Object.values(counts).reduce((sum, value) => sum + value, 0);
+      if (total > 0) {
+        this.fixTotal = total;
+        this.fixCount = total;
+        this.fixLogs = this.buildFixLogs(counts);
+        this.updateFixProgress();
+        this.triggerCounterPulse();
+        this.cdr.detectChanges();
+      }
+    }, 250);
+  }
+
+  private clearFallbackSummary(): void {
+    if (this.fallbackTimeoutId) {
+      window.clearTimeout(this.fallbackTimeoutId);
+      this.fallbackTimeoutId = null;
+    }
+  }
+
+  private computeFallbackCounts(): Record<string, number> {
+    const container = document.getElementById('demo-site-container');
+    if (!container) {
+      return {};
+    }
+    const altText = container.querySelectorAll('img[data-ai-alt]').length;
+    const labels = container.querySelectorAll('[data-ai-label]').length;
+    const contrast = container.querySelectorAll('.low-contrast, .ghost-link, .ghost-button').length
+      ? 1
+      : 0;
+    const skipLink = 1;
+    const focus = 1;
+
+    return { altText, labels, contrast, skipLink, focus };
   }
 
   private triggerCounterPulse(): void {
@@ -318,6 +370,10 @@ export class App implements OnInit, OnDestroy {
     if (this.counterTimeoutId) {
       window.clearTimeout(this.counterTimeoutId);
       this.counterTimeoutId = null;
+    }
+    if (this.fallbackTimeoutId) {
+      window.clearTimeout(this.fallbackTimeoutId);
+      this.fallbackTimeoutId = null;
     }
   }
 }

@@ -716,6 +716,9 @@
 }
 
 .toggle-label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 0.7rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -725,13 +728,13 @@
 }
 
 .toggle-label.left {
-  margin-left: 42px;
+  right: 14px;
   opacity: 1;
   transition: opacity 0.2s ease;
 }
 
 .toggle-label.right {
-  margin-right: 42px;
+  left: 14px;
   opacity: 0;
   transition: opacity 0.2s ease;
 }

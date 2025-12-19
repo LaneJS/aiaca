@@ -2,7 +2,7 @@
   <header class="hero-intro">
     <div class="eyebrow">A11y Assistant Demo</div>
     <h1>One script. Instant accessibility.</h1>
-    <p>Watch 12 issues vanish in under a second.</p>
+    <p>Watch 6 issues vanish in under a second.</p>
   </header>
 
   <!-- SECTION 1: THE STAGE (HERO) -->
@@ -173,7 +173,7 @@
           </span>
         </div>
         <div class="log-items">
-          <div class="log-placeholder" *ngIf="!fixLogs.length">Waiting for toggle...</div>
+          <div class="log-placeholder" *ngIf="!autofixEnabled || !fixLogs.length">Waiting for toggle...</div>
           <div class="log-item" *ngFor="let log of fixLogs">
             <span class="check">✓</span> {{ log }}
           </div>

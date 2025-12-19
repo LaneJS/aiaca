@@ -1,5 +1,13 @@
 /* Global styles for the demo site */
 body {
   margin: 0;
-  background: #0b1221;
+  background: #fafaf9;
+  color: #1c1917;
+  min-height: 100vh;
+}
+
+@media print {
+  body {
+    background: white;
+  }
 }

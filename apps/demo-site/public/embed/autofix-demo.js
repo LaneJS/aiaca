@@ -9,6 +9,14 @@
     contrastStyle: null,
   };
 
+  function dispatchFixEvent(type, details) {
+    window.dispatchEvent(
+      new CustomEvent('aaca-fix-applied', {
+        detail: { type, ...details },
+      }),
+    );
+  }
+
   function applyAltText() {
     state.altImages = [];
     const images = Array.from(document.querySelectorAll('img')).filter(
@@ -22,6 +30,12 @@
       });
       const suggestion = img.dataset.aiAlt || 'AI-generated alt text from AACA demo';
       img.setAttribute('alt', suggestion);
+      
+      dispatchFixEvent('alt-text', {
+        element: img,
+        message: 'Added alt text',
+        value: suggestion
+      });
     });
   }
 
@@ -52,6 +66,12 @@
       });
 
       control.setAttribute('aria-label', suggestion);
+
+      dispatchFixEvent('aria-label', {
+        element: control,
+        message: 'Added aria-label',
+        value: suggestion
+      });
     });
   }
 
@@ -85,6 +105,11 @@
 
     document.body.insertBefore(skipLink, document.body.firstChild);
     state.skipLink = skipLink;
+    
+    dispatchFixEvent('skip-link', {
+        element: skipLink,
+        message: 'Injected skip link'
+    });
   }
 
   function applyFocusStyles() {
@@ -103,6 +128,10 @@
     `;
     document.head.appendChild(style);
     state.focusStyle = style;
+
+    dispatchFixEvent('focus-style', {
+        message: 'Applied focus styles'
+    });
   }
 
   function applyContrastPatch() {
@@ -130,6 +159,10 @@
     document.head.appendChild(style);
     document.body.classList.add('aaca-autofix-contrast');
     state.contrastStyle = style;
+
+    dispatchFixEvent('contrast', {
+        message: 'Enhanced contrast'
+    });
   }
 
   function enable() {
@@ -138,6 +171,7 @@
     injectSkipLink();
     applyFocusStyles();
     applyContrastPatch();
+    window.dispatchEvent(new CustomEvent('aaca-fixes-enabled'));
   }
 
   function disable() {
@@ -174,6 +208,7 @@
       state.contrastStyle = null;
       document.body.classList.remove('aaca-autofix-contrast');
     }
+    window.dispatchEvent(new CustomEvent('aaca-fixes-disabled'));
   }
 
   window.AACAEmbedDemo = {

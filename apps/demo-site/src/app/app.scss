@@ -310,8 +310,8 @@
   right: 30px;
 }
 .contrast-check {
-  top: 185px;
-  left: 52%;
+  top: 210px;
+  left: 60%;
 }
 
 .mini-site.fixed .warning-badge {
@@ -419,7 +419,6 @@
   border-radius: 12px;
 }
 
-.img-warning,
 .img-check {
   position: absolute;
   top: 10px;
@@ -449,10 +448,6 @@
 .mini-site.fixed .img-check {
   opacity: 1;
   transform: scale(1);
-}
-
-.mini-site.fixed .img-warning {
-  opacity: 0;
 }
 
 .hero-content h3 {

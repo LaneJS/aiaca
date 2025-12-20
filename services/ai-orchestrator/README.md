@@ -1,95 +1,78 @@
-# AI Orchestrator Service (Node/TypeScript)
+# AI Orchestrator
 
-Fastify microservice that turns scanner issues + DOM snippets into structured AI suggestions. Providers include Gemini (Vertex AI) and a deterministic stub for offline development.
+The AI Orchestrator service generates accessibility fixes and suggestions using Large Language Models (LLMs). It acts as an abstraction layer between the core platform and AI providers (currently Google Gemini).
 
-## Architecture
-- **Entry point:** `src/main.ts` boots a Fastify server and registers `POST /suggest-fixes` via `src/app/routes.ts`.
-- **Configuration:** Environment variables validated through `@aiaca/config` in `src/app/config.ts`.
-- **Providers:**
-  - `GeminiSuggestionProvider` (`src/providers/gemini-provider.ts`) for live calls to Gemini 2.0 Flash via the `@google/genai` SDK using structured JSON output.
-  - `StubSuggestionProvider` (`src/providers/stub-provider.ts`) to mimic API responses when offline or when `AI_ORCHESTRATOR_USE_STUB=true`.
-- **Prompting & validation:** Prompt builder in `src/prompt/prompt-builder.ts`; AI responses validated and grounded against incoming selectors/snippets in `src/prompt/response-validator.ts`.
-- **Budgeting & resiliency:** `SuggestionService` enforces per-request issue caps, optional tenant token budgets, timeouts, and falls back to the stub provider on errors.
+## Technology Stack
 
-## Environment
-Set the following variables (see `.env.sample` for patterns):
+- **Runtime**: Node.js
+- **Framework**: Fastify
+- **Build System**: Nx
+- **AI Provider**: Google Gemini (via `GeminiSuggestionProvider`)
 
-| Variable | Purpose | Default |
-| --- | --- | --- |
-| `AI_ORCHESTRATOR_PORT` | Port to bind Fastify | `4002` |
-| `AI_ORCHESTRATOR_USE_STUB` | Force stub provider even if Gemini is configured | `false` |
-| `AI_ORCHESTRATOR_MAX_ISSUES` | Max issues per request to guard token use | `5` |
-| `AI_ORCHESTRATOR_TIMEOUT_MS` | Request timeout to AI provider | `20000` |
-| `AI_ORCHESTRATOR_TENANT_BUDGET_TOKENS` | Optional per-tenant budget (in tokens) | _unset_ |
-| `GEMINI_API_KEY` | API key for Gemini / Vertex AI | _required for live calls_ |
-| `GEMINI_MODEL` | Model name | `gemini-2.0-flash-exp` |
+## Features
 
-### Supported Gemini models
+- **Fix Suggestions**: Generates code fixes for detected accessibility issues.
+- **Provider Abstraction**: Supports swapping AI providers or using a stub provider for testing.
+- **Resilience**: Handles timeouts and failures gracefully.
 
-- `gemini-2.0-flash-exp` (default)
-- `gemini-2.0-flash`
-- `gemini-1.5-pro`
-- `gemini-1.5-flash`
+## Getting Started
 
-## Running locally
+### Prerequisites
 
-```bash
-# Install workspace dependencies
-npm install
+- Node.js (v18 or later)
+- Gemini API Key (for production/live AI mode)
 
-# Start the orchestrator (stubbed if GEMINI_API_KEY is missing)
-npx nx serve ai-orchestrator
+### Configuration
 
-# Run tests
-npx nx test ai-orchestrator
-```
+Environment variables (typically set in `.env`):
 
-### Sample request (POST /suggest-fixes)
+- `AI_ORCHESTRATOR_PORT`: Port to listen on (default: 4002)
+- `GEMINI_API_KEY`: API key for Google Gemini.
+- `GEMINI_MODEL`: Model to use (e.g., `gemini-1.5-flash`).
+- `AI_ORCHESTRATOR_USE_STUB`: Set to `true` to use the offline stub provider.
+
+### Development
+
+- **Serve**: `npx nx serve ai-orchestrator`
+- **Build**: `npx nx build ai-orchestrator`
+- **Test**: `npx nx test ai-orchestrator`
+
+## Endpoints
+
+### `POST /suggest-fixes`
+
+Generates suggestions for a list of accessibility issues.
+
+**Request Body:**
 
 ```json
 {
-  "tenantId": "demo-tenant",
-  "domSnapshot": "<main><img class=\"hero\" src=\"/hero.jpg\"></main>",
   "issues": [
     {
-      "id": "issue-1",
-      "type": "alt_missing",
-      "severity": "MODERATE",
-      "description": "Image missing alt text",
-      "selector": "img.hero",
-      "htmlSnippet": "<img class=\"hero\" src=\"/hero.jpg\">"
+      "id": "issue-id",
+      "ruleId": "image-alt",
+      "html": "<img src='cat.jpg'>",
+      "message": "Images must have alt text"
     }
   ]
 }
 ```
 
-### Sample stub response
+**Response:**
 
 ```json
 {
-  "provider": "stub",
-  "requestId": "<uuid>",
   "suggestions": [
     {
-      "issueId": "issue-1",
-      "selector": "img.hero",
-      "explanation": "Images need concise alt text so screen readers can describe them.",
-      "suggestedFix": "Add an alt attribute to img.hero with a short description.",
-      "altText": "Descriptive image alt text",
-      "confidence": 0.42,
-      "grounded": true
+      "issueId": "issue-id",
+      "fix": "<img src='cat.jpg' alt='A cute cat'>",
+      "explanation": "Added alt text to the image."
     }
-  ],
-  "usage": { "inputTokens": 0, "outputTokens": 0 }
+  ]
 }
 ```
 
-## Notes on Gemini usage
-- Uses structured JSON via `responseSchema` to match the DTOs in `@aiaca/domain`.
-- Token usage from Gemini is surfaced in responses; per-tenant budgets are enforced in-memory for now.
-- If Gemini credentials are missing or a timeout/error occurs, the stub provider responds with safe defaults to keep the API stable.
+### Observability
 
-## Deployment considerations
-- Bind to `0.0.0.0` and configure the port via `AI_ORCHESTRATOR_PORT`.
-- Provide `GEMINI_API_KEY` through your secret manager. Avoid logging raw HTML; logs are limited to counts and identifiers.
-- Upstream services should pass `tenantId` to enable per-tenant budgets and audit trails.
+- `GET /health`: Health check.
+- `GET /metrics`: Prometheus metrics.

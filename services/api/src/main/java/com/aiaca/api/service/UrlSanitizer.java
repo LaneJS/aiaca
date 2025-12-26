@@ -18,7 +18,8 @@ public class UrlSanitizer {
 
         try {
             URI parsed = new URI(url.trim());
-            if (!ALLOWED_SCHEMES.contains(parsed.getScheme())) {
+            String scheme = parsed.getScheme();
+            if (scheme == null || !ALLOWED_SCHEMES.contains(scheme.toLowerCase())) {
                 throw new BadRequestException("URL must start with http or https");
             }
             if (parsed.getHost() == null || parsed.getHost().isBlank()) {

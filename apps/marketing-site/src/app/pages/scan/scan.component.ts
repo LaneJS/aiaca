@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CTAButtonComponent } from '@aiaca/ui';
@@ -59,7 +60,12 @@ export class ScanComponent implements OnInit {
     const trimmedUrl = this.url.trim();
 
     if (!trimmedUrl) {
-      this.errorMessage = 'Please enter a valid URL to scan.';
+      this.errorMessage = 'Please enter a URL to scan.';
+      return;
+    }
+
+    if (!this.isValidUrl(trimmedUrl)) {
+      this.errorMessage = 'Enter a full URL starting with http:// or https://';
       return;
     }
 
@@ -71,10 +77,45 @@ export class ScanComponent implements OnInit {
         this.result = response;
         this.submitting = false;
       },
-      error: () => {
-        this.errorMessage = 'We could not reach the scan service. Please try again shortly.';
+      error: (error: unknown) => {
+        this.errorMessage = this.resolveErrorMessage(error);
         this.submitting = false;
       },
     });
+  }
+
+  private isValidUrl(value: string): boolean {
+    try {
+      const parsed = new URL(value);
+      return (parsed.protocol === 'http:' || parsed.protocol === 'https:') && Boolean(parsed.hostname);
+    } catch {
+      return false;
+    }
+  }
+
+  private resolveErrorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 0) {
+        return 'We could not reach the scan service. Please try again shortly.';
+      }
+
+      if (typeof error.error === 'string' && error.error.trim()) {
+        return error.error;
+      }
+
+      if (error.error && typeof error.error === 'object' && 'message' in error.error) {
+        return String((error.error as { message: string }).message);
+      }
+
+      if (error.status === 400) {
+        return 'Please enter a valid URL starting with http:// or https://';
+      }
+
+      if (error.status === 429) {
+        return 'Too many free scans from your network. Please wait a minute and try again.';
+      }
+    }
+
+    return 'We could not complete the scan. Please try again shortly.';
   }
 }

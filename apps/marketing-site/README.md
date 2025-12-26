@@ -1,39 +1,44 @@
-# Marketing Site (Angular)
+# Marketing Site
 
-This Angular app powers the public marketing experience for AACA, including the free scan flow.
+The public-facing marketing website for A11y Assistant. It explains the product features, pricing, and documentation.
+
+## Technology Stack
+
+- **Framework**: Angular
+- **Build System**: Nx
+- **Styling**: SCSS
 
 ## Getting Started
-- Install dependencies at the repo root: `npm install`
-- Run the dev server: `npx nx serve marketing-site`
-- Build for production: `npx nx build marketing-site`
-- Run unit tests: `npx nx test marketing-site`
-- Lint the app: `npx nx lint marketing-site`
 
-## Design tokens
-- Colors: primary `#1d4ed8`, text `#0f172a`, muted `#475569`, backgrounds `#f8fafc`/white.
-- Radii: `var(--radius-lg)` (`1rem`) for cards and panels.
-- Shadows: `var(--shadow-card)` used on cards, hero, and callouts.
-- Typography: Inter/system stack defined in `src/styles.scss` with consistent heading and paragraph spacing.
+### Prerequisites
 
-## Pages & routes
-- `/` home with hero, problem statement, features, pricing teaser, and social proof placeholder.
-- `/how-it-works` outlines the 3-step flow and a11y commitments.
-- `/pricing` lists free and starter plans plus FAQ.
-- `/resources` contains FAQs and guides placeholders.
-- `/scan` provides the free scan form and results preview.
+- Node.js (v18 or later recommended)
+- npm
 
-### Content references
-- Resource FAQs and guide summaries live in `src/app/pages/resources/resources.component.ts|html|scss`.
-- Full Markdown guides for handoffs and support sit in `docs/guides/` and mirror the resource page summaries.
+### Development Server
 
-## API configuration
-The scan form posts to `POST /api/v1/public/scans` using a base URL resolved by `getApiBaseUrl` from `@aiaca/config`. Override via `AACA_API_BASE_URL`, `NX_PUBLIC_API_BASE_URL`, `PUBLIC_API_BASE_URL`, or by setting `window.__AACA_API_BASE_URL__`.
+Run `npx nx serve marketing-site` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Accessibility & SEO
-- Skip link, semantic landmarks, and accessible navigation states are built into the shell.
-- Each page sets a Title/Meta description plus Open Graph tags via `SeoService`.
-- CTA buttons ensure visible focus styles and support anchors, router links, and buttons.
+### Build
 
-## Open questions
-- Final pricing numbers for Starter/Team/Agency tiers.
-- Whether to surface a cookie/banner for analytics on the marketing site.
+Run `npx nx build marketing-site` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+### Running Tests
+
+- **Unit Tests**: Run `npx nx test marketing-site` to execute the unit tests via [Jest](https://jestjs.io).
+- **Linting**: Run `npx nx lint marketing-site` to run linting tools.
+
+## Key Content
+
+- **Landing Page**: Product overview.
+- **Resources**: Documentation and guides.
+- **Legal**: Privacy policy and terms of service.
+
+## Project Structure
+
+- `src/app`: Contains the application components and routing.
+- `src/assets`: Images, fonts, and other static files.
+
+## Further Help
+
+To get more help on the Nx CLI use `npx nx help`.

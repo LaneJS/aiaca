@@ -26,7 +26,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Watch our one-line accessibility rescue');
+    expect(compiled.textContent).toContain('Experience the transformation');
   });
 
   it('should toggle auto-fix state when the embed API exists', () => {

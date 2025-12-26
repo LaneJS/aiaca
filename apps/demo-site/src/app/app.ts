@@ -1,18 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface DemoIssue {
-  title: string;
-  severity: 'critical' | 'serious' | 'moderate' | 'minor';
-  description: string;
-  autoFix: string;
-}
-
-interface Suggestion {
-  label: string;
-  detail: string;
-  impact: string;
-}
 
 declare global {
   interface Window {
@@ -30,78 +17,38 @@ declare global {
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
+  private ngZone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
+
   protected autofixEnabled = false;
-  protected embedSnippet = `<script\n  src="https://cdn.aaca-demo.com/embed.js"\n  data-site-id="your-site-id"\n  data-embed-key="public-key-from-your-dashboard"\n  data-api-base="https://api.aaca.yourdomain.com"\n></script>`;
+  protected fixCount = 0;
+  protected fixTotal = 0;
+  protected fixLogs: string[] = [];
+  protected fixSummary = '';
+  protected fixProgress = 0;
+  protected isFixing = false;
+  protected keyboardDemoActive = false;
+  protected copyLabel = 'Copy';
+  protected counterPulse = false;
 
-  protected demoAccount = {
-    name: 'Demo Bakery',
-    domain: 'brokenbakery.aiaca.demo',
-    lastScan: '4 hours ago',
-    score: '58 / 100',
-  };
+  private fixTimeoutId: number | null = null;
+  private keyboardIntervalId: number | null = null;
+  private keyboardTimeoutId: number | null = null;
+  private copyTimeoutId: number | null = null;
+  private counterTimeoutId: number | null = null;
+  private fallbackTimeoutId: number | null = null;
 
-  protected scanFindings: DemoIssue[] = [
-    {
-      title: 'Missing alternative text on the bakery display',
-      severity: 'critical',
-      description:
-        'The loudest visuals have no alt text, so screen reader users get silence instead of context.',
-      autoFix:
-        'Writes in AI-generated alt text from the latest scan so people who rely on assistive tech know what is shown.',
-    },
-    {
-      title: 'Ghost CTA without focus styles',
-      severity: 'serious',
-      description:
-        'Focus outlines were stripped out, so keyboard users cannot tell where they are on the page.',
-      autoFix:
-        'Restores visible focus indicators and keeps your existing layout untouched.',
-    },
-    {
-      title: 'Low contrast muted copy',
-      severity: 'moderate',
-      description:
-        'Muted grey text on a grey background fails WCAG 2.1 contrast ratios across multiple sections.',
-      autoFix:
-        'Applies a high-contrast palette to muted copy and ghost buttons so visitors can actually read them.',
-    },
-    {
-      title: 'Unlabeled form controls',
-      severity: 'serious',
-      description:
-        'Newsletter inputs rely on placeholder-only hints and have no programmatic labels.',
-      autoFix:
-        'Adds aria-labels using scan recommendations and placeholder context so screen readers announce each field.',
-    },
-  ];
+  private readonly prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  protected aiSuggestions: Suggestion[] = [
-    {
-      label: '“Pastry case with macarons and fruit tarts”',
-      detail:
-        'AI orchestrator suggestion for the bakery display images, generated from the scan context and screenshot.',
-      impact: 'Stops screen reader silence and resolves WCAG 1.1.1.',
-    },
-    {
-      label: 'Inject “Skip to main content” link',
-      detail:
-        'Adds a persistent shortcut to jump past the noisy banner so the page is immediately usable with a keyboard.',
-      impact: 'Meets WCAG 2.4.1 for keyboard navigation and improves usability instantly.',
-    },
-    {
-      label: 'Restore focus outlines in brand purple',
-      detail:
-        'Applies consistent, high-contrast outlines for every interactive control without touching your component code.',
-      impact: 'Addresses WCAG 2.4.7 focus visibility issues and reduces user drop-off.',
-    },
-    {
-      label: 'Upgrade muted text contrast',
-      detail:
-        'Auto-applies a high-contrast palette while leaving layout untouched so calls-to-action stand out.',
-      impact: 'Resolves WCAG 1.4.3 failures called out in the scan and keeps your brand legible.',
-    },
-  ];
+  private readonly handleFixAppliedBound = (event: Event) =>
+    this.handleFixApplied(event as CustomEvent);
+  private readonly handleFixesDisabledBound = () => this.handleFixesDisabled();
+  private readonly handleFixesEnabledBound = (event: Event) =>
+    this.handleFixesEnabled(event as CustomEvent);
 
   ngOnInit(): void {
     const embedAvailable = Boolean(window?.AACAEmbedDemo);
@@ -111,6 +58,17 @@ export class App implements OnInit {
     }
 
     this.autofixEnabled = false;
+
+    window.addEventListener('aaca-fix-applied', this.handleFixAppliedBound as EventListener);
+    window.addEventListener('aaca-fixes-disabled', this.handleFixesDisabledBound);
+    window.addEventListener('aaca-fixes-enabled', this.handleFixesEnabledBound as EventListener);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('aaca-fix-applied', this.handleFixAppliedBound as EventListener);
+    window.removeEventListener('aaca-fixes-disabled', this.handleFixesDisabledBound);
+    window.removeEventListener('aaca-fixes-enabled', this.handleFixesEnabledBound as EventListener);
+    this.clearTimers();
   }
 
   protected toggleAutoFix(): void {
@@ -119,12 +77,303 @@ export class App implements OnInit {
       return;
     }
 
+    this.stopKeyboardDemo();
+
     if (this.autofixEnabled) {
       window.AACAEmbedDemo.disable();
+      this.resetFixState();
+      this.clearFallbackSummary();
     } else {
+      this.resetFixState();
       window.AACAEmbedDemo.enable();
+      this.triggerFixingAnimation();
+      this.scheduleFallbackSummary();
     }
 
     this.autofixEnabled = !this.autofixEnabled;
+    if (!this.autofixEnabled) {
+      this.isFixing = false;
+    }
+  }
+
+  protected handleToggleKey(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.toggleAutoFix();
+    }
+  }
+
+  protected copyCode(): void {
+    const code = '<script src="https://cdn.aaca.ai/fix.js" data-key="your-key"></script>';
+    const updateLabel = () => {
+      this.copyLabel = 'Copied!';
+      this.cdr.detectChanges();
+      if (this.copyTimeoutId) {
+        window.clearTimeout(this.copyTimeoutId);
+      }
+      this.copyTimeoutId = window.setTimeout(() => {
+        this.copyLabel = 'Copy';
+        this.cdr.detectChanges();
+      }, 1800);
+    };
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(code).then(updateLabel).catch(updateLabel);
+    } else {
+      updateLabel();
+    }
+  }
+
+  protected startKeyboardDemo(): void {
+    if (this.keyboardDemoActive) {
+      return;
+    }
+
+    const container = document.getElementById('demo-site-container');
+    if (!container) {
+      return;
+    }
+
+    const focusables = Array.from(
+      container.querySelectorAll<HTMLElement>('a, button, input, select, textarea'),
+    ).filter((element) => !element.hasAttribute('disabled'));
+
+    if (!focusables.length) {
+      return;
+    }
+
+    const stepInterval = this.prefersReducedMotion ? 350 : 700;
+    let index = 0;
+
+    const focusNext = () => {
+      focusables[index % focusables.length]?.focus();
+      index += 1;
+    };
+
+    this.keyboardDemoActive = true;
+    focusNext();
+
+    this.keyboardIntervalId = window.setInterval(focusNext, stepInterval);
+    this.keyboardTimeoutId = window.setTimeout(() => {
+      this.stopKeyboardDemo();
+      this.cdr.detectChanges();
+    }, focusables.length * stepInterval + 200);
+  }
+
+  private stopKeyboardDemo(): void {
+    if (!this.keyboardDemoActive) {
+      return;
+    }
+
+    this.keyboardDemoActive = false;
+    if (this.keyboardIntervalId) {
+      window.clearInterval(this.keyboardIntervalId);
+      this.keyboardIntervalId = null;
+    }
+    if (this.keyboardTimeoutId) {
+      window.clearTimeout(this.keyboardTimeoutId);
+      this.keyboardTimeoutId = null;
+    }
+  }
+
+  private handleFixApplied(event: CustomEvent) {
+    const detail = event.detail || {};
+    this.ngZone.run(() => {
+      if (this.fixTotal > 0 && this.fixCount >= this.fixTotal) {
+        return;
+      }
+      this.fixCount += 1;
+      let message = detail.message || 'Applied fix';
+      if (detail.value) {
+        const value = String(detail.value);
+        const shortValue = value.length > 24 ? `${value.substring(0, 24)}...` : value;
+        message += `: "${shortValue}"`;
+      }
+      this.fixLogs.unshift(message);
+      if (this.fixLogs.length > 6) {
+        this.fixLogs.pop();
+      }
+      this.updateFixProgress();
+      this.triggerCounterPulse();
+      this.cdr.detectChanges();
+    });
+  }
+
+  private handleFixesEnabled(event: CustomEvent) {
+    const detail = event.detail || {};
+    this.ngZone.run(() => {
+      this.fixTotal = Number(detail.total) || 0;
+      if (this.fixCount === 0 && this.fixTotal > 0) {
+        this.fixCount = this.fixTotal;
+        this.fixLogs = this.buildFixLogs(detail.counts || {});
+        this.triggerCounterPulse();
+      }
+      this.updateFixProgress();
+      this.cdr.detectChanges();
+    });
+  }
+
+  private handleFixesDisabled() {
+    this.ngZone.run(() => {
+      this.resetFixState();
+      this.cdr.detectChanges();
+    });
+  }
+
+  private resetFixState(): void {
+    this.fixCount = 0;
+    this.fixTotal = 0;
+    this.fixLogs = [];
+    this.fixSummary = '';
+    this.fixProgress = 0;
+    this.counterPulse = false;
+  }
+
+  private updateFixProgress(): void {
+    if (this.fixTotal > 0) {
+      this.fixProgress = Math.min((this.fixCount / this.fixTotal) * 100, 100);
+      if (this.fixCount >= this.fixTotal) {
+        this.fixSummary = `${this.fixTotal} fixes applied in 0.3s`;
+      }
+      return;
+    }
+    this.fixProgress = 0;
+  }
+
+  private buildFixLogs(counts: Record<string, number>): string[] {
+    const altCount = Number(counts['altText']) || 0;
+    const labelCount = Number(counts['labels']) || 0;
+    const skipCount = Number(counts['skipLink']) || 0;
+    const focusCount = Number(counts['focus']) || 0;
+    const contrastCount = Number(counts['contrast']) || 0;
+    const logs: string[] = [];
+
+    if (altCount) {
+      logs.push(`Added alt text to ${altCount} ${altCount === 1 ? 'image' : 'images'}`);
+    }
+    if (labelCount) {
+      logs.push(`Labeled ${labelCount} form ${labelCount === 1 ? 'control' : 'controls'}`);
+    }
+    if (contrastCount) {
+      logs.push('Enhanced contrast in key areas');
+    }
+    if (skipCount) {
+      logs.push('Injected skip navigation');
+    }
+    if (focusCount) {
+      logs.push('Applied focus indicators');
+    }
+
+    return logs;
+  }
+
+  private scheduleFallbackSummary(): void {
+    if (this.fallbackTimeoutId) {
+      window.clearTimeout(this.fallbackTimeoutId);
+    }
+    this.fallbackTimeoutId = window.setTimeout(() => {
+      if (!this.autofixEnabled) {
+        return;
+      }
+      if (this.fixTotal > 0 || this.fixCount > 0 || this.fixLogs.length > 0) {
+        return;
+      }
+      const counts = this.computeFallbackCounts();
+      const total = Object.values(counts).reduce((sum, value) => sum + value, 0);
+      if (total > 0) {
+        this.fixTotal = total;
+        this.fixCount = total;
+        this.fixLogs = this.buildFixLogs(counts);
+        this.updateFixProgress();
+        this.triggerCounterPulse();
+        this.cdr.detectChanges();
+      }
+    }, 250);
+  }
+
+  private clearFallbackSummary(): void {
+    if (this.fallbackTimeoutId) {
+      window.clearTimeout(this.fallbackTimeoutId);
+      this.fallbackTimeoutId = null;
+    }
+  }
+
+  private computeFallbackCounts(): Record<string, number> {
+    const container = document.getElementById('demo-site-container');
+    if (!container) {
+      return {};
+    }
+    const altText = container.querySelectorAll('img[data-ai-alt]').length;
+    const labels = container.querySelectorAll('[data-ai-label]').length;
+    const contrast = container.querySelectorAll('.low-contrast, .ghost-link, .ghost-button').length
+      ? 1
+      : 0;
+    const skipLink = 1;
+    const focus = 1;
+
+    return { altText, labels, contrast, skipLink, focus };
+  }
+
+  private triggerCounterPulse(): void {
+    if (this.prefersReducedMotion) {
+      return;
+    }
+
+    this.counterPulse = false;
+    if (this.counterTimeoutId) {
+      window.clearTimeout(this.counterTimeoutId);
+    }
+
+    this.counterTimeoutId = window.setTimeout(() => {
+      this.counterPulse = true;
+      this.cdr.detectChanges();
+      this.counterTimeoutId = window.setTimeout(() => {
+        this.counterPulse = false;
+        this.cdr.detectChanges();
+      }, 650);
+    }, 0);
+  }
+
+  private triggerFixingAnimation(): void {
+    if (this.prefersReducedMotion) {
+      this.isFixing = false;
+      return;
+    }
+
+    this.isFixing = true;
+    if (this.fixTimeoutId) {
+      window.clearTimeout(this.fixTimeoutId);
+    }
+    this.fixTimeoutId = window.setTimeout(() => {
+      this.isFixing = false;
+      this.cdr.detectChanges();
+    }, 650);
+  }
+
+  private clearTimers(): void {
+    if (this.fixTimeoutId) {
+      window.clearTimeout(this.fixTimeoutId);
+      this.fixTimeoutId = null;
+    }
+    if (this.keyboardIntervalId) {
+      window.clearInterval(this.keyboardIntervalId);
+      this.keyboardIntervalId = null;
+    }
+    if (this.keyboardTimeoutId) {
+      window.clearTimeout(this.keyboardTimeoutId);
+      this.keyboardTimeoutId = null;
+    }
+    if (this.copyTimeoutId) {
+      window.clearTimeout(this.copyTimeoutId);
+      this.copyTimeoutId = null;
+    }
+    if (this.counterTimeoutId) {
+      window.clearTimeout(this.counterTimeoutId);
+      this.counterTimeoutId = null;
+    }
+    if (this.fallbackTimeoutId) {
+      window.clearTimeout(this.fallbackTimeoutId);
+      this.fallbackTimeoutId = null;
+    }
   }
 }

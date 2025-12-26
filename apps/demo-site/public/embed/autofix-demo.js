@@ -8,10 +8,20 @@
     focusStyle: null,
     contrastStyle: null,
   };
+  const containerSelector = '#demo-site-container';
+
+  function dispatchFixEvent(type, details) {
+    window.dispatchEvent(
+      new CustomEvent('aaca-fix-applied', {
+        detail: { type, ...details },
+      }),
+    );
+  }
 
   function applyAltText() {
     state.altImages = [];
-    const images = Array.from(document.querySelectorAll('img')).filter(
+    const scope = document.querySelector(containerSelector) || document;
+    const images = Array.from(scope.querySelectorAll('img')).filter(
       (img) => !img.hasAttribute('alt'),
     );
 
@@ -22,14 +32,22 @@
       });
       const suggestion = img.dataset.aiAlt || 'AI-generated alt text from AACA demo';
       img.setAttribute('alt', suggestion);
+      
+      dispatchFixEvent('alt-text', {
+        element: img,
+        message: 'Added alt text',
+        value: suggestion
+      });
     });
+
+    return images.length;
   }
 
   function labelControls() {
     state.labeledControls = [];
-    const controls = Array.from(
-      document.querySelectorAll('input, textarea, select, button'),
-    );
+    const scope = document.querySelector(containerSelector) || document;
+    const controls = Array.from(scope.querySelectorAll('input, textarea, select'));
+    let count = 0;
 
     controls.forEach((control, index) => {
       const labelledBy = control.getAttribute('aria-label');
@@ -52,12 +70,21 @@
       });
 
       control.setAttribute('aria-label', suggestion);
+      count += 1;
+
+      dispatchFixEvent('aria-label', {
+        element: control,
+        message: 'Added aria-label',
+        value: suggestion
+      });
     });
+
+    return count;
   }
 
   function injectSkipLink() {
     if (state.skipLink) {
-      return;
+      return 0;
     }
 
     const skipLink = document.createElement('a');
@@ -85,11 +112,18 @@
 
     document.body.insertBefore(skipLink, document.body.firstChild);
     state.skipLink = skipLink;
+    
+    dispatchFixEvent('skip-link', {
+        element: skipLink,
+        message: 'Injected skip link'
+    });
+
+    return 1;
   }
 
   function applyFocusStyles() {
     if (state.focusStyle) {
-      return;
+      return 0;
     }
 
     const style = document.createElement('style');
@@ -103,41 +137,58 @@
     `;
     document.head.appendChild(style);
     state.focusStyle = style;
+
+    dispatchFixEvent('focus-style', {
+        message: 'Applied focus styles'
+    });
+
+    return 1;
   }
 
   function applyContrastPatch() {
     if (state.contrastStyle) {
-      return;
+      return 0;
     }
 
     const style = document.createElement('style');
     style.id = 'aaca-embed-contrast-style';
     style.textContent = `
-      body.aaca-autofix-contrast .low-contrast {
-        color: #0f172a !important;
-        background: #e8edff !important;
+      body.aaca-autofix-contrast #demo-site-container .low-contrast {
+        color: #1c1917 !important;
+        background: transparent !important;
         font-weight: 600;
       }
 
-      body.aaca-autofix-contrast .ghost-link,
-      body.aaca-autofix-contrast .ghost-button {
-        color: #0b3d91 !important;
-        border-color: #0b3d91 !important;
-        background: #e0e7ff !important;
+      body.aaca-autofix-contrast #demo-site-container .ghost-link,
+      body.aaca-autofix-contrast #demo-site-container .ghost-button {
+        color: #047857 !important;
+        border-color: #059669 !important;
+        background: #ecfdf5 !important;
       }
     `;
 
     document.head.appendChild(style);
     document.body.classList.add('aaca-autofix-contrast');
     state.contrastStyle = style;
+
+    dispatchFixEvent('contrast', {
+        message: 'Enhanced contrast'
+    });
+
+    return 1;
   }
 
   function enable() {
-    applyAltText();
-    labelControls();
-    injectSkipLink();
-    applyFocusStyles();
-    applyContrastPatch();
+    const counts = {
+      altText: applyAltText(),
+      labels: labelControls(),
+      skipLink: injectSkipLink(),
+      focus: applyFocusStyles(),
+      contrast: applyContrastPatch(),
+    };
+
+    const total = Object.values(counts).reduce((sum, value) => sum + value, 0);
+    window.dispatchEvent(new CustomEvent('aaca-fixes-enabled', { detail: { counts, total } }));
   }
 
   function disable() {
@@ -174,6 +225,7 @@
       state.contrastStyle = null;
       document.body.classList.remove('aaca-autofix-contrast');
     }
+    window.dispatchEvent(new CustomEvent('aaca-fixes-disabled'));
   }
 
   window.AACAEmbedDemo = {

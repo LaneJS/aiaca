@@ -1,113 +1,361 @@
-<div class="page-shell">
-  <header class="hero">
-    <div class="hero__intro">
-      <p class="eyebrow low-contrast">Copy-paste preview · intentionally rough before state</p>
-      <h1>Watch our one-line accessibility rescue</h1>
-      <p class="bad-tagline low-contrast">
-        Paste the embed snippet below on any page. We scan it on load and instantly patch missing alt text, contrast, labels,
-        a skip link, and focus outlines while you work on permanent fixes.
-      </p>
-      <div class="hero__cta">
-        <a class="ghost-link" href="#">Mystery link (goes nowhere)</a>
-        <button class="icon-button">!</button>
-      </div>
-    </div>
-    <div class="panel embed-panel">
-      <div class="panel__title">Auto-fix embed preview</div>
-      <div class="panel__status" [class.enabled]="autofixEnabled">
-        <span class="dot"></span>
-        <span>{{ autofixEnabled ? 'Auto-fix is running' : 'Auto-fix is paused (showing broken state)' }}</span>
-      </div>
-      <button class="toggle-button" type="button" (click)="toggleAutoFix()">
-        {{ autofixEnabled ? 'View the raw, broken experience' : 'Re-enable automatic fixes' }}
-      </button>
-      <p class="muted meta-text">
-        Toggle to compare the intentionally broken baseline with the quick patch your visitors would see—no coding required.
-      </p>
-      <p class="muted meta-text">
-        Sample site: {{ demoAccount.name }} ({{ demoAccount.domain }}) · Accessibility score before fixes {{ demoAccount.score }}
-        · Last scan {{ demoAccount.lastScan }}
-      </p>
-      <p class="muted meta-text">Copy this one-line embed to try it on your own page:</p>
-      <pre class="embed-snippet" aria-label="Embed code snippet">{{ embedSnippet }}</pre>
-    </div>
+<div class="page-shell" [class.autofix-on]="autofixEnabled" [class.fixing]="isFixing">
+  <header class="hero-intro">
+    <div class="eyebrow">A11y Assistant Demo</div>
+    <h1>One script. Instant accessibility.</h1>
+    <p>Watch 6 issues vanish in under a second.</p>
   </header>
 
-  <main id="main-content" class="content">
-    <section class="broken-preview">
-      <div class="section-heading">
-        <h2 class="out-of-order">Before our snippet (intentionally broken until you toggle fixes)</h2>
-        <p class="muted low-contrast">Missing skip link, faint text, invisible focus states, and unlabeled forms make this page hard to use.</p>
-      </div>
-      <div class="bad-grid">
-        <article class="bad-card">
-          <img
-            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
-            data-ai-alt="Pastry case with macarons and fruit tarts"
-          />
-          <h3>Bakery display with no alt text</h3>
-          <p class="muted low-contrast">Screen readers have no idea what this image contains.</p>
-          <a class="ghost-link" href="#">Learn more</a>
-        </article>
-        <article class="bad-card">
-          <h4>Form without labels</h4>
-          <p class="muted low-contrast">Placeholder-only inputs confuse assistive tech.</p>
-          <form class="bad-form">
-            <input type="text" placeholder="Full name" data-ai-label="Full name" />
-            <input type="email" placeholder="Email" data-ai-label="Work email" />
-            <button type="button" class="ghost-button">Submit</button>
-          </form>
-        </article>
-        <article class="bad-card">
-          <h4>Contrast failure block</h4>
-          <p class="muted low-contrast">This copy is almost invisible. The CTA is just as bad.</p>
-          <button class="ghost-button">Primary action</button>
-        </article>
-      </div>
-    </section>
-
-    <section class="scan-section">
-      <div class="section-heading">
-        <h2>What the snippet fixes instantly</h2>
-        <p class="muted">Simulated AI scan results showing the quick patches applied for visitors while your team builds long-term fixes.</p>
-      </div>
-      <div class="scan-meta muted">
-        <span>Example site: {{ demoAccount.domain }}</span>
-        <span>Latest scan: {{ demoAccount.lastScan }}</span>
-        <span>Auto-fix overlay loads as soon as the script runs</span>
-      </div>
-      <div class="scan-grid">
-        <article class="scan-card" *ngFor="let finding of scanFindings">
-          <div class="pill pill-{{ finding.severity }}">{{ finding.severity }}</div>
-          <h3>{{ finding.title }}</h3>
-          <p class="muted">{{ finding.description }}</p>
-          <div class="auto-fix">{{ finding.autoFix }}</div>
-        </article>
-      </div>
-      <div class="suggestions">
-        <div class="suggestion" *ngFor="let suggestion of aiSuggestions">
-          <div class="suggestion__label">{{ suggestion.label }}</div>
-          <div class="muted">{{ suggestion.detail }}</div>
-          <div class="suggestion__impact">{{ suggestion.impact }}</div>
+  <!-- SECTION 1: THE STAGE (HERO) -->
+  <section class="hero-stage">
+    <div class="demo-canvas">
+      <div class="browser-chrome">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <div class="url-bar">
+          <span class="lock-icon">🔒</span>
+          brokenbakery.demo
+          <span class="refresh-icon">⟳</span>
         </div>
       </div>
-    </section>
 
-    <section class="script-benefits">
-      <div class="section-heading">
-        <h2>Above: before vs. after the embed</h2>
-        <p class="muted">
-          The section above shows the raw, broken experience versus what visitors see after our snippet scans the page and appl
-          ies quick fixes. Use it as a stopgap while your dev team ships permanent updates.
-        </p>
+      <div class="canvas-hint">Hover elements for status</div>
+
+      <!-- The Mini Broken Website -->
+      <div
+        class="mini-site"
+        [class.fixed]="autofixEnabled"
+        [class.fixing]="isFixing"
+        id="demo-site-container"
+      >
+        <div class="site-noise" aria-hidden="true"></div>
+        <div class="confetti" aria-hidden="true">
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+          <span class="confetti-piece"></span>
+        </div>
+
+        <!-- Overlay Badges -->
+        <div class="warning-badge alt-warning" *ngIf="!autofixEnabled">⚠️ No alt text</div>
+        <div class="warning-badge label-warning" *ngIf="!autofixEnabled">⚠️ Missing label</div>
+        <div class="warning-badge contrast-warning" *ngIf="!autofixEnabled">⚠️ Low contrast</div>
+        <div class="fix-check alt-check" *ngIf="autofixEnabled">✓ Alt text added</div>
+        <div class="fix-check label-check" *ngIf="autofixEnabled">✓ Labels injected</div>
+        <div class="fix-check contrast-check" *ngIf="autofixEnabled">✓ Contrast fixed</div>
+
+        <header
+          class="mini-header a11y-target"
+          data-status-broken="Navigation lacks focus styles"
+          data-status-fixed="Focus rings restored"
+        >
+          <div class="logo">🥐 The Broken Bakery</div>
+          <nav>
+            <a href="#" class="nav-link ghost-link">Menu</a>
+            <a href="#" class="nav-link ghost-link">About</a>
+            <a href="#" class="nav-link ghost-link">Contact</a>
+          </nav>
+        </header>
+
+        <main id="main-content" class="mini-main">
+          <section class="mini-hero">
+            <figure
+              class="hero-figure a11y-target"
+              data-status-broken="Image missing alt text"
+              data-status-fixed="Alt text added"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80"
+                class="hero-img"
+                data-ai-alt="Fresh croissants and pastries on display in a bakery case"
+              />
+              <span class="img-check" aria-hidden="true" *ngIf="autofixEnabled">✓</span>
+            </figure>
+
+            <div
+              class="hero-content a11y-target"
+              data-status-broken="2.1:1 contrast fails"
+              data-status-fixed="7.2:1 contrast passes"
+            >
+              <span class="hero-kicker">Fresh daily</span>
+              <h3>Fresh pastries, terrible accessibility</h3>
+              <p class="low-contrast">
+                Our pastries are delicious, but our website is a nightmare for assistive technology.
+              </p>
+              <button class="order-btn ghost-button" type="button">Order Now</button>
+            </div>
+          </section>
+
+          <section
+            class="mini-form a11y-target"
+            data-status-broken="Form fields unlabeled"
+            data-status-fixed="Labels injected"
+          >
+            <div class="form-group" data-field-label="Email address">
+              <input
+                type="email"
+                placeholder="Email address"
+                class="input-field"
+                data-ai-label="Email address for newsletter"
+              />
+              <span class="field-warning" aria-hidden="true" *ngIf="!autofixEnabled">⚠️</span>
+            </div>
+            <div class="form-group" data-field-label="Full name">
+              <input
+                type="text"
+                placeholder="Your name"
+                class="input-field"
+                data-ai-label="Your full name"
+              />
+              <span class="field-warning" aria-hidden="true" *ngIf="!autofixEnabled">⚠️</span>
+            </div>
+            <button class="subscribe-btn ghost-button" type="button">Subscribe</button>
+          </section>
+        </main>
+
+        <footer class="mini-footer">
+          <small>Terms • Privacy • Contact</small>
+        </footer>
       </div>
-      <ul class="benefits">
-        <li>Skip link appears so keyboard users can jump straight to the main content.</li>
-        <li>ARIA labels are written in for unlabeled form fields, buttons, and icons.</li>
-        <li>Visible focus outlines return for every link and button without changing your layout.</li>
-        <li>High-contrast palette overlays muted text and ghost buttons so CTAs stand out.</li>
-        <li>AI-suggested alt text fills in for every unannotated image pulled from the scan.</li>
-      </ul>
-    </section>
-  </main>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+      <div class="panel-header">
+        <span class="panel-eyebrow">Live demo</span>
+        <h2>Experience the transformation</h2>
+        <p>Toggle to see how one line of code fixes accessibility issues instantly.</p>
+      </div>
+
+      <div class="toggle-stack">
+        <button
+          class="toggle-switch"
+          type="button"
+          role="switch"
+          [attr.aria-checked]="autofixEnabled"
+          [attr.aria-label]="autofixEnabled ? 'Disable accessibility fixes' : 'Enable accessibility fixes'"
+          (click)="toggleAutoFix()"
+          (keydown)="handleToggleKey($event)"
+        >
+          <span class="toggle-track" [class.active]="autofixEnabled">
+            <span class="toggle-knob"></span>
+            <span class="toggle-label left">Broken</span>
+            <span class="toggle-label right">Fixed</span>
+          </span>
+        </button>
+        <div class="status-indicator" [class.active]="autofixEnabled">
+          <span class="status-dot"></span>
+          {{ autofixEnabled ? 'Accessibility fixes are live' : 'Experience the inaccessible version' }}
+        </div>
+        <div class="toggle-hint">Toggle to see the transformation</div>
+      </div>
+
+      <div class="fix-summary" [class.active]="autofixEnabled">
+        <div class="summary-value" [class.pulse]="counterPulse">{{ fixCount || fixTotal }}</div>
+        <div class="summary-label">issues fixed instantly</div>
+        <div class="summary-meta" *ngIf="autofixEnabled && fixSummary">{{ fixSummary }}</div>
+      </div>
+
+      <div class="live-log" [class.active]="autofixEnabled">
+        <div class="log-header">
+          <span>🔧 Fixing accessibility issues</span>
+          <span class="log-progress">
+            <span class="log-progress-bar" [style.width.%]="fixProgress"></span>
+          </span>
+        </div>
+        <div class="log-items">
+          <div class="log-placeholder" *ngIf="!autofixEnabled || !fixLogs.length">Waiting for toggle...</div>
+          <div class="log-item" *ngFor="let log of fixLogs">
+            <span class="check">✓</span> {{ log }}
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-actions">
+        <button
+          class="ghost-action"
+          type="button"
+          (click)="startKeyboardDemo()"
+          [disabled]="keyboardDemoActive"
+        >
+          Try keyboard navigation
+        </button>
+        <div class="action-note">Shows focus movement on the demo site</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: EVIDENCE GRID -->
+  <section class="evidence-grid">
+    <div class="grid-header">
+      <h2>See the difference</h2>
+      <p>Real examples of what gets fixed automatically.</p>
+    </div>
+
+    <div class="comparison-strips">
+      <article class="comparison-strip">
+        <div class="strip-title">Image Accessibility</div>
+        <div class="strip-body">
+          <div class="strip-panel before">
+            <div class="badge">BEFORE</div>
+            <div class="strip-mock">
+              <div class="img-placeholder red-border"></div>
+              <div class="screen-reader-text">"Image" (silence)</div>
+            </div>
+            <div class="strip-note">⚠️ No alt text</div>
+          </div>
+          <div class="strip-panel after">
+            <div class="badge">AFTER</div>
+            <div class="strip-mock">
+              <div class="img-placeholder green-border"></div>
+              <div class="screen-reader-text">"Fresh croissants on display"</div>
+            </div>
+            <div class="strip-note">✓ Descriptive alt text</div>
+          </div>
+        </div>
+        <div class="strip-footer">
+          <strong>AI-Powered Alt Text</strong>
+          <p>Generates descriptive text for images missing alt attributes.</p>
+        </div>
+      </article>
+
+      <article class="comparison-strip">
+        <div class="strip-title">Form Labels</div>
+        <div class="strip-body">
+          <div class="strip-panel before">
+            <div class="badge">BEFORE</div>
+            <div class="strip-mock">
+              <div class="input-mock red-border">Placeholder only</div>
+              <div class="screen-reader-text">"Edit text" (unlabeled)</div>
+            </div>
+            <div class="strip-note">⚠️ No label</div>
+          </div>
+          <div class="strip-panel after">
+            <div class="badge">AFTER</div>
+            <div class="strip-mock">
+              <div class="input-mock green-border">Email address</div>
+              <div class="screen-reader-text">"Email address: Edit text"</div>
+            </div>
+            <div class="strip-note">✓ aria-label added</div>
+          </div>
+        </div>
+        <div class="strip-footer">
+          <strong>Automatic Labeling</strong>
+          <p>Injects aria-labels based on context and placeholders.</p>
+        </div>
+      </article>
+
+      <article class="comparison-strip">
+        <div class="strip-title">Color Contrast</div>
+        <div class="strip-body">
+          <div class="strip-panel before">
+            <div class="badge">BEFORE</div>
+            <div class="strip-mock">
+              <div class="text-mock low-contrast">Hard to read text</div>
+              <div class="contrast-badge fail">2.1:1 ratio (Fail)</div>
+            </div>
+            <div class="strip-note">⚠️ Fails WCAG AA</div>
+          </div>
+          <div class="strip-panel after">
+            <div class="badge">AFTER</div>
+            <div class="strip-mock">
+              <div class="text-mock high-contrast">Clear, legible text</div>
+              <div class="contrast-badge pass">7.2:1 ratio (AAA)</div>
+            </div>
+            <div class="strip-note">✓ Passes WCAG AAA</div>
+          </div>
+        </div>
+        <div class="strip-footer">
+          <strong>Smart Contrast</strong>
+          <p>Dynamically adjusts colors to meet WCAG standards.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- SECTION 3: THE CODE -->
+  <section class="code-section">
+    <div class="section-content">
+      <h2>One Line. Instant Results.</h2>
+      <p>Add this snippet to your <code>&lt;head&gt;</code> tag and fix accessibility issues immediately.</p>
+
+      <div class="code-block">
+        <pre><code>&lt;script src="https://cdn.aaca.ai/fix.js" data-key="your-key"&gt;&lt;/script&gt;</code></pre>
+        <button class="copy-btn" type="button" (click)="copyCode()">{{ copyLabel }}</button>
+      </div>
+
+      <div class="typing-simulation">
+        <div class="step">✓ Scanning page... 847 elements checked</div>
+        <div class="step">✓ Found 12 accessibility issues</div>
+        <div class="step">✓ Applied 12 automatic fixes</div>
+        <div class="step highlight">✓ Page is now WCAG 2.1 AA compliant</div>
+      </div>
+
+      <a href="#" class="cta-button primary">Get Your Fix Script</a>
+    </div>
+  </section>
+
+  <!-- SECTION 4: CAPABILITIES -->
+  <section class="capabilities-section">
+    <h2>What Gets Fixed</h2>
+    <div class="capabilities-grid">
+      <div class="capability-item">
+        <div class="icon">🖼️</div>
+        <h3>Missing Alt Text</h3>
+        <p>AI-generated descriptions for images.</p>
+      </div>
+      <div class="capability-item">
+        <div class="icon">📝</div>
+        <h3>Unlabeled Forms</h3>
+        <p>Automatic aria-label injection.</p>
+      </div>
+      <div class="capability-item">
+        <div class="icon">🎨</div>
+        <h3>Low Contrast</h3>
+        <p>Dynamic color enhancement for readability.</p>
+      </div>
+      <div class="capability-item">
+        <div class="icon">⌨️</div>
+        <h3>Missing Skip Links</h3>
+        <p>Keyboard navigation shortcuts added.</p>
+      </div>
+      <div class="capability-item">
+        <div class="icon">🎯</div>
+        <h3>Focus Indicators</h3>
+        <p>Visible outlines on interactive elements.</p>
+      </div>
+      <div class="capability-item">
+        <div class="icon">🏗️</div>
+        <h3>Heading Structure</h3>
+        <p>ARIA landmark fixes for better navigation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: TRUST & CTA -->
+  <section class="trust-cta">
+    <div class="cta-container">
+      <h2>Try It Now - No Signup Required</h2>
+      <div class="input-group">
+        <input type="text" placeholder="Enter your website URL (e.g. brokenbakery.com)" />
+        <button class="cta-button secondary" type="button">Scan Your Site Free</button>
+      </div>
+      <p class="subtext">We'll scan up to 100 pages to find issues.</p>
+
+      <div class="badges">
+        <span>✅ WCAG 2.1 Compliant</span>
+        <span>✅ Section 508 Ready</span>
+        <span>✅ ADA Friendly</span>
+      </div>
+      <p class="trust-text">Trusted by 500+ websites</p>
+    </div>
+  </section>
 </div>

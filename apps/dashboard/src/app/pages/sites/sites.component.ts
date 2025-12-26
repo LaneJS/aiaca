@@ -9,6 +9,7 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
 import { ErrorStateComponent } from '../../shared/components/error-state.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SubscriptionStateService } from '../../core/subscription-state.service';
 
 @Component({
   selector: 'app-sites',
@@ -22,6 +23,7 @@ export class SitesComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastService);
+  private readonly subscriptions = inject(SubscriptionStateService);
 
   protected sites: SiteSummary[] = [];
   protected showAddModal = false;
@@ -36,8 +38,11 @@ export class SitesComponent implements OnInit {
   protected error: string | null = null;
   protected editingSite: SiteSummary | null = null;
   protected deletingSite: SiteSummary | null = null;
+  protected showSubscriptionModal = false;
+  protected subscriptionMessage = 'Your subscription is required to manage sites.';
 
   ngOnInit(): void {
+    this.subscriptions.refresh().subscribe();
     this.loadSites();
   }
 
@@ -58,6 +63,10 @@ export class SitesComponent implements OnInit {
   }
 
   openAddModal(): void {
+    if (this.isReadOnly) {
+      this.openSubscriptionModal('add sites');
+      return;
+    }
     this.showAddModal = true;
     this.newSiteName = '';
     this.newSiteUrl = '';
@@ -71,6 +80,10 @@ export class SitesComponent implements OnInit {
   }
 
   openEditModal(site: SiteSummary): void {
+    if (this.isReadOnly) {
+      this.openSubscriptionModal('edit sites');
+      return;
+    }
     this.editingSite = site;
     this.newSiteName = site.name;
     this.newSiteUrl = site.url;
@@ -85,6 +98,10 @@ export class SitesComponent implements OnInit {
   }
 
   openDeleteModal(site: SiteSummary): void {
+    if (this.isReadOnly) {
+      this.openSubscriptionModal('delete sites');
+      return;
+    }
     this.deletingSite = site;
     this.showDeleteModal = true;
   }
@@ -108,6 +125,10 @@ export class SitesComponent implements OnInit {
   }
 
   submitAddSite(): void {
+    if (this.isReadOnly) {
+      this.openSubscriptionModal('add sites');
+      return;
+    }
     if (!this.isFormValid() || this.isSubmitting) {
       return;
     }
@@ -136,6 +157,10 @@ export class SitesComponent implements OnInit {
   }
 
   submitEditSite(): void {
+    if (this.isReadOnly) {
+      this.openSubscriptionModal('edit sites');
+      return;
+    }
     if (!this.isFormValid() || !this.editingSite || this.isSubmitting) {
       return;
     }
@@ -165,6 +190,10 @@ export class SitesComponent implements OnInit {
   }
 
   confirmDelete(): void {
+    if (this.isReadOnly) {
+      this.openSubscriptionModal('delete sites');
+      return;
+    }
     if (!this.deletingSite || this.isSubmitting) {
       return;
     }
@@ -220,5 +249,31 @@ export class SitesComponent implements OnInit {
 
   retryLoad(): void {
     this.loadSites();
+  }
+
+  handleAddAction(): void {
+    if (this.isReadOnly) {
+      this.openSubscriptionModal('add sites');
+      return;
+    }
+    this.openAddModal();
+  }
+
+  openSubscriptionModal(action: string): void {
+    this.subscriptionMessage = `An active subscription is required to ${action}.`;
+    this.showSubscriptionModal = true;
+  }
+
+  closeSubscriptionModal(): void {
+    this.showSubscriptionModal = false;
+  }
+
+  goToBilling(): void {
+    this.showSubscriptionModal = false;
+    this.router.navigate(['/account'], { queryParams: { billing: 'required' } });
+  }
+
+  get isReadOnly(): boolean {
+    return this.subscriptions.isReadOnly();
   }
 }

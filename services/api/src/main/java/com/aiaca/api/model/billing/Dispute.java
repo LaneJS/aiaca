@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "disputes")
@@ -57,6 +59,7 @@ public class Dispute extends BaseAuditedEntity {
     @Column(name = "stripe_dispute_id", unique = true, length = 255)
     private String stripeDisputeId;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String metadata;
 }

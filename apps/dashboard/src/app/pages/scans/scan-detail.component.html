@@ -13,6 +13,11 @@
     </div>
   </header>
 
+  <div *ngIf="isReadOnly" class="alert warning">
+    <p><strong>Read-only access</strong></p>
+    <p>Your subscription is inactive. You can review issues, but editing and exports require an active plan.</p>
+  </div>
+
   <div class="filters" role="group" aria-label="Issue filters">
     <label>
       Status
@@ -61,15 +66,19 @@
   </div>
 
   <ng-container *ngIf="filteredIssues().length; else noIssues">
+    <div *ngIf="!canViewSuggestions" class="alert info">
+      <p><strong>Suggestions locked</strong></p>
+      <p>Upgrade your subscription to see AI-powered fix recommendations.</p>
+    </div>
     <ul class="issues">
       <li *ngFor="let issue of filteredIssues()">
         <div>
           <p class="title">{{ issue.title }}</p>
           <p class="muted">{{ issue.description }}</p>
-          <p class="hint" *ngIf="issue.suggestion">Suggested fix: {{ issue.suggestion }}</p>
+          <p class="hint" *ngIf="canViewSuggestions && issue.suggestion">Suggested fix: {{ issue.suggestion }}</p>
           <p class="hint" *ngIf="issue.selector">Selector: {{ issue.selector }}</p>
         </div>
-        <button type="button" [disabled]="isUpdating(issue.id)" (click)="toggle(issue)">
+        <button type="button" [disabled]="isUpdating(issue.id) || !canEditIssues" (click)="toggle(issue)">
           {{ issue.status === 'fixed' ? 'Mark open' : 'Mark fixed' }}
         </button>
       </li>
@@ -87,16 +96,16 @@
       </div>
     </header>
     <div class="actions">
-      <button type="button" class="ghost" (click)="export('pdf')" [disabled]="exportStatus.pdf === 'loading'">
+      <button type="button" class="ghost" (click)="export('pdf')" [disabled]="exportStatus.pdf === 'loading' || !canEditIssues">
         {{ exportStatus.pdf === 'loading' ? 'Exporting PDF...' : 'Download PDF' }}
       </button>
-      <button type="button" class="ghost" (click)="export('html')" [disabled]="exportStatus.html === 'loading'">
+      <button type="button" class="ghost" (click)="export('html')" [disabled]="exportStatus.html === 'loading' || !canEditIssues">
         {{ exportStatus.html === 'loading' ? 'Exporting HTML...' : 'Download HTML' }}
       </button>
-      <button type="button" class="ghost" (click)="generateShare()" [disabled]="shareStatus === 'loading'">
+      <button type="button" class="ghost" (click)="generateShare()" [disabled]="shareStatus === 'loading' || !canEditIssues">
         {{ shareStatus === 'loading' ? 'Generating link...' : 'Generate share link' }}
       </button>
-      <button type="button" class="ghost" (click)="copyShare()" [disabled]="!shareLink">Copy share link</button>
+      <button type="button" class="ghost" (click)="copyShare()" [disabled]="!shareLink || !canEditIssues">Copy share link</button>
     </div>
     <p class="form-error" *ngIf="exportError">{{ exportError }}</p>
     <p class="muted" *ngIf="shareStatus === 'error'">Share links may require backend support.</p>

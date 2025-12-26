@@ -137,7 +137,7 @@
               </div>
               <div class="upgrade-text">
                 <p class="upgrade-headline">See all {{ result.totalIssues }} issues</p>
-                <p class="upgrade-description">Get AI-powered fix suggestions and auto-fix script access</p>
+                <p class="upgrade-description">{{ result.upgradeMessage || 'Get AI-powered fix suggestions and auto-fix script access' }}</p>
               </div>
             </div>
             <ui-cta-button routerLink="/signup" label="Unlock full report" variant="primary"></ui-cta-button>

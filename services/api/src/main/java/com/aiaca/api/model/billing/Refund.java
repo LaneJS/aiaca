@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "refunds")
@@ -51,6 +53,7 @@ public class Refund extends BaseAuditedEntity {
     @Column(name = "refunded_at")
     private LocalDateTime refundedAt;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String metadata;
 }

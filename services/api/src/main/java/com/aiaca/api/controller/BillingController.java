@@ -59,14 +59,19 @@ public class BillingController {
         String email = user.getEmail();
         String name = user.getFullName();
 
-        String checkoutUrl = stripeCheckoutService.createCheckoutSession(
+        StripeCheckoutService.CheckoutSessionResult session = stripeCheckoutService.createCheckoutSession(
+                user.getId(),
                 email,
                 name,
                 successUrl,
                 cancelUrl
         );
+        if (session.customerId() != null && !session.customerId().isBlank()) {
+            user.setStripeCustomerId(session.customerId());
+            userRepository.save(user);
+        }
 
-        return ResponseEntity.ok(new CheckoutSessionResponse(checkoutUrl));
+        return ResponseEntity.ok(new CheckoutSessionResponse(session.checkoutUrl()));
     }
 
     @PostMapping("/billing/portal-session")

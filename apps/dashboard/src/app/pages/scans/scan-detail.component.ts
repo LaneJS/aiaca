@@ -9,6 +9,7 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
 import { ErrorStateComponent } from '../../shared/components/error-state.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { SubscriptionStateService } from '../../core/subscription-state.service';
 
 @Component({
   selector: 'app-scan-detail',
@@ -21,6 +22,7 @@ export class ScanDetailComponent implements OnInit {
   private readonly api = inject(ApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly toasts = inject(ToastService);
+  private readonly subscriptions = inject(SubscriptionStateService);
 
   protected scan?: ScanDetail;
   protected filter = signal<'all' | 'open' | 'fixed'>('all');
@@ -40,6 +42,7 @@ export class ScanDetailComponent implements OnInit {
   protected shareLink: string | null = null;
 
   ngOnInit(): void {
+    this.subscriptions.refresh().subscribe();
     this.loadScan();
   }
 
@@ -70,6 +73,10 @@ export class ScanDetailComponent implements OnInit {
 
   toggle(issue: IssueDetail): void {
     if (!this.scan || this.updatingIssues.has(issue.id)) return;
+    if (!this.canEditIssues) {
+      this.toasts.push('Active subscription required to update issue status.', 'error');
+      return;
+    }
 
     const previousStatus = issue.status;
     const newStatus: 'open' | 'fixed' = previousStatus === 'fixed' ? 'open' : 'fixed';
@@ -156,6 +163,19 @@ export class ScanDetailComponent implements OnInit {
       () => this.toasts.push('Share link copied', 'success'),
       () => this.toasts.push('Unable to copy share link', 'error')
     );
+  }
+
+  get isReadOnly(): boolean {
+    return this.subscriptions.isReadOnly();
+  }
+
+  get canViewSuggestions(): boolean {
+    const status = this.subscriptions.status();
+    return status === 'ACTIVE' || status === 'TRIALING' || status === 'PAST_DUE';
+  }
+
+  get canEditIssues(): boolean {
+    return this.subscriptions.isActive();
   }
 
   private applyFilters(): IssueDetail[] {

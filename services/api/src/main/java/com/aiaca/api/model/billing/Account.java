@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "accounts")
@@ -55,9 +57,11 @@ public class Account extends BaseAuditedEntity {
     @Column(name = "tax_exempt")
     private boolean taxExempt;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "billing_address", columnDefinition = "jsonb")
     private String billingAddress;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String metadata;
 

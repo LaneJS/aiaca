@@ -124,6 +124,29 @@ input {
   color: #dc2626;
 }
 
+.checkbox-row {
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+  font-size: 0.875rem;
+  color: #57534e;
+
+  input {
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.2rem;
+  }
+
+  a {
+    color: #059669;
+    text-decoration: underline;
+
+    &:hover {
+      color: #047857;
+    }
+  }
+}
+
 // Pricing Highlight
 .pricing-highlight {
   background: #ecfdf5;

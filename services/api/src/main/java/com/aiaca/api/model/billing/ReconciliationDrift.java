@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "reconciliation_drifts")
@@ -41,6 +43,7 @@ public class ReconciliationDrift extends BaseAuditedEntity {
     @Column(name = "drift_type", length = 100)
     private String driftType;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String details;
 

@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "subscriptions")
@@ -72,6 +74,7 @@ public class Subscription extends BaseAuditedEntity {
     @Column(name = "collection_method", length = 50)
     private CollectionMethod collectionMethod;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String metadata;
 

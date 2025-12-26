@@ -6,13 +6,27 @@
     </div>
     <div class="run-controls" *ngIf="sites.length">
       <label for="scan-site">Run scan</label>
-      <select id="scan-site" [(ngModel)]="selectedSiteId">
+      <select id="scan-site" [(ngModel)]="selectedSiteId" [disabled]="isReadOnly">
         <option value="">Select site</option>
         <option *ngFor="let site of sites" [value]="site.id">{{ site.name }}</option>
       </select>
-      <button type="button" class="ghost" (click)="runScan()" [disabled]="!selectedSiteId">Start</button>
+      <button
+        type="button"
+        class="ghost"
+        (click)="runScan()"
+        [attr.aria-disabled]="isReadOnly || !selectedSiteId"
+        [class.disabled]="isReadOnly"
+        [disabled]="!selectedSiteId"
+      >
+        Start
+      </button>
     </div>
   </header>
+
+  <div *ngIf="isReadOnly" class="alert warning">
+    <p><strong>Read-only access</strong></p>
+    <p>Your subscription is inactive. You can view past scans, but running new scans requires an active plan.</p>
+  </div>
 
   <ng-container *ngIf="isLoading">
     <app-loading-spinner message="Loading scans..." />
@@ -59,3 +73,20 @@
     </table>
   </ng-container>
 </section>
+
+<!-- Subscription Required Modal -->
+<div class="modal-overlay" *ngIf="showSubscriptionModal" (click)="closeSubscriptionModal()">
+  <div class="modal" role="dialog" aria-labelledby="subscription-required-title" aria-modal="true" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2 id="subscription-required-title">Subscription required</h2>
+      <button type="button" class="close-btn" (click)="closeSubscriptionModal()" aria-label="Close modal">&times;</button>
+    </header>
+    <div class="modal-body">
+      <p>{{ subscriptionMessage }}</p>
+      <footer class="modal-footer">
+        <button type="button" class="ghost" (click)="closeSubscriptionModal()">Close</button>
+        <button type="button" class="primary" (click)="goToBilling()">Manage subscription</button>
+      </footer>
+    </div>
+  </div>
+</div>

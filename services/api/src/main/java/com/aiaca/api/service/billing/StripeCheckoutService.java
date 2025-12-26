@@ -15,6 +15,7 @@ import com.stripe.param.billingportal.SessionCreateParams.Builder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,8 @@ public class StripeCheckoutService {
     private final String stripeSecretKey;
     private final String stripePriceId;
 
+    public record CheckoutSessionResult(String checkoutUrl, String customerId) {}
+
     public StripeCheckoutService(@Value("${billing.stripe.secret-key:}") String stripeSecretKey,
                                  @Value("${billing.stripe.price-id:}") String stripePriceId) {
         this.stripeSecretKey = stripeSecretKey;
@@ -37,7 +40,7 @@ public class StripeCheckoutService {
         }
     }
 
-    public String createCheckoutSession(String email, String name, String successUrl, String cancelUrl) {
+    public CheckoutSessionResult createCheckoutSession(UUID userId, String email, String name, String successUrl, String cancelUrl) {
         validateStripeConfiguration();
 
         if (email == null || email.isBlank()) {
@@ -55,11 +58,15 @@ public class StripeCheckoutService {
 
             Map<String, String> metadata = new HashMap<>();
             metadata.put("customer_email", email);
+            metadata.put("price_id", stripePriceId);
             if (name != null && !name.isBlank()) {
                 metadata.put("customer_name", name);
             }
+            if (userId != null) {
+                metadata.put("user_id", userId.toString());
+            }
 
-            SessionCreateParams params = SessionCreateParams.builder()
+            SessionCreateParams.Builder paramsBuilder = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
                     .setCustomer(customerId)
                     .setCustomerEmail(email)
@@ -71,12 +78,17 @@ public class StripeCheckoutService {
                     )
                     .setSuccessUrl(successUrl)
                     .setCancelUrl(cancelUrl)
-                    .putAllMetadata(metadata)
-                    .build();
+                    .putAllMetadata(metadata);
+
+            if (userId != null) {
+                paramsBuilder.setClientReferenceId(userId.toString());
+            }
+
+            SessionCreateParams params = paramsBuilder.build();
 
             Session session = Session.create(params);
             logger.info("Created Stripe checkout session for customer: {}, session ID: {}", customerId, session.getId());
-            return session.getUrl();
+            return new CheckoutSessionResult(session.getUrl(), customerId);
         } catch (StripeException e) {
             logger.error("Failed to create checkout session for email: {}", email, e);
             throw new BadRequestException("Failed to create checkout session: " + e.getMessage());

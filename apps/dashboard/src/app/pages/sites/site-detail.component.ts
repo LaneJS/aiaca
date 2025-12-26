@@ -10,6 +10,7 @@ import { ToastService } from '../../core/toast.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SubscriptionStateService } from '../../core/subscription-state.service';
 
 @Component({
   selector: 'app-site-detail',
@@ -22,6 +23,7 @@ export class SiteDetailComponent implements OnInit {
   private readonly api = inject(ApiService);
   private readonly toasts = inject(ToastService);
   protected readonly route = inject(ActivatedRoute);
+  private readonly subscriptions = inject(SubscriptionStateService);
 
   protected site?: SiteSummary;
   protected scans: ScanSummary[] = [];
@@ -51,6 +53,7 @@ export class SiteDetailComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.subscriptions.refresh().subscribe();
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.load(id);
@@ -122,6 +125,10 @@ export class SiteDetailComponent implements OnInit {
   }
 
   saveSchedule(): void {
+    if (this.isReadOnly) {
+      this.toasts.push('Active subscription required to update schedules.', 'error');
+      return;
+    }
     if (!this.site || this.scheduleUnavailable) {
       this.toasts.push('Scheduling is not available in this environment.', 'info');
       return;
@@ -149,6 +156,10 @@ export class SiteDetailComponent implements OnInit {
   }
 
   saveNotifications(): void {
+    if (this.isReadOnly) {
+      this.toasts.push('Active subscription required to update notifications.', 'error');
+      return;
+    }
     if (!this.site || this.notificationsUnavailable) {
       this.toasts.push('Notifications are not available in this environment.', 'info');
       return;
@@ -173,5 +184,9 @@ export class SiteDetailComponent implements OnInit {
         this.notificationsError = err.error?.message || 'Failed to save notification settings.';
       }
     });
+  }
+
+  get isReadOnly(): boolean {
+    return this.subscriptions.isReadOnly();
   }
 }

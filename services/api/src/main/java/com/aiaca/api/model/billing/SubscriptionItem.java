@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "subscription_items")
@@ -39,6 +41,7 @@ public class SubscriptionItem extends BaseAuditedEntity {
     @Column(name = "stripe_subscription_item_id", unique = true, length = 255)
     private String stripeSubscriptionItemId;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String metadata;
 

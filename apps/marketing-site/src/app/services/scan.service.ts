@@ -20,6 +20,8 @@ export interface PublicScanResponse {
   limited: boolean;
   /** Total issues found (only set if limited) */
   totalIssues?: number;
+  /** Upsell message when results are limited */
+  upgradeMessage?: string;
 }
 
 @Injectable({ providedIn: 'root' })

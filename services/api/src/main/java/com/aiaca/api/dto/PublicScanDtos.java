@@ -17,12 +17,14 @@ public class PublicScanDtos {
      * @param issues List of issues (limited to top 5 for free scans)
      * @param limited Whether the results are limited (more issues exist)
      * @param totalIssues Total number of issues found (only set if limited)
+     * @param upgradeMessage Optional upsell message when results are limited
      */
     public record PublicScanResponse(
             String url,
             Double score,
             List<PublicIssue> issues,
             boolean limited,
-            Integer totalIssues
+            Integer totalIssues,
+            String upgradeMessage
     ) {}
 }

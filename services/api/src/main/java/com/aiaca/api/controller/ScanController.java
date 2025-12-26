@@ -9,6 +9,7 @@ import com.aiaca.api.service.ScanService;
 import com.aiaca.api.service.SiteService;
 import com.aiaca.api.service.UrlSanitizer;
 import com.aiaca.api.repository.UserRepository;
+import com.aiaca.api.model.billing.enums.SubscriptionStatus;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -80,7 +81,8 @@ public class ScanController {
         if (!scan.getSite().getOwner().getId().equals(owner.getId())) {
             return ResponseEntity.status(403).build();
         }
-        return ResponseEntity.ok(scanService.getDetailById(id));
+        boolean includeSuggestions = shouldIncludeSuggestions(principal);
+        return ResponseEntity.ok(scanService.getDetailById(id, includeSuggestions));
     }
 
     @GetMapping("/scans/{id}/export")
@@ -128,5 +130,15 @@ public class ScanController {
         User owner = userRepository.findById(principal.getId()).orElseThrow();
         var issue = scanService.updateIssueStatus(scanId, issueId, request.status(), owner);
         return ResponseEntity.ok(scanService.toIssueDetail(issue));
+    }
+
+    private boolean shouldIncludeSuggestions(UserPrincipal principal) {
+        SubscriptionStatus status = principal != null ? principal.getSubscriptionStatus() : null;
+        if (status == null) {
+            status = SubscriptionStatus.NONE;
+        }
+        return status == SubscriptionStatus.ACTIVE
+                || status == SubscriptionStatus.TRIALING
+                || status == SubscriptionStatus.PAST_DUE;
     }
 }

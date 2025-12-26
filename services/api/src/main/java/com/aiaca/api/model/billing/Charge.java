@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "charges")
@@ -74,6 +76,7 @@ public class Charge extends BaseAuditedEntity {
     @Column(name = "net_amount")
     private Long netAmount;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String metadata;
 }

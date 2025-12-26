@@ -5,8 +5,13 @@
       <h1>Tracked properties</h1>
       <p class="muted">Add, edit, or remove domains tied to your account.</p>
     </div>
-    <button class="ghost" type="button" (click)="openAddModal()">Add site</button>
+    <button class="ghost" type="button" (click)="openAddModal()" [attr.aria-disabled]="isReadOnly" [class.disabled]="isReadOnly">Add site</button>
   </header>
+
+  <div *ngIf="isReadOnly" class="alert warning">
+    <p><strong>Read-only access</strong></p>
+    <p>Your subscription is inactive. You can view sites, but adding or editing requires an active plan.</p>
+  </div>
 
   <ng-container *ngIf="isLoading">
     <app-loading-spinner message="Loading your sites..." />
@@ -22,8 +27,8 @@
       icon="🌐"
       title="No sites yet"
       message="Add your first domain to start tracking accessibility scans."
-      actionLabel="Add a site"
-      (action)="openAddModal()"
+      [actionLabel]="isReadOnly ? 'Manage subscription' : 'Add a site'"
+      (action)="handleAddAction()"
     ></app-empty-state>
 
     <div class="grid" *ngIf="sites.length">
@@ -54,8 +59,8 @@
 
         <div class="actions">
           <button type="button" class="ghost" (click)="view(site); $event.stopPropagation()">Open</button>
-          <button type="button" class="ghost" (click)="openEditModal(site); $event.stopPropagation()">Edit</button>
-          <button type="button" class="ghost danger" (click)="openDeleteModal(site); $event.stopPropagation()">Delete</button>
+          <button type="button" class="ghost" (click)="openEditModal(site); $event.stopPropagation()" [attr.aria-disabled]="isReadOnly" [class.disabled]="isReadOnly">Edit</button>
+          <button type="button" class="ghost danger" (click)="openDeleteModal(site); $event.stopPropagation()" [attr.aria-disabled]="isReadOnly" [class.disabled]="isReadOnly">Delete</button>
         </div>
       </article>
     </div>
@@ -126,6 +131,23 @@
         </button>
       </footer>
     </form>
+  </div>
+</div>
+
+<!-- Subscription Required Modal -->
+<div class="modal-overlay" *ngIf="showSubscriptionModal" (click)="closeSubscriptionModal()">
+  <div class="modal" role="dialog" aria-labelledby="subscription-required-title" aria-modal="true" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2 id="subscription-required-title">Subscription required</h2>
+      <button type="button" class="close-btn" (click)="closeSubscriptionModal()" aria-label="Close modal">&times;</button>
+    </header>
+    <div class="modal-body">
+      <p>{{ subscriptionMessage }}</p>
+      <footer class="modal-footer">
+        <button type="button" class="ghost" (click)="closeSubscriptionModal()">Close</button>
+        <button type="button" class="primary" (click)="goToBilling()">Manage subscription</button>
+      </footer>
+    </div>
   </div>
 </div>
 

@@ -27,6 +27,7 @@ public class PublicScanController {
     }
 
     private static final int FREE_SCAN_MAX_ISSUES = 5;
+    private static final String FREE_SCAN_UPGRADE_MESSAGE = "Sign up for the full report";
 
     @PostMapping("/scans")
     public ResponseEntity<PublicScanDtos.PublicScanResponse> createPublicScan(@Valid @RequestBody PublicScanDtos.PublicScanRequest request,
@@ -50,7 +51,8 @@ public class PublicScanController {
                 result.score(),
                 limitedIssues,
                 isLimited,
-                isLimited ? totalIssues : null
+                isLimited ? totalIssues : null,
+                isLimited ? FREE_SCAN_UPGRADE_MESSAGE : null
         );
         return ResponseEntity.ok(response);
     }

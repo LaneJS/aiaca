@@ -174,6 +174,16 @@ export class AuthService {
     this.scheduleExpiry(token);
   }
 
+  updateSubscriptionStatus(status: UserProfile['subscriptionStatus'] | null): void {
+    const current = this._user();
+    if (!current) {
+      return;
+    }
+    const next = { ...current, subscriptionStatus: status ?? current.subscriptionStatus };
+    this.storage.setItem(USER_KEY, JSON.stringify(next));
+    this._user.set(next);
+  }
+
   private clearSession(reason: LogoutReason = 'manual'): void {
     if (this.tokenExpiryTimer) {
       clearTimeout(this.tokenExpiryTimer);

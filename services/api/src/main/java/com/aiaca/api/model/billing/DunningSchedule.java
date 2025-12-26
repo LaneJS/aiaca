@@ -13,6 +13,8 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "dunning_schedules")
@@ -36,6 +38,7 @@ public class DunningSchedule extends BaseAuditedEntity {
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "strategy", columnDefinition = "jsonb", nullable = false)
     private String strategy;
 }

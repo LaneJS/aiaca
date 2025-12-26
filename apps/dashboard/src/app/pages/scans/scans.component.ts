@@ -10,6 +10,7 @@ import { ScanTrackerService } from '../../core/scan-tracker.service';
 import { ToastService } from '../../core/toast.service';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SubscriptionStateService } from '../../core/subscription-state.service';
 
 @Component({
   selector: 'app-scans',
@@ -23,6 +24,7 @@ export class ScansComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly tracker = inject(ScanTrackerService);
   private readonly toast = inject(ToastService);
+  private readonly subscriptions = inject(SubscriptionStateService);
 
   protected scans: ScanSummary[] = [];
   protected sites: SiteSummary[] = [];
@@ -30,8 +32,11 @@ export class ScansComponent implements OnInit {
   protected error: string | null = null;
   protected runningScanIds = new Set<string>();
   protected selectedSiteId = '';
+  protected showSubscriptionModal = false;
+  protected subscriptionMessage = 'An active subscription is required to run scans.';
 
   ngOnInit(): void {
+    this.subscriptions.refresh().subscribe();
     this.loadData();
   }
 
@@ -66,6 +71,10 @@ export class ScansComponent implements OnInit {
   }
 
   runScan(): void {
+    if (this.isReadOnly) {
+      this.openSubscriptionModal('run scans');
+      return;
+    }
     const site = this.sites.find((s) => s.id === this.selectedSiteId);
     if (!site) {
       this.toast.push('Select a site to run a scan', 'error');
@@ -136,5 +145,23 @@ export class ScansComponent implements OnInit {
     } else {
       this.scans = [scan, ...this.scans];
     }
+  }
+
+  openSubscriptionModal(action: string): void {
+    this.subscriptionMessage = `An active subscription is required to ${action}.`;
+    this.showSubscriptionModal = true;
+  }
+
+  closeSubscriptionModal(): void {
+    this.showSubscriptionModal = false;
+  }
+
+  goToBilling(): void {
+    this.showSubscriptionModal = false;
+    this.router.navigate(['/account'], { queryParams: { billing: 'required' } });
+  }
+
+  get isReadOnly(): boolean {
+    return this.subscriptions.isReadOnly();
   }
 }

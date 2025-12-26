@@ -19,6 +19,11 @@
         <span class="pill alert">{{ site.issuesOpen || 0 }} open</span>
       </div>
     </header>
+
+    <div *ngIf="isReadOnly" class="alert warning">
+      <p><strong>Read-only access</strong></p>
+      <p>Your subscription is inactive. Schedule and notification updates are locked.</p>
+    </div>
     <div class="grid">
       <div>
         <p class="muted">Last scan</p>
@@ -54,7 +59,7 @@
         <div class="schedule-grid">
           <label>
             Cadence
-            <select [(ngModel)]="scheduleForm.cadence">
+            <select [(ngModel)]="scheduleForm.cadence" [disabled]="isReadOnly">
               <option value="daily">Daily</option>
               <option value="weekly">Weekly</option>
               <option value="monthly">Monthly</option>
@@ -62,15 +67,15 @@
           </label>
           <label>
             Time (UTC)
-            <input type="time" [(ngModel)]="scheduleForm.timeUtc" />
+            <input type="time" [(ngModel)]="scheduleForm.timeUtc" [disabled]="isReadOnly" />
           </label>
           <label>
             Timezone
-            <input type="text" [(ngModel)]="scheduleForm.timezone" placeholder="UTC" />
+            <input type="text" [(ngModel)]="scheduleForm.timezone" placeholder="UTC" [disabled]="isReadOnly" />
           </label>
           <label>
             Active
-            <input type="checkbox" [(ngModel)]="scheduleForm.isActive" />
+            <input type="checkbox" [(ngModel)]="scheduleForm.isActive" [disabled]="isReadOnly" />
           </label>
         </div>
         <p class="muted">
@@ -78,7 +83,7 @@
           {{ schedule?.lastRun ? (schedule?.lastRun | date:'short') : 'Not available' }}
         </p>
         <p class="form-error" *ngIf="scheduleError">{{ scheduleError }}</p>
-        <button class="ghost" type="button" (click)="saveSchedule()" [disabled]="scheduleSaving">
+        <button class="ghost" type="button" (click)="saveSchedule()" [disabled]="scheduleSaving || isReadOnly">
           {{ scheduleSaving ? 'Saving...' : 'Save schedule' }}
         </button>
       </ng-container>
@@ -103,26 +108,26 @@
         <div class="schedule-grid">
           <label>
             Email alerts
-            <input type="checkbox" [(ngModel)]="notificationsForm.emailEnabled" />
+            <input type="checkbox" [(ngModel)]="notificationsForm.emailEnabled" [disabled]="isReadOnly" />
           </label>
           <label>
             Digest cadence
-            <select [(ngModel)]="notificationsForm.digestCadence">
+            <select [(ngModel)]="notificationsForm.digestCadence" [disabled]="isReadOnly">
               <option value="daily">Daily</option>
               <option value="weekly">Weekly</option>
             </select>
           </label>
           <label>
             Slack webhook URL
-            <input type="url" [(ngModel)]="notificationsForm.slackWebhookUrl" placeholder="https://hooks.slack.com/..." />
+            <input type="url" [(ngModel)]="notificationsForm.slackWebhookUrl" placeholder="https://hooks.slack.com/..." [disabled]="isReadOnly" />
           </label>
           <label>
             Webhook URL
-            <input type="url" [(ngModel)]="notificationsForm.webhookUrl" placeholder="https://example.com/hook" />
+            <input type="url" [(ngModel)]="notificationsForm.webhookUrl" placeholder="https://example.com/hook" [disabled]="isReadOnly" />
           </label>
         </div>
         <p class="form-error" *ngIf="notificationsError">{{ notificationsError }}</p>
-        <button class="ghost" type="button" (click)="saveNotifications()" [disabled]="notificationsSaving">
+        <button class="ghost" type="button" (click)="saveNotifications()" [disabled]="notificationsSaving || isReadOnly">
           {{ notificationsSaving ? 'Saving...' : 'Save notifications' }}
         </button>
       </ng-container>

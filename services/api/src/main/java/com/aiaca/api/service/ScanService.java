@@ -203,9 +203,14 @@ public class ScanService {
 
     @Transactional(readOnly = true)
     public ScanDtos.ScanDetail getDetailById(UUID id) {
+        return getDetailById(id, true);
+    }
+
+    @Transactional(readOnly = true)
+    public ScanDtos.ScanDetail getDetailById(UUID id, boolean includeSuggestions) {
         Scan scan = scanRepository.findByIdWithIssues(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Scan not found"));
-        return toDetail(scan);
+        return toDetail(scan, includeSuggestions);
     }
 
     @Transactional(readOnly = true)
@@ -220,9 +225,14 @@ public class ScanService {
     }
 
     public ScanDtos.ScanDetail toDetail(Scan scan) {
+        return toDetail(scan, true);
+    }
+
+    public ScanDtos.ScanDetail toDetail(Scan scan, boolean includeSuggestions) {
         List<ScanDtos.ScanIssueDto> issueDtos = scan.getIssues().stream()
                 .map(issue -> new ScanDtos.ScanIssueDto(issue.getId(), issue.getType(), issue.getSeverity(),
-                        issue.getDescription(), issue.getSelector(), resolveSuggestion(issue)))
+                        issue.getDescription(), issue.getSelector(),
+                        includeSuggestions ? resolveSuggestion(issue) : null))
                 .toList();
         return new ScanDtos.ScanDetail(scan.getId(), scan.getSite() != null ? scan.getSite().getId() : null,
                 scan.getCreatedAt(), scan.getStatus(), scan.getScore(), issueDtos);
@@ -235,23 +245,15 @@ public class ScanService {
         return issue.getAiSuggestions().stream().findFirst().map(AiSuggestion::getSuggestion).orElse(null);
     }
 
-    private String firstSuggestion(List<AiOrchestratorClient.SuggestedFix> fixes) {
-        if (fixes == null || fixes.isEmpty()) {
-            return null;
-        }
-        return fixes.get(0).suggestedFix();
-    }
-
     public ScanDtos.ScanDetail createPublicScan(String url) {
         Timer.Sample sample = Timer.start();
         try {
             ScannerClient.ScannerResponse scannerResponse = scannerClient.scan(url);
-            Map<String, List<AiOrchestratorClient.SuggestedFix>> suggestions = fetchSuggestions(scannerResponse);
 
             List<ScanDtos.ScanIssueDto> issueDtos = scannerResponse.issues().stream()
                     .map(issue -> new ScanDtos.ScanIssueDto(null, issue.type(), mapSeverity(issue.severity()),
                             issue.description(), issue.selector(),
-                            firstSuggestion(suggestions.get(issue.id()))))
+                            null))
                     .toList();
 
             publicScanCounter.increment();

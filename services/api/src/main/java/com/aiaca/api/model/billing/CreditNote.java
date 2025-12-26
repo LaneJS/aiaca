@@ -16,6 +16,8 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "credit_notes")
@@ -47,6 +49,7 @@ public class CreditNote extends BaseAuditedEntity {
     @Column(name = "stripe_credit_note_id", unique = true, length = 255)
     private String stripeCreditNoteId;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String metadata;
 }

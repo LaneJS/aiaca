@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "webhook_events")
@@ -31,6 +33,7 @@ public class WebhookEvent extends BaseAuditedEntity {
     @Column(name = "event_type", nullable = false, length = 150)
     private String eventType;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", nullable = false)
     private String payload;
 

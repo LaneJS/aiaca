@@ -17,6 +17,7 @@ export class SignupComponent implements OnInit {
   email = '';
   password = '';
   confirmPassword = '';
+  termsAccepted = false;
   submitting = false;
   errorMessage = '';
   validationErrors: { [key: string]: string } = {};
@@ -60,6 +61,11 @@ export class SignupComponent implements OnInit {
       isValid = false;
     } else if (this.password !== this.confirmPassword) {
       this.validationErrors['confirmPassword'] = 'Passwords do not match';
+      isValid = false;
+    }
+
+    if (!this.termsAccepted) {
+      this.validationErrors['terms'] = 'You must accept the terms to continue';
       isValid = false;
     }
 

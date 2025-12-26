@@ -101,6 +101,9 @@ export interface Subscription {
   id: string;
   accountId: string;
   status: string;
+  currency?: string;
+  currentPeriodStart?: string;
+  currentPeriodEnd?: string;
   items?: SubscriptionItem[];
 }
 

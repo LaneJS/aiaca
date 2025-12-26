@@ -1128,7 +1128,14 @@
   color: #e2e8f0;
   font-family: var(--font-mono);
   overflow-x: auto;
+  overflow-y: hidden;
   text-align: left;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.code-block pre::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .copy-btn {

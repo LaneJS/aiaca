@@ -15,6 +15,7 @@ DECLARE
     operator_password CONSTANT text := 'operator123!';
     viewer_email CONSTANT text := 'viewer@local.test';
     viewer_password CONSTANT text := 'viewer123!';
+    dev_email CONSTANT text := 'dev@aaca.local';
 
     admin_role_id uuid;
     operator_role_id uuid;
@@ -71,7 +72,7 @@ BEGIN
     -- Ensure local RBAC accounts can access subscription-gated endpoints
     UPDATE users
     SET subscription_status = 'ACTIVE'
-    WHERE email IN (admin_email, operator_email, viewer_email);
+    WHERE email IN (admin_email, operator_email, viewer_email, dev_email);
 
     -- Link users to roles (idempotent)
     IF admin_user_id IS NOT NULL AND admin_role_id IS NOT NULL THEN

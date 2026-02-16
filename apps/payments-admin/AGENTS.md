@@ -1,82 +1,95 @@
-# AGENTS.md – Payments Admin Portal (apps/payments-admin)
+# AGENTS.md – Payments Admin (apps/payments-admin)
 
-**Scope:** All files under `apps/payments-admin/**` (frontend) plus related contracts/tasks in `services/api/**` that power this portal.
+## Scope & Mission
+- **Scope:** Only files in `apps/payments-admin/**`.
+- **Platform context:** This app is part of **AACA (AI Accessibility Compliance Assistant)**.
+- **Mission:** Deliver the internal billing/revenue operations UI used by AACA staff (not customer self-serve checkout), with production-grade auth, RBAC, auditability, and reliable API integration.
 
-## Purpose & Vision
-The payments admin portal is the **internal control center** for billing, revenue operations, and customer payment oversight. It must:
-- Give revenue ops full visibility into **accounts, subscriptions, invoices, payments, refunds, and disputes**.
-- Support **cash collection and dunning** with Stripe as the PSP (Cards + ACH) while preserving auditability.
-- Provide **read/write controls** for plan changes, credits, one-off charges, and user entitlements.
-- Offer **exportable audit trails** for finance, tax, and compliance reviews.
+## Current State (Grounded in Repo)
+- Angular app already uses standalone bootstrap (`bootstrapApplication`) with `provideRouter`.
+- Core routes/pages exist for: Dashboard, Accounts, Account Detail, Payments, Plans, Operations, Reporting, Settings, and Auth.
+- API client layer exists:
+  - Frontend calls `services/api` via `/api/v1/**` base path.
+  - Billing calls are routed through `/api/v1/billing/**`.
+  - DTOs/types are already consumed from `@aiaca/domain` (`packages/domain`).
+- Server-side billing and Stripe wiring exist in `services/api`, but not all flows are complete.
+- **Gap to close now:** several UI flows still convert API failures into empty states (`catchError(() => of([]))` or equivalent). For production MVP, this is treated as a bug, not acceptable behavior.
 
-## Core Capabilities (target state)
-- **Accounts & contacts:** CRUD for accounts, billing contacts, tax IDs, addresses, and payment methods on file.
-- **Subscriptions & plans:** Create/swap/cancel plans, proration, seat adjustments, coupons/discounts, scheduled changes, and add-ons.
-- **Invoicing & payments:** Generate invoices, capture payments, retry failed charges, mark offline payments, partial payments, and refunds.
-- **Dunning & collections:** Automated retries, past-due queues, reminder templates, write-offs, and notes on collection attempts.
-- **Disputes:** View chargebacks, upload evidence packet references, track dispute statuses, and deadlines.
-- **Payout & tax visibility:** Fees, net vs. gross, sales-tax/VAT fields, and exportable settlement summaries.
-- **Auditing:** Immutable audit log of user actions (who/when/what), data changes, webhook deliveries, and settlement confirmations.
-- **Reporting:** MRR/ARR, churn, cohort of failed payments, top debtors, plan mix, and invoice aging views with CSV export.
-- **User access & safety:** RBAC (viewer/operator/admin), impersonation safeguards, field-level redaction for PANs, and least-privilege defaults.
+## Target Behavior (Near-Term, Executable)
+- API-first, no mock/demo fallbacks in production code.
+- Clear loading/error states for every async billing operation.
+- Consistent handling of core billing entities already modeled in the app/API:
+  - accounts, contacts, payment methods, plans/prices/coupons
+  - subscriptions, invoices, charges, refunds, credit notes
+  - disputes, dunning events/queue, webhook events, audit logs
 
-## Agents & Ownership
-- **Product & Ops Agent:** Owns workflows (collections, refunds, disputes), defines SLAs, and prioritizes backlog for revenue ops.
-- **UX & Content Agent:** Crafts table layouts, filters, bulk actions, and clear billing language; ensures accessibility and printable outputs.
-- **Frontend Agent (Angular):** Implements routes, data fetching, optimistic updates with rollback, and state for selections/filters; wires to API without mock data.
-- **Backend/API Agent (Spring Boot):** Adds DTOs/entities (Accounts, Users, PaymentMethods, Plans, Subscriptions, Invoices, Charges, Refunds, Disputes, AuditLog) and exposes secured REST/webhook handlers; enforces idempotency and validation.
-- **Data & Persistence Agent:** Designs migrations for billing tables, reference data (currencies, tax rates), soft deletes, and history tables; ensures indexes for reporting queries.
-- **DevOps & Observability Agent:** Manages Stripe keys/secrets, webhook signing, background workers, logging/metrics for payment events, and alerting on failures.
-- **QA & Compliance Agent:** Defines acceptance tests (happy path + dunning + dispute), validates PCI scope boundaries, and keeps axe/Playwright coverage current.
+## Ownership Boundaries
+- **Frontend (`apps/payments-admin`) owns:**
+  - Route structure, UX, accessibility, view models, API request orchestration, client-side validation, optimistic UI only when safe.
+  - Rendering RBAC-aware UI (hide/disable controls based on role) while assuming backend remains source of truth.
+- **API (`services/api`) owns:**
+  - Authentication/authorization enforcement, billing business rules, Stripe calls, idempotency enforcement, persistence, and audit log creation.
+  - Any operation that mutates financial state or Stripe state.
+- **Shared contracts (`packages/domain`) own:**
+  - Canonical DTOs/enums used by frontend + API.
+  - Breaking contract changes must be coordinated across all three areas in one planned change set.
 
-## Information Architecture (frontend)
-- **Dashboard:** KPIs (MRR, net revenue, failed payments, dispute counts), aging widgets, and at-risk accounts list.
-- **Accounts:** Search/filter, account detail with contacts, payment methods, subscription history, invoices, and audit log tab.
-- **Payments:** Invoice list, payment attempts, retries, refunds, dispute indicators, and bulk actions for reminders.
-- **Plans & Pricing:** Plan catalog, add-ons, coupons, scheduled changes, and price book governance.
-- **Operations Center:** Dunning queue, dispute queue, webhook delivery monitor, exports/download center.
-- **Settings:** Roles & access, email templates, Stripe configuration status, tax settings, and data retention controls.
+## Integration & Data-Contract Rules
+- Use real endpoints under `/api/v1/auth/**` and `/api/v1/billing/**`; do not add local mock data services.
+- No silent fallback behavior:
+  - Do not replace failed API calls with fake success or empty collections that hide operational failures.
+  - Surface actionable UI errors and preserve observability.
+- Keep API usage centralized:
+  - Use `ApiClient`/`BillingApiService` patterns for billing operations.
+  - Do not scatter ad hoc billing URLs across page components.
+- Use domain contracts from `@aiaca/domain` first; avoid duplicating DTO shapes locally.
+- Mutations must send idempotency keys (already supported by `ApiClient`); do not bypass this for billing writes.
+- Stripe integration remains server-side:
+  - Frontend must never hold Stripe secret keys or webhook secrets.
+  - Frontend must not store PCI-sensitive card data (PAN/CVC/track data). Only tokenized/payment-method metadata allowed.
 
-## Stripe & API Integration Expectations
-- Use **Stripe customer + subscription + invoice/charge** primitives; mirror IDs in our DB for reconciliation.
-- **Webhooks:** `invoice.payment_succeeded/failed`, `customer.subscription.updated`, `charge.refunded`, `charge.dispute.*`, `payment_method.*` captured with signature verification and idempotency keys stored server-side.
-- **Idempotency & retries:** All create/update actions use idempotency keys from the frontend; backend must persist request UUIDs per account to avoid duplicate charges.
-- **Data sync:** Nightly backfill job to reconcile invoices/charges and mark drift; dashboard surfaces mismatches for manual review.
-- **PII/PCI:** Never store full card numbers or CVC; store Stripe PaymentMethod references, last4, brand, exp month/year only; redact logs.
+## Angular Implementation Standards (Mandatory for New Work)
+- Standalone components only (`standalone: true`).
+- Use `inject()` for dependency injection in new components/services/guards/interceptors.
+- Explicit `imports` arrays in standalone components (no implicit module inheritance).
+- Keep standalone app architecture (`bootstrapApplication`, `provideRouter`); do not introduce NgModules.
 
-## TODO – Frontend (apps/payments-admin)
-- Replace **mock BillingDataService** with API-backed services and typed DTOs from `@aiaca/domain`.
-- Implement **auth** (SSO-ready) with role-based guards; show redacted fields for read-only roles.
-- Build **accounts detail** page: contacts, payment methods, subscription timeline, invoice history, dunning notes, audit log, and activity feed.
-- Add **payments/invoices views**: sorting/filtering, status chips, retry/refund/mark-offline actions with confirmation dialogs.
-- Create **plan management UI**: plan catalog editor, price overrides, coupons, and scheduled changes UI with validation.
-- Add **operations center**: past-due queue with bulk reminder templates, dispute tracker with deadlines, webhook delivery status.
-- Provide **reporting dashboards**: MRR/ARR, cash vs. refunds, invoice aging buckets, churn/retention charts, export buttons.
-- Implement **form validations & accessibility** (ARIA labels, focus management, table keyboard nav, toast feedback on async actions).
-- Add **audit log surfaces** (per entity + global) with filters and CSV export.
-- Integrate **Stripe Elements** or Checkout for one-off charges and payment method updates; handle 3DS flows and error states.
-- Provide **settings pages**: role management, email templates, tax settings, webhook status, environment indicators.
+## Security & Privacy Baseline
+- Follow `docs/security-privacy.md` and least-privilege defaults.
+- Enforce role-aware UX for `ADMIN`, `OPERATOR`, `VIEWER`; never rely on client checks alone for security.
+- Redact sensitive values in UI logs/errors/telemetry.
+- Do not persist secrets or PCI-sensitive payloads in browser storage.
+- Keep data exposure minimal in exports and on-screen details.
 
-## TODO – Backend/API (services/api)
-- Add **entities + migrations**: User, Role, Account, Contact, PaymentMethod (tokenized refs), Plan, Price, Subscription, SubscriptionItem, Invoice, InvoiceLine, Charge, Refund, Dispute, CreditNote, Adjustment, Coupon, AuditLog, WebhookEvent, DunningSchedule, DunningEvent.
-- Add **DTOs + mappers** in `packages/domain` for all billing objects; ensure validation and pagination contracts for tables.
-- Implement **REST endpoints** (v1):
-  - Accounts: CRUD, attach payment method, notes, tags, upload tax IDs/addresses.
-  - Plans/Prices: CRUD, activate/deactivate, add-ons, coupons, scheduled changes.
-  - Subscriptions: create/swap/cancel/pause/resume, proration options, seat changes, trial extensions.
-  - Invoices & payments: list, retrieve, create one-off invoice, retry, mark offline payment, issue credit note/refund.
-  - Dunning: list queues, send reminder, log touchpoints, mark promise-to-pay, write-offs.
-  - Disputes: list, add evidence references, mark submitted/accepted/lost.
-  - Audit logs: query by entity/user/date; export endpoint (CSV/JSON).
-  - Webhook monitor: delivery attempts, replay, signature verification status.
-- **Stripe integration:** client for server-side calls (customers, payment methods, invoices, subscriptions, refunds, disputes); store Stripe IDs; enforce idempotency keys.
-- **Jobs/workers:** dunning retries, nightly reconciliation, webhook retry dead-letter queue, invoice aging rollups, report materializations.
-- **Security:** RBAC middleware, scope checks per endpoint, tamper-proof audit logging (append-only), rate limits, request tracing.
-- **Testing:** unit + integration tests with Stripe mock client, contract tests for DTOs, seed scripts for demo/stage data.
+## Dev Workflow Commands
+Run from repo root. In this environment, prefer npm scripts or Docker commands over direct `nx` CLI.
 
-## Deployment & Compliance Notes
-- Configure secrets for Stripe (publishable/secret keys, webhook signing secret) via env/secret manager; never commit keys.
-- Enable structured logging for all payment events and webhook deliveries; ship to centralized logging.
-- Metrics/alerts: payment success rate, retry success, dispute win rate, webhook failure count, reconciliation drift.
-- Data retention: purge PII on account deletion; keep financial records per tax policy; document retention windows in `docs/security-privacy.md`.
-- Release readiness checklist: lint/tests, accessibility sweeps, load test critical endpoints, and verify database migrations on staging before prod cutover.
+- Install deps: `npm ci`
+- Serve app: `npm run nx -- serve payments-admin`
+- Build app (dev): `npm run nx -- run payments-admin:build:development`
+- Build app (prod): `npm run nx -- run payments-admin:build:production`
+- Lint app: `npm run lint -- --projects=payments-admin`
+- Test app: `npm run test -- --projects=payments-admin`
+- Full local stack (when integration testing with API/DB): `npm run docker:up`
+
+## Billing Change Risk Checklist (Must Pass Before Merge)
+- **Idempotency**
+  - All create/update/cancel/refund/retry actions are idempotent end-to-end.
+  - Repeated submissions (refresh/retry/double-click) do not duplicate financial mutations.
+- **RBAC / Least Privilege**
+  - UI controls respect role permissions.
+  - Backend rejects unauthorized mutations even if UI is bypassed.
+- **Auditability**
+  - Mutating actions leave traceable records (who, what, when, target entity, outcome).
+  - Correlation IDs/request IDs are preserved where available.
+- **Error Handling**
+  - No silent fallbacks to mock or empty data on API failure.
+  - User gets clear error state and recovery path (retry, contact ops, etc.).
+  - Partial failures are visible and do not imply successful settlement.
+- **Data Contract Integrity**
+  - DTO changes are reflected in `packages/domain`, frontend usage, and API serialization together.
+  - Pagination/filter/sort semantics are consistent between UI and API.
+- **Security/Privacy**
+  - No PCI-sensitive storage in frontend.
+  - Sensitive fields redacted in logs and UI where appropriate.
+  - Changes align with `docs/security-privacy.md`.

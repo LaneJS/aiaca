@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -45,7 +47,7 @@ public class AuthService {
         userRepository.save(user);
         String token = jwtService.generateToken(user);
         log.info("User registered: {}", user.getEmail());
-        return new AuthDtos.AuthResponse(user.getId(), user.getEmail(), token);
+        return new AuthDtos.AuthResponse(user.getId(), user.getEmail(), token, resolveRoles(user));
     }
 
     public AuthDtos.AuthResponse login(AuthDtos.LoginRequest request) {
@@ -55,7 +57,7 @@ public class AuthService {
             User authenticatedUser = userRepository.findByEmail(request.email())
                     .orElseThrow(() -> new BadRequestException("Invalid credentials"));
             String token = jwtService.generateToken(authenticatedUser);
-            return new AuthDtos.AuthResponse(authenticatedUser.getId(), authenticatedUser.getEmail(), token);
+            return new AuthDtos.AuthResponse(authenticatedUser.getId(), authenticatedUser.getEmail(), token, resolveRoles(authenticatedUser));
         } catch (AuthenticationException ex) {
             throw new BadRequestException("Invalid credentials");
         }
@@ -88,5 +90,14 @@ public class AuthService {
         userRepository.save(user);
         log.info("User created without login: {}", user.getEmail());
         return user;
+    }
+
+    private List<String> resolveRoles(User user) {
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            return List.of();
+        }
+        return user.getRoles().stream()
+                .map(role -> role.getName())
+                .collect(Collectors.toList());
     }
 }

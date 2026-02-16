@@ -106,7 +106,7 @@ export class AuthService {
 
   private toSession(response: AuthResponse): AuthSession {
     const expiresAt = this.decodeExpiry(response.token);
-    const roles = response.roles?.length ? response.roles : (['VIEWER'] as UserRole[]);
+    const roles = response.roles?.length ? response.roles : ([] as UserRole[]);
 
     return {
       token: response.token,

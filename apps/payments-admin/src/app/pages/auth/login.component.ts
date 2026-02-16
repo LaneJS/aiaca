@@ -37,7 +37,15 @@ export class LoginComponent {
       .login({ email, password })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: () => {
+        next: (session) => {
+          if (!session.user.roles?.length) {
+            this.auth.logout(false);
+            const message = 'This account does not have access to the billing admin portal.';
+            this.error.set(message);
+            this.notifications.error(message);
+            this.router.navigate(['/unauthorized']);
+            return;
+          }
           this.notifications.success('Signed in successfully');
           const fromQuery = this.route.snapshot.queryParamMap.get('returnUrl');
           const nextUrl = fromQuery || this.auth.consumeRedirect() || '/';

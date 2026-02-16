@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { ToastService } from '../../core/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 type AuthMode = 'login' | 'reset-request' | 'reset-confirm';
@@ -107,10 +107,33 @@ export class AuthComponent implements OnInit {
     this.isLoading = true;
     const { email, password, resetToken } = this.form.getRawValue();
 
-    let action: Observable<void>;
     if (this.mode === 'login') {
-      action = this.auth.login(email, password).pipe(map(() => void 0));
-    } else if (this.mode === 'reset-request') {
+      this.auth.login(email, password).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.roles?.length) {
+            this.auth.clearLocalSession('unauthorized');
+            this.errorMessage = 'This account is for the billing admin portal. Please use the admin login.';
+            this.toasts.push(this.errorMessage, 'error');
+            return;
+          }
+          this.toasts.push('Successfully logged in', 'success');
+          this.router.navigateByUrl(this.redirectPath || '/overview');
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isLoading = false;
+          this.errorMessage = this.getErrorMessage(error);
+          if (this.isLockout(error)) {
+            this.lockoutMessage = 'Too many attempts. Please wait a moment before trying again.';
+          }
+          this.toasts.push(this.errorMessage, 'error');
+        },
+      });
+      return;
+    }
+
+    let action: Observable<void>;
+    if (this.mode === 'reset-request') {
       action = this.auth.requestPasswordReset(email);
     } else {
       action = this.auth.confirmPasswordReset((resetToken || '').trim(), password);
@@ -124,14 +147,9 @@ export class AuthComponent implements OnInit {
           this.toasts.push(this.successMessage, 'info');
           return;
         }
-        if (this.mode === 'reset-confirm') {
-          this.successMessage = 'Password updated. You can now sign in.';
-          this.toasts.push(this.successMessage, 'success');
-          this.setMode('login');
-          return;
-        }
-        this.toasts.push('Successfully logged in', 'success');
-        this.router.navigateByUrl(this.redirectPath || '/overview');
+        this.successMessage = 'Password updated. You can now sign in.';
+        this.toasts.push(this.successMessage, 'success');
+        this.setMode('login');
       },
       error: (error: HttpErrorResponse) => {
         this.isLoading = false;
@@ -173,7 +191,10 @@ export class AuthComponent implements OnInit {
     if (reason === 'manual') {
       return 'You have signed out. Sign back in to continue.';
     }
-    if (reason === 'unauthorized' || reason === 'unauthenticated') {
+    if (reason === 'unauthorized') {
+      return 'This account is for the billing admin portal. Please use the correct login.';
+    }
+    if (reason === 'unauthenticated') {
       return 'Please sign in to continue.';
     }
     return '';

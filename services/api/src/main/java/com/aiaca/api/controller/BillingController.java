@@ -8,6 +8,7 @@ import com.aiaca.api.security.UserPrincipal;
 import com.aiaca.api.service.billing.StripeCheckoutService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
+@PreAuthorize("!hasAnyRole('ADMIN','OPERATOR','VIEWER')")
 public class BillingController {
     private final StripeCheckoutService stripeCheckoutService;
     private final UserRepository userRepository;

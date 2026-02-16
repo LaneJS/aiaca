@@ -11,6 +11,10 @@ export class AuthGuard implements CanActivate {
     const status = this.auth.sessionStatus();
 
     if (status === 'valid') {
+      if (this.auth.hasBillingRoles()) {
+        this.auth.clearLocalSession('unauthorized');
+        return this.router.createUrlTree(['/auth'], { queryParams: { reason: 'unauthorized' } });
+      }
       return true;
     }
 

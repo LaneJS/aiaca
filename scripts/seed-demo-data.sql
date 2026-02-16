@@ -3,12 +3,13 @@
 -- Usage: docker exec -i aaca-postgres psql -U aaca -d aaca < scripts/seed-demo-data.sql
 
 -- Demo User (if not exists)
-INSERT INTO users (id, email, password_hash, full_name, created_at, updated_at)
+INSERT INTO users (id, email, password_hash, full_name, subscription_status, created_at, updated_at)
 VALUES (
     '00000000-0000-0000-0000-000000000000',
     'demo@a11yassistant.com',
     '$2a$10$demohashedpasswordplaceholder000000000000000000000000000',
     'Demo User',
+    'ACTIVE',
     NOW(),
     NOW()
 ) ON CONFLICT (id) DO NOTHING;

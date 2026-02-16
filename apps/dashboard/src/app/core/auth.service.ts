@@ -55,24 +55,24 @@ export class AuthService {
     this.restoreSession();
   }
 
-  login(email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string }> {
-    return this.http.post<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string }>(`${this.baseUrl}/auth/login`, { email, password }).pipe(
+  login(email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string; roles?: string[] }> {
+    return this.http.post<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string; roles?: string[] }>(`${this.baseUrl}/auth/login`, { email, password }).pipe(
       tap((res) => {
-        this.persistSession(res.token, this.toUserProfile(res.token, res.userId, res.email, res.name, res.subscriptionStatus));
+        this.persistSession(res.token, this.toUserProfile(res.token, res.userId, res.email, res.name, res.subscriptionStatus, res.roles));
       })
     );
   }
 
-  signup(name: string, email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string }> {
+  signup(name: string, email: string, password: string): Observable<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string; roles?: string[] }> {
     return this.http
-      .post<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string }>(`${this.baseUrl}/auth/register`, {
+      .post<{ userId: string; email: string; name?: string; token: string; subscriptionStatus?: string; roles?: string[] }>(`${this.baseUrl}/auth/register`, {
         name,
         email,
         password,
       })
       .pipe(
         tap((res) => {
-          this.persistSession(res.token, this.toUserProfile(res.token, res.userId, res.email, res.name || name, res.subscriptionStatus));
+          this.persistSession(res.token, this.toUserProfile(res.token, res.userId, res.email, res.name || name, res.subscriptionStatus, res.roles));
         })
       );
   }
@@ -184,6 +184,14 @@ export class AuthService {
     this._user.set(next);
   }
 
+  hasBillingRoles(): boolean {
+    return (this._user()?.roles ?? []).length > 0;
+  }
+
+  clearLocalSession(reason: LogoutReason = 'manual'): void {
+    this.clearSession(reason);
+  }
+
   private clearSession(reason: LogoutReason = 'manual'): void {
     if (this.tokenExpiryTimer) {
       clearTimeout(this.tokenExpiryTimer);
@@ -204,7 +212,7 @@ export class AuthService {
     return new MemoryStorage();
   }
 
-  private toUserProfile(token: string, userId?: string, email?: string, name?: string, subscriptionStatus?: string): UserProfile {
+  private toUserProfile(token: string, userId?: string, email?: string, name?: string, subscriptionStatus?: string, roles?: string[]): UserProfile {
     const decoded = this.decode(token);
     const derivedEmail = email || decoded.email || '';
     const derivedId = userId || decoded.sub || '';
@@ -213,6 +221,7 @@ export class AuthService {
       id: derivedId,
       email: derivedEmail,
       name: derivedName,
+      roles: roles?.length ? roles : undefined,
       subscriptionStatus: subscriptionStatus as UserProfile['subscriptionStatus']
     };
   }

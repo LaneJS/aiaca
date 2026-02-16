@@ -19,7 +19,8 @@ export const appRoutes: Route[] = [
   },
   {
     path: '',
-    canMatch: [authGuard],
+    canMatch: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'OPERATOR', 'VIEWER'] },
     children: [
       { path: '', component: DashboardComponent, pathMatch: 'full' },
       { path: 'accounts', component: AccountsComponent, canMatch: [roleGuard], data: { roles: ['ADMIN', 'OPERATOR', 'VIEWER'] } },

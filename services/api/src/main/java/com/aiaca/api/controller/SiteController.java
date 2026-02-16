@@ -8,6 +8,7 @@ import com.aiaca.api.service.SiteService;
 import com.aiaca.api.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/sites")
+@PreAuthorize("!hasAnyRole('ADMIN','OPERATOR','VIEWER')")
 public class SiteController {
     private final SiteService siteService;
     private final UserRepository userRepository;

@@ -49,24 +49,29 @@ BEGIN
     -- Ensure users exist (no overrides if they already exist)
     SELECT id INTO admin_user_id FROM users WHERE email = admin_email;
     IF admin_user_id IS NULL THEN
-        INSERT INTO users (id, email, password_hash, full_name, created_at, updated_at)
-        VALUES (gen_random_uuid(), admin_email, crypt(admin_password, gen_salt('bf')), 'Local Admin', now(), now())
+        INSERT INTO users (id, email, password_hash, full_name, subscription_status, created_at, updated_at)
+        VALUES (gen_random_uuid(), admin_email, crypt(admin_password, gen_salt('bf')), 'Local Admin', 'ACTIVE', now(), now())
         RETURNING id INTO admin_user_id;
     END IF;
 
     SELECT id INTO operator_user_id FROM users WHERE email = operator_email;
     IF operator_user_id IS NULL THEN
-        INSERT INTO users (id, email, password_hash, full_name, created_at, updated_at)
-        VALUES (gen_random_uuid(), operator_email, crypt(operator_password, gen_salt('bf')), 'Local Operator', now(), now())
+        INSERT INTO users (id, email, password_hash, full_name, subscription_status, created_at, updated_at)
+        VALUES (gen_random_uuid(), operator_email, crypt(operator_password, gen_salt('bf')), 'Local Operator', 'ACTIVE', now(), now())
         RETURNING id INTO operator_user_id;
     END IF;
 
     SELECT id INTO viewer_user_id FROM users WHERE email = viewer_email;
     IF viewer_user_id IS NULL THEN
-        INSERT INTO users (id, email, password_hash, full_name, created_at, updated_at)
-        VALUES (gen_random_uuid(), viewer_email, crypt(viewer_password, gen_salt('bf')), 'Local Viewer', now(), now())
+        INSERT INTO users (id, email, password_hash, full_name, subscription_status, created_at, updated_at)
+        VALUES (gen_random_uuid(), viewer_email, crypt(viewer_password, gen_salt('bf')), 'Local Viewer', 'ACTIVE', now(), now())
         RETURNING id INTO viewer_user_id;
     END IF;
+
+    -- Ensure local RBAC accounts can access subscription-gated endpoints
+    UPDATE users
+    SET subscription_status = 'ACTIVE'
+    WHERE email IN (admin_email, operator_email, viewer_email);
 
     -- Link users to roles (idempotent)
     IF admin_user_id IS NOT NULL AND admin_role_id IS NOT NULL THEN
@@ -87,4 +92,3 @@ BEGIN
         ON CONFLICT DO NOTHING;
     END IF;
 END $$;
-
